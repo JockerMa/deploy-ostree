@@ -13,5 +13,7 @@ lint:
 		--ignore-missing-imports \
 		--check-untyped-defs
 
-test: lint
+_test:
 	$(PYTHON) setup.py test
+
+qc: lint _test
