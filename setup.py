@@ -41,6 +41,9 @@ setup(
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=[],
+    extras_require={
+        'dev': ['flake8', 'mypy'],
+    },
     package_data={
         'deploy_ostree': ['default-provisioners'],
     },
