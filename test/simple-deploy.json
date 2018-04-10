@@ -1,0 +1,7 @@
+{
+    "_desc": "the simplest possible config, using no provisioners and randomly generated names",
+    "_other comment": "any keys starting with _ should be ignored",
+
+    "ostree_url": "https://kojipkgs.fedoraproject.org/atomic/repo/",
+    "ref": "fedora/28/x86_64/atomic-host"
+}
