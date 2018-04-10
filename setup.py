@@ -1,11 +1,18 @@
-# Always prefer setuptools over distutils
+# Copyright 2018 Felix Krull
+# Licensed under the MIT license, see LICENSE for details.
+
 from setuptools import setup, find_packages
-# To use a consistent encoding
-from codecs import open
 from os import path
+import unittest
+
+
+def get_test_suite():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover('test', pattern='test_*.py')
+    return test_suite
+
 
 here = path.abspath(path.dirname(__file__))
-
 # Get the long description from the README file
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
@@ -37,17 +44,10 @@ setup(
     package_data={
         'deploy_ostree': ['default-provisioners'],
     },
-
-    # To provide executable scripts, use entry points in preference to the
-    # "scripts" keyword. Entry points provide cross-platform support and allow
-    # `pip` to create the appropriate form of executable for the target
-    # platform.
-    #
-    # For example, the following would provide a command called `sample` which
-    # executes the function `main` from this package when invoked:
-    entry_points={  # Optional
+    entry_points={
         'console_scripts': [
             'deploy-ostree=deploy_ostree:main',
         ],
     },
+    test_suite='setup.get_test_suite',
 )
