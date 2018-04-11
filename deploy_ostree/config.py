@@ -19,10 +19,10 @@ class Config:
         self.ref = ref
 
     @classmethod
-    def parse_json(cls, fobj: TextIO) -> 'Config':
+    def parse_json(cls, fobj: TextIO):
         data = json.load(fobj)
         try:
-            return Config(
+            return cls(
                 data['ostree_url'],
                 data['ref'],
             )
