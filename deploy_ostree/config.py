@@ -5,6 +5,10 @@ import json
 from typing import TextIO
 
 
+class InvalidConfigError(RuntimeError):
+    pass
+
+
 class Config:
     def __init__(
         self,
@@ -17,7 +21,10 @@ class Config:
     @classmethod
     def parse_json(cls, fobj: TextIO) -> 'Config':
         data = json.load(fobj)
-        return Config(
-            data['ostree_url'],
-            data['ref'],
-        )
+        try:
+            return Config(
+                data['ostree_url'],
+                data['ref'],
+            )
+        except KeyError as exc:
+            raise InvalidConfigError("missing key '{}'".format(exc.args))
