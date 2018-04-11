@@ -8,7 +8,8 @@ import unittest
 
 def get_test_suite():
     test_loader = unittest.TestLoader()
-    test_suite = test_loader.discover('test', pattern='test_*.py')
+    test_suite = test_loader.discover('tests', pattern='test_*.py',
+                                      top_level_dir='.')
     return test_suite
 
 
@@ -39,7 +40,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
 
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    packages=['deploy_ostree'],
     install_requires=[],
     extras_require={
         'dev': ['flake8', 'mypy'],

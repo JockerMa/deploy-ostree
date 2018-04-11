@@ -4,8 +4,7 @@
 import os.path
 import shutil
 from unittest import TestCase
-from util import deploy_ostree, ostree
-
+from . import deploy_ostree, ostree
 
 TESTS_DIR = os.path.dirname(__file__)
 
@@ -13,7 +12,7 @@ TESTS_DIR = os.path.dirname(__file__)
 class TestSimpleDeploy(TestCase):
     @classmethod
     def setUpClass(cls):
-        os.makedirs('/ostree', mode=0o755, exist_ok=True)
+        os.makedirs('/ostree/repo', mode=0o755)
         ostree(['init', '--repo=/ostree/repo'])
         deploy_ostree([os.path.join(TESTS_DIR, 'simple-deploy.json')])
 

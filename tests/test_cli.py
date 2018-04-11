@@ -2,7 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from unittest import TestCase
-from util import deploy_ostree
+from . import deploy_ostree
 
 
 class TestHelp(TestCase):
