@@ -5,7 +5,7 @@ import argparse
 import sys
 
 from .config import Config
-from .steps import DeploySteps
+from .steps import get_deploy_steps
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
@@ -28,5 +28,5 @@ def main():
     args = parser.parse_args(sys.argv[1:])
     with open(args.config, encoding='utf-8') as fobj:
         cfg = Config.parse_json(fobj)
-    steps = DeploySteps.get(cfg)
+    steps = get_deploy_steps(cfg)
     steps.run()
