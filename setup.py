@@ -1,7 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-from setuptools import setup, find_packages
+from setuptools import setup
 from os import path
 import unittest
 
