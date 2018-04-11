@@ -14,10 +14,13 @@ lint:
 		--ignore-missing-imports \
 		--check-untyped-defs
 
-run-tests:
+all-test:
 	$(PYTHON) setup.py test
 
-qc/host: lint run-tests
+qc/host: lint all-tests
+
+unit:
+	$(PYTHON) -m unittest discover -t . -s tests/unit
 
 # Debian
 image/debian:
