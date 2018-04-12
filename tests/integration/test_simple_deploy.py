@@ -10,6 +10,9 @@ TESTS_DIR = os.path.dirname(__file__)
 
 
 class TestSimpleDeploy(TestCase):
+    url = 'http://mirror.centos.org/centos/7/atomic/x86_64/repo'
+    ref = 'centos-atomic-host/7/x86_64/standard'
+
     @classmethod
     def setUpClass(cls):
         os.makedirs('/ostree/repo', mode=0o755)
@@ -25,13 +28,13 @@ class TestSimpleDeploy(TestCase):
         remote = ostree(['remote', 'list']).stdout.strip()
         url = ostree(['remote', 'show-url', remote]).stdout.strip()
         self.assertEqual(
-            'https://kojipkgs.fedoraproject.org/atomic/repo/',
+            self.url,
             url)
 
     def test_should_pull_ref_from_remote(self):
         remote = ostree(['remote', 'list']).stdout.strip()
         refs = [ref.strip() for ref in ostree(['refs']).stdout.splitlines()]
-        self.assertIn('%s:https://kojipkgs.fedoraproject.org/atomic/repo/' % remote, refs)
+        self.assertIn('%s:%s' % (remote, self.ref), refs)
 
     def test_should_create_randomly_named_stateroot(self):
         deploy_dir = '/ostree/deploy'
