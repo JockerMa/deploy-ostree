@@ -8,9 +8,12 @@ from deploy_ostree.run import run, ProcessResult, ProcessError
 
 
 def deploy_ostree(extra_args: List[str]) -> ProcessResult:
-    return run(
+    result = run(
         [sys.executable, '-mdeploy_ostree'] + extra_args,
         capture_output=True)
+    print(result.stdout)
+    print(result.stderr)
+    return result
 
 
 def ostree(extra_args: List[str]) -> ProcessResult:
