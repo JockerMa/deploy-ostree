@@ -1,7 +1,6 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-from shutil import which
 from . import DeployStep
 from ..config import Config
 from ..run import run
@@ -9,7 +8,6 @@ from ..run import run
 
 class HttpRemote(DeployStep):
     def __init__(self, cfg: Config) -> None:
-        self.ostree = which('ostree')
         self.remote = cfg.remote
         self.url = cfg.url
 
@@ -19,7 +17,7 @@ class HttpRemote(DeployStep):
 
     def run(self):
         run([
-            self.ostree,
+            'ostree',
             'remote',
             'add',
             '--no-gpg-verify',

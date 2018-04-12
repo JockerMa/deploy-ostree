@@ -8,17 +8,15 @@ from deploy_ostree.steps.http_remote import HttpRemote
 
 class TestHttpRemote(TestCase):
     @mock.patch('deploy_ostree.steps.http_remote.run')
-    @mock.patch('deploy_ostree.steps.http_remote.which')
-    def test_should_add_ostree_remote_for_url_in_config(self, mock_which: mock.Mock, mock_run: mock.Mock):
+    def test_should_add_ostree_remote_for_url_in_config(self, mock_run: mock.Mock):
         cfg = Config('https://example.com/ostree', 'debian/9/i386/desktop', 'remote-name')
-        mock_which.return_value = '/usr/bin/ostree'
 
         steps = HttpRemote.get_steps(cfg)
         for step in steps:
             step.run()
 
         mock_run.assert_called_once_with([
-            '/usr/bin/ostree',
+            'ostree',
             'remote', 'add',
             '--no-gpg-verify',
             '--if-not-exists',
