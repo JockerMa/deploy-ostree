@@ -73,6 +73,7 @@ class TestGetDeploySteps(TestCase):
     def test_should_pass_all_deploy_steps(self, mock_deploysteps):
         mocks = [(clsname, mock.Mock()) for clsname in [
             'HttpRemote',
+            'PullRef',
             'CreateStateroot'
         ]]
 
