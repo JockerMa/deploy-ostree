@@ -3,13 +3,12 @@
 
 import os.path
 import shutil
-from unittest import TestCase, skip
+from unittest import TestCase
 from .. import deploy_ostree, ostree
 
 TESTS_DIR = os.path.dirname(__file__)
 
 
-@skip('not implemented yet')
 class TestSimpleDeploy(TestCase):
     @classmethod
     def setUpClass(cls):
