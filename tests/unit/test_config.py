@@ -34,3 +34,9 @@ class TestConfig(TestCase):
         cfg2 = Config('url', 'ref')
 
         self.assertNotEqual(cfg1.remote, cfg2.remote)
+
+    def test_stateroot_should_be_randomly_generated_if_not_specified(self):
+        cfg1 = Config('url', 'ref')
+        cfg2 = Config('url', 'ref')
+
+        self.assertNotEqual(cfg1.stateroot, cfg2.stateroot)

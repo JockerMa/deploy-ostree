@@ -20,10 +20,12 @@ class Config:
         url: str,
         ref: str,
         remote: Optional[str]=None,
+        stateroot: Optional[str]=None,
     ) -> None:
         self.url = url
         self.ref = ref
-        self.remote = remote if remote else random_string()
+        self.remote = remote or random_string()
+        self.stateroot = stateroot or random_string()
 
     @classmethod
     def parse_json(cls, fobj: TextIO):
