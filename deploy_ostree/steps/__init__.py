@@ -4,6 +4,7 @@
 from typing import Iterable, List, Type  # noqa
 from .deploystep import DeployStep
 from .http_remote import HttpRemote
+from .create_stateroot import CreateStateroot
 from ..config import Config
 
 
@@ -21,4 +22,4 @@ class DeploySteps:
 
 
 def get_deploy_steps(cfg: Config) -> DeploySteps:
-    return DeploySteps(cfg, [HttpRemote])
+    return DeploySteps(cfg, [HttpRemote, CreateStateroot])
