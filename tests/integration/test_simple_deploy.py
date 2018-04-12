@@ -28,6 +28,11 @@ class TestSimpleDeploy(TestCase):
             'https://kojipkgs.fedoraproject.org/atomic/repo/',
             url)
 
+    def test_should_pull_ref_from_remote(self):
+        remote = ostree(['remote', 'list']).stdout.strip()
+        refs = [ref.strip() for ref in ostree(['refs']).stdout.splitlines()]
+        self.assertIn('%s:https://kojipkgs.fedoraproject.org/atomic/repo/' % remote, refs)
+
     def test_should_create_randomly_named_stateroot(self):
         deploy_dir = '/ostree/deploy'
         elems = os.listdir(deploy_dir)
