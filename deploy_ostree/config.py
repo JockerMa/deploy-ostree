@@ -13,10 +13,12 @@ class Config:
     def __init__(
         self,
         url: str,
-        ref: str
+        ref: str,
+        remote: str='deploy-ostree-remote',
     ) -> None:
         self.url = url
         self.ref = ref
+        self.remote = remote
 
     @classmethod
     def parse_json(cls, fobj: TextIO):
