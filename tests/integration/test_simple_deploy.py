@@ -27,3 +27,10 @@ class TestSimpleDeploy(TestCase):
         self.assertEqual(
             'https://kojipkgs.fedoraproject.org/atomic/repo/',
             url)
+
+    def test_should_create_randomly_named_stateroot(self):
+        deploy_dir = '/ostree/deploy'
+        elems = os.listdir(deploy_dir)
+        self.assertEqual(1, len(elems))
+        stateroot = elems[0]
+        self.assertTrue(os.path.isdir(os.path.join(deploy_dir, stateroot)))
