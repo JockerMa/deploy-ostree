@@ -28,3 +28,9 @@ class TestConfig(TestCase):
         json = '{"ostree_url": "http://example.com"}'
         with self.assertRaises(InvalidConfigError, msg="missing key 'ref'"):
             Config.parse_json(StringIO(json))
+
+    def test_remote_name_should_be_randomly_generated_if_not_specified(self):
+        cfg1 = Config('url', 'ref')
+        cfg2 = Config('url', 'ref')
+
+        self.assertNotEqual(cfg1.remote, cfg2.remote)

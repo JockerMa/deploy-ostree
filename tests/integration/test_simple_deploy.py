@@ -19,6 +19,7 @@ class TestSimpleDeploy(TestCase):
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree('/ostree')
+        shutil.rmtree('/etc/ostree/remotes.d')
 
     def test_should_add_randomly_named_remote(self):
         remote = ostree(['remote', 'list']).stdout.strip()

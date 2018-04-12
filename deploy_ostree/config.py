@@ -2,11 +2,16 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import json
-from typing import TextIO
+from typing import Optional, TextIO
+from uuid import uuid4
 
 
 class InvalidConfigError(RuntimeError):
     pass
+
+
+def random_string() -> str:
+    return uuid4().hex[:12]
 
 
 class Config:
@@ -14,11 +19,11 @@ class Config:
         self,
         url: str,
         ref: str,
-        remote: str='deploy-ostree-remote',
+        remote: Optional[str]=None,
     ) -> None:
         self.url = url
         self.ref = ref
-        self.remote = remote
+        self.remote = remote if remote else random_string()
 
     @classmethod
     def parse_json(cls, fobj: TextIO):
