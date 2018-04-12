@@ -35,3 +35,6 @@ class TestCreateStateroot(TestCase):
 
     def test_should_be_relevant(self):
         self.assertTrue(CreateStateroot.is_relevant(mock.Mock()))
+
+    def test_title_should_be_str(self):
+        self.assertIsInstance(CreateStateroot(mock.Mock()).title, str)

@@ -2,7 +2,6 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from shutil import which
-from typing import Iterable
 from . import DeployStep
 from ..config import Config
 from ..run import run
@@ -33,7 +32,3 @@ class HttpRemote(DeployStep):
     @classmethod
     def is_relevant(cls, cfg: Config) -> bool:
         return cfg.url is not None
-
-    @classmethod
-    def get_steps(cls, cfg: Config) -> Iterable[DeployStep]:
-        return [cls(cfg)]

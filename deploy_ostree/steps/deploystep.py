@@ -6,13 +6,16 @@ from ..config import Config
 
 
 class DeployStep:
+    def __init__(self, cfg: Config) -> None:
+        pass
+
     @classmethod
     def is_relevant(cls, cfg: Config) -> bool:
-        raise NotImplementedError
+        return True
 
     @classmethod
     def get_steps(cls, cfg: Config) -> 'Iterable[DeployStep]':
-        raise NotImplementedError
+        return [cls(cfg)]
 
     @property
     def title(self) -> str:
