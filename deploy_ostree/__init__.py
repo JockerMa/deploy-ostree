@@ -17,7 +17,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
         'config',
         metavar='CONFIG',
         type=str,
-        nargs=1,
         help='the path to the configuration file')
 
     return parser
