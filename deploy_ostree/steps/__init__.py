@@ -16,6 +16,7 @@ class DeploySteps:
 
     def run(self):
         for step in self.steps:
+            print('==>', step.title)
             step.run()
 
 

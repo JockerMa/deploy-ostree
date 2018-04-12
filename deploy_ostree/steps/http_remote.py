@@ -11,10 +11,14 @@ from ..run import run
 class HttpRemote(DeployStep):
     def __init__(self, cfg: Config) -> None:
         self.ostree = which('ostree')
-        self.cfg = cfg
+        self.remote = cfg.remote
+        self.url = cfg.url
+
+    @property
+    def title(self) -> str:
+        return 'Adding OSTree remote: %s' % self.url
 
     def run(self):
-        print('==> Adding OSTree remote:', self.cfg.url)
         run([
             self.ostree,
             'remote',
@@ -22,8 +26,8 @@ class HttpRemote(DeployStep):
             '--no-gpg-verify',
             '--if-not-exists',
             '--repo=/ostree/repo',
-            self.cfg.remote,
-            self.cfg.url
+            self.remote,
+            self.url
         ], check=True)
 
     @classmethod

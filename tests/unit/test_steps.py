@@ -12,6 +12,7 @@ def mock_teststep(relevant: bool, n_steps: int = 1) -> Mock:
     teststep = Mock()
     teststep.is_relevant.return_value = relevant
     teststep.get_steps.return_value = [teststep] * n_steps
+    teststep.title = 'test step'
     return teststep
 
 

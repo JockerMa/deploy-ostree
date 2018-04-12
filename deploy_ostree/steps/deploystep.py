@@ -14,5 +14,9 @@ class DeployStep:
     def get_steps(cls, cfg: Config) -> 'Iterable[DeployStep]':
         raise NotImplementedError
 
+    @property
+    def title(self) -> str:
+        raise NotImplementedError
+
     def run(self):
         raise NotImplementedError
