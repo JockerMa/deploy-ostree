@@ -2,20 +2,8 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from typing import Iterable, List, Type  # noqa
+from .deploystep import DeployStep
 from ..config import Config
-
-
-class DeployStep:
-    @classmethod
-    def is_relevant(cls, cfg: Config) -> bool:
-        raise NotImplementedError
-
-    @classmethod
-    def get_steps(cls, cfg: Config) -> 'Iterable[DeployStep]':
-        raise NotImplementedError
-
-    def run(self):
-        raise NotImplementedError
 
 
 class DeploySteps:
