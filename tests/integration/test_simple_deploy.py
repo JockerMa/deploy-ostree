@@ -2,27 +2,22 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
-import shutil
-from unittest import TestCase
 from .. import deploy_ostree, ostree
+from ..fixtures import FixtureTestCase, OSTreeFixture
 
 TESTS_DIR = os.path.dirname(__file__)
 
 
-class TestSimpleDeploy(TestCase):
+class TestSimpleDeploy(FixtureTestCase):
     url = 'http://mirror.centos.org/centos/7/atomic/x86_64/repo'
     ref = 'centos-atomic-host/7/x86_64/standard'
 
-    @classmethod
-    def setUpClass(cls):
-        os.makedirs('/ostree/repo', mode=0o755)
-        ostree(['init', '--repo=/ostree/repo'])
-        deploy_ostree([os.path.join(TESTS_DIR, 'simple-deploy.json')])
+    FIXTURES = [OSTreeFixture]
 
     @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree('/ostree')
-        shutil.rmtree('/etc/ostree/remotes.d')
+    def setUpClass(cls):
+        super().setUpClass()
+        deploy_ostree([os.path.join(TESTS_DIR, 'simple-deploy.json')])
 
     def test_should_add_randomly_named_remote(self):
         remote = ostree(['remote', 'list']).stdout.strip()
