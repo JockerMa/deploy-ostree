@@ -42,7 +42,7 @@ class TestSimpleDeploy(FixtureTestCase):
         deploy_dir = '/ostree/deploy'
         elems = os.listdir(deploy_dir)
         deployments_dir = os.path.join(deploy_dir, elems[0], 'deploy')
-        elems = os.listdir(deployments_dir)
+        elems = [elem for elem in os.listdir(deployments_dir) if not elem.endswith('.origin')]
         self.assertEqual(1, len(elems))
         deployment = os.path.join(deployments_dir, elems[0])
         self.assertTrue(os.path.isfile(os.path.join(deployment, 'etc', 'os-release')))
