@@ -3,16 +3,16 @@
 
 import os.path
 from .. import deploy_ostree, ostree
-from ..fixtures import FixtureTestCase, OSTreeFixture
+from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 
 TESTS_DIR = os.path.dirname(__file__)
 
 
 class TestSimpleDeploy(FixtureTestCase):
-    url = 'http://mirror.centos.org/centos/7/atomic/x86_64/repo'
-    ref = 'centos-atomic-host/7/x86_64/standard'
+    url = 'http://localhost:8000/'
+    ref = 'test-commit'
 
-    FIXTURES = [OSTreeFixture]
+    FIXTURES = [OSTreeFixture, OSTreeCommitFixture]
 
     @classmethod
     def setUpClass(cls):

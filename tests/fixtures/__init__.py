@@ -5,8 +5,13 @@ from unittest import TestCase
 from typing import List, Type  # noqa
 from .fixture import Fixture  # noqa
 from .ostree import OSTreeFixture
+from .ostree_commit import OSTreeCommitFixture
 
-__all__ = ['FixtureTestCase', 'OSTreeFixture']
+__all__ = [
+    'FixtureTestCase',
+    'OSTreeFixture',
+    'OSTreeCommitFixture'
+]
 
 
 class FixtureTestCase(TestCase):

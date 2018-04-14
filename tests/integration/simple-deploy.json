@@ -2,6 +2,6 @@
     "_desc": "the simplest possible config, using no provisioners and randomly generated names",
     "_other comment": "any keys starting with _ should be ignored",
 
-    "ostree_url": "http://mirror.centos.org/centos/7/atomic/x86_64/repo",
-    "ref": "centos-atomic-host/7/x86_64/standard"
+    "ostree_url": "http://localhost:8000/",
+    "ref": "test-commit"
 }
