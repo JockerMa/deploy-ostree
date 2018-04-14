@@ -9,9 +9,6 @@ TESTS_DIR = os.path.dirname(__file__)
 
 
 class TestSimpleDeploy(FixtureTestCase):
-    url = 'http://localhost:8000/'
-    ref = 'test-commit'
-
     FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
 
     @classmethod
@@ -23,13 +20,13 @@ class TestSimpleDeploy(FixtureTestCase):
         remote = ostree(['remote', 'list']).stdout.strip()
         url = ostree(['remote', 'show-url', remote]).stdout.strip()
         self.assertEqual(
-            self.url,
+            'http://localhost:8000/',
             url)
 
     def test_should_pull_ref_from_remote(self):
         remote = ostree(['remote', 'list']).stdout.strip()
         refs = [ref.strip() for ref in ostree(['refs']).stdout.splitlines()]
-        self.assertIn('%s:%s' % (remote, self.ref), refs)
+        self.assertIn('%s:test-commit' % remote, refs)
 
     def test_should_create_randomly_named_stateroot(self):
         stateroot = os.path.join(self.get_stateroot())
