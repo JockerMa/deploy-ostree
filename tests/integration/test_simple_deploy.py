@@ -32,17 +32,22 @@ class TestSimpleDeploy(FixtureTestCase):
         self.assertIn('%s:%s' % (remote, self.ref), refs)
 
     def test_should_create_randomly_named_stateroot(self):
-        deploy_dir = '/ostree/deploy'
-        elems = os.listdir(deploy_dir)
-        self.assertEqual(1, len(elems))
-        stateroot = os.path.join(deploy_dir, elems[0])
+        stateroot = os.path.join(self.get_stateroot())
         self.assertTrue(os.path.isdir(os.path.join(stateroot, 'var')))
 
     def test_should_deploy_commit(self):
-        deploy_dir = '/ostree/deploy'
-        elems = os.listdir(deploy_dir)
-        deployments_dir = os.path.join(deploy_dir, elems[0], 'deploy')
+        deployments_dir = os.path.join(self.get_stateroot(), 'deploy')
         elems = [elem for elem in os.listdir(deployments_dir) if not elem.endswith('.origin')]
         self.assertEqual(1, len(elems))
         deployment = os.path.join(deployments_dir, elems[0])
         self.assertTrue(os.path.isfile(os.path.join(deployment, 'etc', 'os-release')))
+
+    def test_should_create_boot_loader_entry(self):
+        stateroot_name = os.path.basename(self.get_stateroot())
+        entry_file = os.path.join('/boot/loader/entries', 'ostree-%s-0.conf' % stateroot_name)
+        self.assertTrue(os.path.isfile(entry_file))
+
+    def get_stateroot(self):
+        deploy_dir = '/ostree/deploy'
+        elems = os.listdir(deploy_dir)
+        return os.path.join(deploy_dir, elems[0])
