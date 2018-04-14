@@ -6,6 +6,7 @@ from .deploystep import DeployStep
 from .http_remote import HttpRemote
 from .pull_ref import PullRef
 from .create_stateroot import CreateStateroot
+from .deploy import Deploy
 from ..config import Config
 
 
@@ -23,4 +24,4 @@ class DeploySteps:
 
 
 def get_deploy_steps(cfg: Config) -> DeploySteps:
-    return DeploySteps(cfg, [HttpRemote, PullRef, CreateStateroot])
+    return DeploySteps(cfg, [HttpRemote, PullRef, CreateStateroot, Deploy])

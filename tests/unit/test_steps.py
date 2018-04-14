@@ -74,7 +74,8 @@ class TestGetDeploySteps(TestCase):
         mocks = [(clsname, mock.Mock()) for clsname in [
             'HttpRemote',
             'PullRef',
-            'CreateStateroot'
+            'CreateStateroot',
+            'Deploy',
         ]]
 
         with mock.patch.multiple('deploy_ostree.steps', **{clsname: mock for clsname, mock in mocks}):
