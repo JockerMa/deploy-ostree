@@ -35,5 +35,14 @@ class TestSimpleDeploy(FixtureTestCase):
         deploy_dir = '/ostree/deploy'
         elems = os.listdir(deploy_dir)
         self.assertEqual(1, len(elems))
-        stateroot = elems[0]
-        self.assertTrue(os.path.isdir(os.path.join(deploy_dir, stateroot)))
+        stateroot = os.path.join(deploy_dir, elems[0])
+        self.assertTrue(os.path.isdir(os.path.join(stateroot, 'var')))
+
+    def test_should_deploy_commit(self):
+        deploy_dir = '/ostree/deploy'
+        elems = os.listdir(deploy_dir)
+        deployments_dir = os.path.join(deploy_dir, elems[0], 'deploy')
+        elems = os.listdir(deployments_dir)
+        self.assertEqual(1, len(elems))
+        deployment = os.path.join(deployments_dir, elems[0])
+        self.assertTrue(os.path.isfile(os.path.join(deployment, 'etc', 'os-release')))
