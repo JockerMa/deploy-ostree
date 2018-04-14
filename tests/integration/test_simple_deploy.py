@@ -12,7 +12,7 @@ class TestSimpleDeploy(FixtureTestCase):
     url = 'http://localhost:8000/'
     ref = 'test-commit'
 
-    FIXTURES = [OSTreeFixture, OSTreeCommitFixture]
+    FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
 
     @classmethod
     def setUpClass(cls):

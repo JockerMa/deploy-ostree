@@ -15,26 +15,14 @@ __all__ = [
 
 
 class FixtureTestCase(TestCase):
-    FIXTURES = []  # type: List[Type[Fixture]]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fixtures = [fixture_cls() for fixture_cls in self.FIXTURES]
+    FIXTURES = []  # type: List[Fixture]
 
     @classmethod
     def setUpClass(cls):
-        for fixture_cls in cls.FIXTURES:
-            fixture_cls.setUpClass()
+        for fixture in cls.FIXTURES:
+            fixture.setUp()
 
     @classmethod
     def tearDownClass(cls):
-        for fixture_cls in reversed(cls.FIXTURES):
-            fixture_cls.tearDownClass()
-
-    def setUp(self):
-        for fixture_instance in self.fixtures:
-            fixture_instance.setUp()
-
-    def tearDown(self):
-        for fixture_instance in reversed(self.fixtures):
-            fixture_instance.tearDown()
+        for fixture in reversed(cls.FIXTURES):
+            fixture.tearDown()

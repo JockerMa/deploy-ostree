@@ -30,29 +30,36 @@ def create_test_tree(commit_dir: str):
 
 
 class OSTreeCommitFixture(Fixture):
-    BRANCH = 'test-commit'
-    PORT = 8000
+    def __init__(self, branch: str='test-commit', port: int=8000) -> None:
+        self.http_server = None
+        self.repo_dir = None
+        self.branch = branch
+        self.port = port
 
-    http_server = None  # type: Optional[subprocess.Popen]
-    repo_dir = None  # type: Optional[TemporaryDirectory]
+    def setUp(self):
+        self.setup_repo()
+        self.create_test_commit()
+        self.start_http_server()
 
-    @classmethod
-    def setUpClass(cls):
-        cls.repo_dir = TemporaryDirectory()
-        ostree(['init', '--repo', cls.repo_dir.name, '--mode=archive-z2'])
+    def tearDown(self):
+        if self.http_server:
+            self.http_server.kill()
+            self.http_server = None
+        if self.repo_dir:
+            self.repo_dir.cleanup()
+            self.repo_dir = None
+
+    def setup_repo(self):
+        self.repo_dir = TemporaryDirectory()
+        ostree(['init', '--repo', self.repo_dir.name, '--mode=archive-z2'])
+
+    def create_test_commit(self):
         with TemporaryDirectory() as commit_dir:
             create_test_tree(commit_dir)
-            ostree(['commit', '--repo', cls.repo_dir.name, '--branch', cls.BRANCH, commit_dir])
-        cls.http_server = subprocess.Popen(
-            [sys.executable, '-mhttp.server', str(cls.PORT), '--bind', '127.0.0.1'],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            cwd=cls.repo_dir.name)
+            ostree(['commit', '--repo', self.repo_dir.name, '--branch', self.branch, commit_dir])
 
-    @classmethod
-    def tearDownClass(cls):
-        if cls.repo_dir:
-            cls.repo_dir.cleanup()
-            cls.repo_dir = None
-        if cls.http_server:
-            cls.http_server.kill()
-            cls.http_server = None
+    def start_http_server(self):
+        self.http_server = subprocess.Popen(
+            [sys.executable, '-mhttp.server', str(self.port), '--bind', '127.0.0.1'],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            cwd=self.repo_dir.name)

@@ -8,12 +8,10 @@ from .. import ostree
 
 
 class OSTreeFixture(Fixture):
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         os.makedirs('/ostree/repo', mode=0o755)
         ostree(['init', '--repo=/ostree/repo'])
 
-    @classmethod
-    def tearDownClass(cls):
+    def tearDown(self):
         shutil.rmtree('/ostree')
         shutil.rmtree('/etc/ostree/remotes.d')
