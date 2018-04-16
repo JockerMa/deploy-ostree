@@ -1,0 +1,19 @@
+image: ruby:2.2
+
+lint:
+  image: python:3.5-slim
+  before_script:
+    - apt-get update
+    - apt-get install -y make
+    - pip install flake8 mypy
+    - python3 setup.py install[dev]
+  script:
+    - make lint
+
+tests:
+  image: debian:buster-slim
+  before_script:
+    - apt-get update
+    - apt-get install -y make python3 ostree
+  script:
+    - make all-tests
