@@ -27,7 +27,7 @@ image/debian:
 	docker build -t deploy-ostree-debian -f Dockerfile.debian .
 
 qc/debian: image/debian
-	docker run --rm -i --privileged deploy-ostree-debian
+	docker run --rm -i -v /ostree deploy-ostree-debian
 
 # combined targets for all Docker versions
 qc: qc/debian
