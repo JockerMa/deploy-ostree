@@ -1,16 +1,10 @@
-image: debian:9-slim
-before_script:
-  - echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list.d/stretch-backports.list
-  - apt-get update
-  - apt-get install -y make python3 python3-pip python3-setuptools
-  - apt-get install -y -t stretch-backports ostree
-  - pip3 install flake8 mypy
-  - pip3 install .[dev]
+image: docker
+services:
+  - docker:dind
 
-lint:
-  script:
-    - make lint
+before_script:
+  - apk add --no-cache make
 
 test:
   script:
-    - make all-tests
+    - make qc
