@@ -2,14 +2,12 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
-from unittest import skip
 from .. import deploy_ostree, ostree
 from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 
 TESTS_DIR = os.path.dirname(__file__)
 
 
-@skip('not yet implemented')
 class TestNamedDeploy(FixtureTestCase):
     url = 'http://localhost:8000/'
     ref = 'test-commit'

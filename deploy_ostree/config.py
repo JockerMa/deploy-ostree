@@ -32,8 +32,10 @@ class Config:
         data = json.load(fobj)
         try:
             return cls(
-                data['ostree_url'],
-                data['ref'],
+                url=data['ostree_url'],
+                ref=data['ref'],
+                remote=data.get('remote'),
+                stateroot=data.get('stateroot')
             )
         except KeyError as exc:
             raise InvalidConfigError("missing key '{}'".format(exc.args))

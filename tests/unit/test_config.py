@@ -19,6 +19,21 @@ class TestConfig(TestCase):
         self.assertEqual('https://example.com/ostree', cfg.url)
         self.assertEqual('fedora/28/x86_64/workstation', cfg.ref)
 
+    def test_should_parse_config_with_remote_and_stateroot_names(self):
+        json = '''{
+            "ostree_url": "https://example.com/ostree",
+            "ref": "fedora/28/x86_64/workstation",
+
+            "remote": "atomicws",
+            "stateroot": "fedora-atomic-workstation"
+        }'''
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual('https://example.com/ostree', cfg.url)
+        self.assertEqual('fedora/28/x86_64/workstation', cfg.ref)
+        self.assertEqual('atomicws', cfg.remote)
+        self.assertEqual('fedora-atomic-workstation', cfg.stateroot)
+
     def test_should_raise_config_exception_if_url_is_missing(self):
         json = '{"ref": "ostree/ref"}'
         with self.assertRaises(InvalidConfigError, msg="missing key 'ostree_url'"):
