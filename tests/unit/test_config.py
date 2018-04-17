@@ -3,7 +3,7 @@
 
 from io import StringIO
 from unittest import TestCase
-from deploy_ostree.config import Config, InvalidConfigError
+from deploy_ostree.config import Config, ProvisionerConfig, InvalidConfigError
 
 
 class TestConfig(TestCase):
@@ -33,6 +33,62 @@ class TestConfig(TestCase):
         self.assertEqual('fedora/28/x86_64/workstation', cfg.ref)
         self.assertEqual('atomicws', cfg.remote)
         self.assertEqual('fedora-atomic-workstation', cfg.stateroot)
+
+    def test_should_parse_config_with_empty_provisioners_list(self):
+        json = '''{
+            "ostree_url": "http://example.com",
+            "ref": "ref",
+
+            "default-provisioners": []
+        }'''
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.default_provisioners, [])
+
+    def test_should_parse_config_with_one_default_provisioner(self):
+        json = '''{
+            "ostree_url": "http://example.com",
+            "ref": "ref",
+
+            "default-provisioners": [
+                {
+                    "provisioner": "some-provisioner"
+                }
+            ]
+        }'''
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.default_provisioners, [
+            ProvisionerConfig('some-provisioner', {})
+        ])
+
+    def test_should_parse_config_with_multiple_provisioners_and_arguments(self):
+        json = '''{
+            "ostree_url": "http://example.com",
+            "ref": "ref",
+
+            "default-provisioners": [
+                {
+                    "provisioner": "prov-1"
+                },
+                {
+                    "arg1": "value1",
+                    "arg2": 5,
+                    "provisioner": "prov-3"
+                },
+                {
+                    "provisioner": "prov-2",
+                    "arg": true
+                }
+            ]
+        }'''
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.default_provisioners, [
+            ProvisionerConfig('prov-1', {}),
+            ProvisionerConfig('prov-3', {'arg1': 'value1', 'arg2': 5}),
+            ProvisionerConfig('prov-2', {'arg': True}),
+        ])
 
     def test_should_raise_config_exception_if_url_is_missing(self):
         json = '{"ref": "ostree/ref"}'
