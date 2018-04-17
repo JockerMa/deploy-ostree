@@ -61,7 +61,10 @@ class NewItemsHelper:
         return current_items - self.initial_items
 
     def get_current_items(self) -> Set[str]:
-        return set(filter(self.item_is_relevant, os.listdir(self.path)))
+        try:
+            return set(filter(self.item_is_relevant, os.listdir(self.path)))
+        except OSError:
+            return set()
 
     def item_is_relevant(self, item: str) -> bool:
         return not item.endswith(self.exclude_suffix)
