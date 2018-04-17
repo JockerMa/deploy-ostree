@@ -1,0 +1,24 @@
+{
+    "ostree_url": "http://localhost:8000/",
+    "ref": "test-commit",
+    "stateroot": "test-stateroot",
+
+    "default-provisioners": [
+        {
+            "provisioner": "etc-fstab"
+        },
+        {
+            "provisioner": "etc-network-interfaces",
+            "interface": "enp0s3"
+        },
+        {
+            "provisioner": "root-password",
+            "password": "rootpw"
+        },
+        {
+            "provisioner": "create-user",
+            "username": "testuser",
+            "password": "testpw"
+        }
+    ]
+}
