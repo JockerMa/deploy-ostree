@@ -58,11 +58,11 @@ class Config:
         data = json.load(fobj)
         try:
             return cls(
-                url=data['ostree_url'],
+                url=data['url'],
                 ref=data['ref'],
                 remote=data.get('remote'),
                 stateroot=data.get('stateroot'),
                 default_provisioners=ProvisionerConfig.from_dicts(data.get('default-provisioners', ())),
             )
         except KeyError as exc:
-            raise InvalidConfigError("missing key '{}'".format(exc.args))
+            raise InvalidConfigError("missing key '{}'".format(exc.args[0]))

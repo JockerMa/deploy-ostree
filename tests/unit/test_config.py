@@ -9,7 +9,7 @@ from deploy_ostree.config import Config, ProvisionerConfig, InvalidConfigError
 class TestConfig(TestCase):
     def test_should_parse_config_with_url_and_ref(self):
         json = '''{
-            "ostree_url": "https://example.com/ostree",
+            "url": "https://example.com/ostree",
             "ref": "fedora/28/x86_64/workstation",
 
             "ignored key": "ignored value"
@@ -21,7 +21,7 @@ class TestConfig(TestCase):
 
     def test_should_parse_config_with_remote_and_stateroot_names(self):
         json = '''{
-            "ostree_url": "https://example.com/ostree",
+            "url": "https://example.com/ostree",
             "ref": "fedora/28/x86_64/workstation",
 
             "remote": "atomicws",
@@ -36,7 +36,7 @@ class TestConfig(TestCase):
 
     def test_should_parse_config_with_empty_provisioners_list(self):
         json = '''{
-            "ostree_url": "http://example.com",
+            "url": "http://example.com",
             "ref": "ref",
 
             "default-provisioners": []
@@ -47,7 +47,7 @@ class TestConfig(TestCase):
 
     def test_should_parse_config_with_one_default_provisioner(self):
         json = '''{
-            "ostree_url": "http://example.com",
+            "url": "http://example.com",
             "ref": "ref",
 
             "default-provisioners": [
@@ -64,7 +64,7 @@ class TestConfig(TestCase):
 
     def test_should_parse_config_with_multiple_provisioners_and_arguments(self):
         json = '''{
-            "ostree_url": "http://example.com",
+            "url": "http://example.com",
             "ref": "ref",
 
             "default-provisioners": [
@@ -96,7 +96,7 @@ class TestConfig(TestCase):
             Config.parse_json(StringIO(json))
 
     def test_should_raise_config_exception_if_ref_is_missing(self):
-        json = '{"ostree_url": "http://example.com"}'
+        json = '{"url": "http://example.com"}'
         with self.assertRaises(InvalidConfigError, msg="missing key 'ref'"):
             Config.parse_json(StringIO(json))
 
