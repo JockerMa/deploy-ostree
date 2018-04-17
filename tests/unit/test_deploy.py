@@ -2,17 +2,24 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from io import StringIO
+import os
 from unittest import mock, TestCase
 from deploy_ostree.config import Config
+from deploy_ostree.steps.deploystep import DeployError
 from deploy_ostree.steps.deploy import Deploy, get_root_fs
 
 
 class TestDeploy(TestCase):
     @mock.patch('deploy_ostree.steps.deploy.run')
     @mock.patch('deploy_ostree.steps.deploy.get_root_fs')
-    def test_should_deploy_commit(self, get_root_fs_mock: mock.Mock, run_mock: mock.Mock):
+    @mock.patch('os.listdir')
+    def test_should_deploy_commit_and_set_deployment_folder(self, listdir_mock, get_root_fs_mock, run_mock):
         cfg = Config('url', 'fedora/28/x86_64/atomic-host', remote='fedora-atomic', stateroot='atomic-host')
         get_root_fs_mock.return_value = '/dev/mapper/atomic-root'
+        listdir_mock.side_effect = [
+            ['1234567.0', '1234567.0.origin'],
+            ['1234567.0.origin', 'abcdef.1.origin', 'abcdef.1', '1234567.0'],
+        ]
 
         steps = Deploy.get_steps(cfg)
         for step in steps:
@@ -26,6 +33,34 @@ class TestDeploy(TestCase):
                 'fedora-atomic:fedora/28/x86_64/atomic-host',
                 '--karg=root=/dev/mapper/atomic-root'
             ], check=True)
+        self.assertEqual(cfg.deployment_dir, os.path.join('/ostree', 'deploy', 'atomic-host', 'deploy', 'abcdef.1'))
+
+    @mock.patch('deploy_ostree.steps.deploy.run', mock.Mock())
+    @mock.patch('deploy_ostree.steps.deploy.get_root_fs', mock.Mock())
+    @mock.patch('os.listdir')
+    def test_should_raise_exception_if_nothing_was_added_to_deployments_dir(self, listdir_mock):
+        cfg = Config('url', 'ref')
+        listdir_mock.return_value = ['abcdef.1.origin', 'abcdef.1']
+
+        steps = Deploy.get_steps(cfg)
+        with self.assertRaises(DeployError):
+            for step in steps:
+                step.run()
+
+    @mock.patch('deploy_ostree.steps.deploy.run', mock.Mock())
+    @mock.patch('deploy_ostree.steps.deploy.get_root_fs', mock.Mock())
+    @mock.patch('os.listdir')
+    def test_should_raise_exception_if_too_many_elements_were_added_to_deployments_dir(self, listdir_mock):
+        cfg = Config('url', 'ref')
+        listdir_mock.side_effect = [
+            [],
+            ['1234567.0.origin', 'abcdef.1.origin', 'abcdef.1', '1234567.0'],
+        ]
+
+        steps = Deploy.get_steps(cfg)
+        with self.assertRaises(DeployError):
+            for step in steps:
+                step.run()
 
     def test_should_be_relevant(self):
         self.assertTrue(Deploy.is_relevant(mock.Mock()))

@@ -2,6 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import json
+import os.path
 from typing import Any, Iterable, Mapping, Optional, TextIO
 from uuid import uuid4
 
@@ -52,6 +53,16 @@ class Config:
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
         self.default_provisioners = list(default_provisioners)
+        self.deployment_name = None  # type: Optional[str]
+
+    @property
+    def deployment_dir(self) -> str:
+        if self.deployment_name is None:
+            raise RuntimeError('deployment name not set')
+        return os.path.join('/ostree', 'deploy', self.stateroot, 'deploy', self.deployment_name)
+
+    def set_deployment_name(self, deployment: str) -> None:
+        self.deployment_name = deployment
 
     @classmethod
     def parse_json(cls, fobj: TextIO):

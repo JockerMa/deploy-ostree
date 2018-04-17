@@ -2,6 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from io import StringIO
+import os.path
 from unittest import TestCase
 from deploy_ostree.config import Config, ProvisionerConfig, InvalidConfigError
 
@@ -111,3 +112,18 @@ class TestConfig(TestCase):
         cfg2 = Config('url', 'ref')
 
         self.assertNotEqual(cfg1.stateroot, cfg2.stateroot)
+
+    def test_deployment_path_should_raise_exception_if_name_is_not_set(self):
+        cfg = Config('url', 'ref')
+
+        with self.assertRaises(RuntimeError):
+            cfg.deployment_dir
+
+    def test_deployment_path_should_return_path_after_setting_name(self):
+        cfg = Config('url', 'ref', stateroot='test-stateroot')
+        cfg.set_deployment_name('deployment-name')
+
+        self.assertEqual(
+            cfg.deployment_dir,
+            os.path.join('/ostree', 'deploy', 'test-stateroot', 'deploy', 'deployment-name')
+        )
