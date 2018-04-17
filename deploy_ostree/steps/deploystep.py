@@ -5,6 +5,10 @@ from typing import Iterable, List, Type  # noqa
 from ..config import Config
 
 
+class DeployError(RuntimeError):
+    pass
+
+
 class DeployStep:
     def __init__(self, cfg: Config) -> None:
         pass

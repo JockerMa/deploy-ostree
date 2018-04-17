@@ -2,7 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from typing import Iterable, List, Type  # noqa
-from .deploystep import DeployStep
+from .deploystep import DeployStep, DeployError  # noqa
 from .http_remote import HttpRemote
 from .pull_ref import PullRef
 from .create_stateroot import CreateStateroot
