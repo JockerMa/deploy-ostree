@@ -8,8 +8,12 @@ from .fixture import Fixture
 from .. import ostree
 
 
-def sh(cmd):
-    return subprocess.run(cmd, shell=True)
+def sh(cmd, **kwargs):
+    return subprocess.run(cmd, shell=True, **kwargs)
+
+
+def sh_silent(cmd, **kwargs):
+    return sh(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, **kwargs)
 
 
 class OSTreeFixture(Fixture):
@@ -19,7 +23,7 @@ class OSTreeFixture(Fixture):
         ostree(['admin', 'init-fs', '/'])
 
     def tearDown(self):
-        sh('chattr -R -i /ostree')
+        sh_silent('chattr -R -i /ostree')
         sh('rm -rf /ostree/*')
         shutil.rmtree('/etc/ostree/remotes.d')
         for elem in os.listdir('/boot'):
