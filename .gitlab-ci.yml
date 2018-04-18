@@ -1,10 +1,36 @@
-image: docker
-services:
-  - docker:dind
+image: debian:9-slim
 
 before_script:
-  - apk add --no-cache make
+  - echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list.d/stretch-backports.list
+  - apt-get update
+  - apt-get install -y make python3
+  - apt-get install -y -t stretch-backports ostree
 
-test:
-  script:
-    - make qc
+stages:
+  - lint
+  - test
+  - integration
+
+lint:
+  stage: lint
+  before_script:
+    - apt-get update
+    - apt-get install -y python3-pip
+    - pip install .[dev]
+  script: make lint
+
+unit:
+  stage: test
+  script: make test/unit
+
+provisioners:
+  stage: test
+  script: make test/provisioners
+
+integration:
+  stage: test
+  script: make test/integration
+
+integration_long:
+  stage: integration
+  script: make test/integration_long
