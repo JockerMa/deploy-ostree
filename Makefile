@@ -15,12 +15,12 @@ lint:
 		--check-untyped-defs
 
 all-tests:
-	$(PYTHON) -m unittest discover -t . -s tests
+	$(PYTHON) -m unittest discover -v -t . -s tests
 
 qc/host: lint all-tests
 
 unit:
-	$(PYTHON) -m unittest discover -t . -s tests/unit
+	$(PYTHON) -m unittest discover -v -t . -s tests/unit
 
 # Debian
 image/debian:
