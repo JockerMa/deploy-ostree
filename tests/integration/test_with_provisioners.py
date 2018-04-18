@@ -26,6 +26,16 @@ class TestDeployWithProvisioners(FixtureTestCase):
             host_fstab = f.read()
         self.assertEqual(deployment_fstab, host_fstab)
 
+    def test_should_create_interfaces_file_for_loopback(self):
+        deployment = self.get_deployment()
+        with open(os.path.join(deployment, 'etc', 'network', 'interfaces.d', 'lo'), 'r') as f:
+            self.assertEqual(f.read().strip(), 'auto lo\niface lo inet loopback')
+
+    def test_should_create_interfaces_file_for_specified_interface(self):
+        deployment = self.get_deployment()
+        with open(os.path.join(deployment, 'etc', 'network', 'interfaces.d', 'default'), 'r') as f:
+            self.assertEqual(f.read().strip(), 'allow-hotplug enp0s3\niface enp0s3 inet dhcp')
+
     def get_deployment(self):
         deployments_dir = '/ostree/deploy/test-stateroot/deploy'
         elems = [elem for elem in os.listdir(deployments_dir) if not elem.endswith('.origin')]
