@@ -6,15 +6,12 @@ from typing import List
 from deploy_ostree.run import run, ProcessResult, ProcessError
 
 
-def deploy_ostree(extra_args: List[str], check: bool=True) -> ProcessResult:
-    result = run(
+def deploy_ostree(extra_args: List[str], check: bool=True, capture_output=False) -> ProcessResult:
+    return run(
         [sys.executable, '-mdeploy_ostree'] + extra_args,
-        capture_output=True,
+        capture_output=capture_output,
         check=check,
     )
-    print(result.stdout)
-    print(result.stderr)
-    return result
 
 
 def ostree(extra_args: List[str]) -> ProcessResult:
