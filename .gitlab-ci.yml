@@ -9,7 +9,6 @@ before_script:
 stages:
   - lint
   - test
-  - integration
 
 lint:
   stage: lint
@@ -32,5 +31,5 @@ integration:
   script: make test/integration
 
 integration_long:
-  stage: integration
+  stage: test
   script: make test/integration_long
