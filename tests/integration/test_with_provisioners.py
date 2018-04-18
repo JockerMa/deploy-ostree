@@ -9,6 +9,7 @@ from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 TESTS_DIR = os.path.dirname(__file__)
 
 
+@skip('WIP')
 class TestDeployWithProvisioners(FixtureTestCase):
     FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
 
@@ -17,7 +18,6 @@ class TestDeployWithProvisioners(FixtureTestCase):
         super().setUpClass()
         deploy_ostree([os.path.join(TESTS_DIR, 'default-provisioners.json')])
 
-    @skip('WIP')
     def test_should_copy_etc_fstab_from_host(self):
         deployment = self.get_deployment()
         with open(os.path.join(deployment, 'etc', 'fstab'), 'r') as f:
