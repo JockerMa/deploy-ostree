@@ -15,7 +15,7 @@ lint:
 		--check-untyped-defs
 
 all-tests:
-	$(PYTHON) setup.py test
+	$(PYTHON) -m unittest discover -t . -s tests
 
 qc/host: lint all-tests
 
