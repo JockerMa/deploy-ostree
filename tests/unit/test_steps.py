@@ -76,6 +76,7 @@ class TestGetDeploySteps(TestCase):
             'PullRef',
             'CreateStateroot',
             'Deploy',
+            'DefaultProvisioner',
         ]]
 
         with mock.patch.multiple('deploy_ostree.steps', **{clsname: mock for clsname, mock in mocks}):
