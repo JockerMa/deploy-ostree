@@ -2,16 +2,14 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
-from unittest import skip
 from .. import deploy_ostree
-from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
+from ..fixtures import FixtureTestCase, OSTreeFixture
 
 TESTS_DIR = os.path.dirname(__file__)
 
 
-@skip('WIP')
 class TestDeployWithProvisioners(FixtureTestCase):
-    FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
+    FIXTURES = [OSTreeFixture()]
 
     @classmethod
     def setUpClass(cls):
@@ -35,6 +33,14 @@ class TestDeployWithProvisioners(FixtureTestCase):
         deployment = self.get_deployment()
         with open(os.path.join(deployment, 'etc', 'network', 'interfaces.d', 'default'), 'r') as f:
             self.assertEqual(f.read().strip(), 'allow-hotplug enp0s3\niface enp0s3 inet dhcp')
+
+    def test_should_set_root_password(self):
+        deployment = self.get_deployment()
+        with open(os.path.join(deployment, 'etc', 'shadow'), 'r') as f:
+            for line in f:
+                parts = line.strip().split(':')
+                if parts[0] == 'root':
+                    self.assertNotEqual(parts[1], '*')
 
     def get_deployment(self):
         deployments_dir = '/ostree/deploy/test-stateroot/deploy'

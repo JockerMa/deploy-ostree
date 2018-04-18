@@ -1,6 +1,6 @@
 {
-    "url": "http://localhost:8000/",
-    "ref": "test-commit",
+    "url": "http://mirror.centos.org/centos/7/atomic/x86_64/repo/",
+    "ref": "centos-atomic-host/7/x86_64/standard",
     "stateroot": "test-stateroot",
 
     "default-provisioners": [
