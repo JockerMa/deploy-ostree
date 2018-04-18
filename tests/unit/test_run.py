@@ -15,7 +15,7 @@ class TestRun(TestCase):
 
         result = run(args)
 
-        mock_run.assert_called_once_with(args, stdout=None, stderr=None)
+        mock_run.assert_called_once_with(args, stdout=None, stderr=None, env=None)
         self.assertEqual(32, result.exitcode)
         self.assertIsNone(result.stdout)
         self.assertIsNone(result.stderr)
@@ -31,7 +31,7 @@ class TestRun(TestCase):
 
         result = run(args, capture_output=True, encoding='utf-16')
 
-        mock_run.assert_called_once_with(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        mock_run.assert_called_once_with(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=None)
         self.assertEqual(0, result.exitcode)
         self.assertEqual('stdout', result.stdout)
         self.assertEqual('stderr', result.stderr)
@@ -52,3 +52,24 @@ class TestRun(TestCase):
 
         with self.assertRaises(ProcessError):
             run(args, check=True)
+
+    @mock.patch('subprocess.run')
+    @mock.patch('os.environ', {'HOME': '/home/user', 'USER': 'user'})
+    def test_should_extend_os_environ_with_given_environment(self, mock_run: mock.Mock):
+        args = ['/usr/bin/python3', '-m', 'http.server']
+
+        run(
+            args,
+            env={'extra1': 'value1', 'extra2': 'value2', 'USER': 'test'},
+        )
+
+        mock_run.assert_called_once_with(
+            args,
+            stdout=None,
+            stderr=None,
+            env={
+                'HOME': '/home/user',
+                'USER': 'test',
+                'extra1': 'value1',
+                'extra2': 'value2',
+            })
