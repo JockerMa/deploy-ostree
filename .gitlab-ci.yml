@@ -16,7 +16,7 @@ lint:
   before_script:
     - apt-get update
     - apt-get install -y python3-pip
-    - pip install .[dev]
+    - pip3 install .[dev]
   script: make lint
 
 unit:
