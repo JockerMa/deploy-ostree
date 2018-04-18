@@ -3,14 +3,6 @@
 
 from setuptools import setup
 from os import path
-import unittest
-
-
-def get_test_suite():
-    test_loader = unittest.TestLoader()
-    test_suite = test_loader.discover('tests', pattern='test_*.py',
-                                      top_level_dir='.')
-    return test_suite
 
 
 here = path.abspath(path.dirname(__file__))
@@ -53,5 +45,4 @@ setup(
             'deploy-ostree=deploy_ostree:main',
         ],
     },
-    test_suite='setup.get_test_suite',
 )
