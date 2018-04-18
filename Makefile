@@ -25,7 +25,10 @@ test/provisioners:
 test/integration:
 	$(UNITTEST) tests/integration
 
-test: test/unit test/provisioners test/integration
+test/integration_long:
+	$(UNITTEST) tests/integration_long
+
+test: test/unit test/provisioners test/integration test/integration_long
 
 qc/host: lint test
 
