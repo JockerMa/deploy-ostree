@@ -7,7 +7,7 @@ from .. import deploy_ostree
 
 class TestHelp(TestCase):
     def test_should_print_error_and_exit_if_called_with_no_arguments(self):
-        result = deploy_ostree([])
+        result = deploy_ostree([], check=False)
 
         self.assertIn('the following arguments are required', result.stderr)
         self.assertEqual(2, result.exitcode)
