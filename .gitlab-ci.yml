@@ -16,7 +16,7 @@ stages:
   before_script:
     - pip install .[dev]
   script:
-    - python3 -m unittest -v -t . -s $TESTS_DIR
+    - python3 -m unittest discover -v -t . -s $TESTS_DIR
 
 lint:
   <<: *test-template
