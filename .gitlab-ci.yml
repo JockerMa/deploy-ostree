@@ -1,13 +1,17 @@
-image: debian:9-slim
-before_script:
-  - echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list.d/stretch-backports.list
-  - apt-get update
-  - apt-get install -y make python3
-  - apt-get install -y -t stretch-backports ostree
+# image: debian:9-slim
+# before_script:
+#   - echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list.d/stretch-backports.list
+#   - apt-get update
+#   - apt-get install -y make python3
+#   - apt-get install -y -t stretch-backports ostree
+
+services:
+  - docker:dind
 
 stages:
   - lint
   - test
+  - build
   - integration
 
 .test-template: &test-template
@@ -35,10 +39,18 @@ provisioners:
   variables:
     TESTS_DIR: tests/provisioners
 
+docker-image:
+  stage: build
+  image: docker
+  script:
+    - docker build -t deploy-ostree .
+
 integration:
   stage: integration
-  script: make test/integration
+  image: docker
+  script:
+    - docker run --rm -i --privileged -v /ostree -v .:/package -w /package deploy-ostree python3 -m unittest discover -v -t . -s tests/integration
 
-integration_long:
-  stage: integration
-  script: make test/integration_long
+#integration_long:
+#  stage: integration
+#  script: make test/integration_long
