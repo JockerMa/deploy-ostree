@@ -1,10 +1,3 @@
-# image: debian:9-slim
-# before_script:
-#   - echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list.d/stretch-backports.list
-#   - apt-get update
-#   - apt-get install -y make python3
-#   - apt-get install -y -t stretch-backports ostree
-
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
@@ -14,52 +7,52 @@ stages:
   - build
   - integration
 
-.test-template: &test-template
-  stage: test
+.python-template: &python-template
   image: python:3.5
   before_script:
     - pip install .[dev]
-  script:
-    - python3 -m unittest discover -v -t . -s $TESTS_DIR
 
 lint:
-  <<: *test-template
+  <<: *python-template
   stage: lint
   script:
     - flake8 .
     - mypy .
 
 unit:
-  <<: *test-template
-  variables:
-    TESTS_DIR: tests/unit
+  <<: *python-template
+  stage: test
+  script:
+    - python3 -m unittest discover -v -t . -s tests/unit
 
 provisioners:
-  <<: *test-template
-  variables:
-    TESTS_DIR: tests/provisioners
+  <<: *python-template
+  stage: test
+  script:
+    - python3 -m unittest discover -v -t . -s tests/unit
 
-docker-image:
-  stage: build
+.docker-template: &docker-template
   image: docker
   services:
     - docker:dind
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+build:
+  <<: *docker-template
+  stage: build
   script:
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
 integration:
+  <<: *docker-template
   stage: integration
-  image: docker
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - docker run --rm -i --privileged -v /ostree -v $PWD/tests:/tests $IMAGE_TAG python3 -m unittest discover -v -t / -s /tests/integration
 
-#integration_long:
-#  stage: integration
-#  script: make test/integration_long
+integration-long:
+  <<: *docker-template
+  stage: integration
+  script:
+    - docker run --rm -i --privileged -v /ostree -v $PWD/tests:/tests $IMAGE_TAG python3 -m unittest discover -v -t / -s /tests/integration_long
