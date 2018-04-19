@@ -12,7 +12,7 @@ stages:
 
 .test-template: &test-template
   stage: test
-  image: python:3.5-alpine
+  image: python:3.5
   before_script:
     - pip install .[dev]
   script:
