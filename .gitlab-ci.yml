@@ -1,11 +1,14 @@
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  BRANCH_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  LATEST_TAG: $CI_REGISTRY_IMAGE:latest
 
 stages:
   - lint
   - test
   - build
   - integration
+  - release
 
 .python-template: &python-template
   image: python:3.5
@@ -56,3 +59,20 @@ integration-long:
   stage: integration
   script:
     - docker run --rm -i --privileged -v /ostree -v $PWD/tests:/tests $IMAGE_TAG python3 -m unittest discover -v -t / -s /tests/integration_long
+
+tag-branch:
+  <<: *docker-template
+  stage: release
+  script:
+    - docker pull $IMAGE_TAG
+    - docker tag $IMAGE_TAG $BRANCH_TAG
+    - docker push $BRANCH_TAG
+
+tag-latest:
+  <<: *docker-template
+  stage: release
+  only: master
+  script:
+    - docker pull $IMAGE_TAG
+    - docker tag $IMAGE_TAG $LATEST_TAG
+    - docker push $LATEST_TAG
