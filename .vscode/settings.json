@@ -1,8 +1,4 @@
 {
     "python.linting.flake8Enabled": true,
-    "python.linting.mypyEnabled": true,
-    "python.linting.mypyArgs": [
-        "--ignore-missing-imports",
-        "--check-untyped-defs"
-    ]
+    "python.linting.mypyEnabled": true
 }

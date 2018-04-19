@@ -12,9 +12,7 @@ dummy:
 # plain linting/test targets
 lint:
 	flake8 .
-	mypy . \
-		--ignore-missing-imports \
-		--check-untyped-defs
+	mypy .
 
 test/unit:
 	$(UNITTEST) tests/unit
