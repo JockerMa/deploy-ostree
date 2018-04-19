@@ -5,8 +5,8 @@
 #   - apt-get install -y make python3
 #   - apt-get install -y -t stretch-backports ostree
 
-services:
-  - docker:dind
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 stages:
   - lint
@@ -42,14 +42,21 @@ provisioners:
 docker-image:
   stage: build
   image: docker
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker build -t deploy-ostree .
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
 
 integration:
   stage: integration
   image: docker
+  services:
+    - docker:dind
   script:
-    - docker run --rm -i --privileged -v /ostree -v .:/package -w /package deploy-ostree python3 -m unittest discover -v -t . -s tests/integration
+    - docker run --rm -i --privileged -v /ostree -v $PWD/tests:/tests $IMAGE_TAG python3 -m unittest discover -v -t / -s /tests/integration
 
 #integration_long:
 #  stage: integration
