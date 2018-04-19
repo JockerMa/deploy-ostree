@@ -1,7 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-from setuptools import setup
+from setuptools import setup, find_packages
 from os import path
 
 
@@ -26,19 +26,19 @@ setup(
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',
 
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
 
-    packages=['deploy_ostree'],
+    packages=find_packages(exclude=['tests', 'tests.*']),
+    zip_safe=False,
     install_requires=[],
     extras_require={
         'dev': ['flake8', 'mypy'],
     },
     package_data={
-        'deploy_ostree': ['default-provisioners'],
+        'deploy_ostree': ['default-provisioners/*'],
     },
     entry_points={
         'console_scripts': [
