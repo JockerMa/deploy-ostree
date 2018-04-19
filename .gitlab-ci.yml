@@ -1,5 +1,4 @@
 image: debian:9-slim
-
 before_script:
   - echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list.d/stretch-backports.list
   - apt-get update
@@ -9,27 +8,37 @@ before_script:
 stages:
   - lint
   - test
+  - integration
+
+.test-template: &test-template
+  stage: test
+  image: python:3.5-alpine
+  before_script:
+    - pip install .[dev]
+  script:
+    - python3 -m unittest -v -t . -s $TESTS_DIR
 
 lint:
+  <<: *test-template
   stage: lint
-  before_script:
-    - apt-get update
-    - apt-get install -y python3-pip
-    - pip3 install .[dev]
-  script: make lint
+  script:
+    - flake8 .
+    - mypy .
 
 unit:
-  stage: test
-  script: make test/unit
+  <<: *test-template
+  variables:
+    TESTS_DIR: tests/unit
 
 provisioners:
-  stage: test
-  script: make test/provisioners
+  <<: *test-template
+  variables:
+    TESTS_DIR: tests/provisioners
 
 integration:
-  stage: test
+  stage: integration
   script: make test/integration
 
 integration_long:
-  stage: test
+  stage: integration
   script: make test/integration_long
