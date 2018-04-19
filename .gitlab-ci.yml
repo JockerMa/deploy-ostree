@@ -55,6 +55,8 @@ integration:
   image: docker
   services:
     - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - docker run --rm -i --privileged -v /ostree -v $PWD/tests:/tests $IMAGE_TAG python3 -m unittest discover -v -t / -s /tests/integration
 
