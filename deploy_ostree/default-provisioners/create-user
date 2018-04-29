@@ -2,3 +2,5 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 set -eu
+
+echo ${DEPLOY_OSTREE_username} ${DEPLOY_OSTREE_password} > /dev/null
