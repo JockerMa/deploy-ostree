@@ -4,6 +4,7 @@
 import crypt
 import os.path
 from typing import Iterator
+from unittest import skip
 from .. import deploy_ostree
 from ..fixtures import FixtureTestCase, OSTreeFixture
 
@@ -75,6 +76,23 @@ class TestDeployWithProvisioners(FixtureTestCase):
         for spwd in shadow(deployment):
             if spwd.name == 'root':
                 self.assertTrue(spwd.password_is('rootpw'))
+
+    @skip('TBD')
+    def test_should_create_user(self):
+        deployment = self.get_deployment()
+        pwd_entry = None
+        shadow_entry = None
+
+        for pwd in passwd(deployment):
+            if pwd.name == 'testuser':
+                pwd_entry = pwd
+        for spwd in shadow(deployment):
+            if spwd.name == 'testuser':
+                shadow_entry = spwd
+
+        self.assertIsNotNone(pwd_entry)
+        self.assertIsNotNone(shadow_entry)
+        self.assertTrue(shadow_entry.password_is('testpw'))
 
     def get_deployment(self):
         deployments_dir = '/ostree/deploy/test-stateroot/deploy'
