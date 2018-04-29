@@ -3,4 +3,5 @@
 # Licensed under the MIT license, see LICENSE for details.
 set -eu
 
-echo ${DEPLOY_OSTREE_username} ${DEPLOY_OSTREE_password} > /dev/null
+chroot $1 useradd -M ${DEPLOY_OSTREE_username}
+echo ${DEPLOY_OSTREE_username}:${DEPLOY_OSTREE_password} | chroot $1 chpasswd

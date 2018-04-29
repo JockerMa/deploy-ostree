@@ -4,7 +4,6 @@
 import crypt
 import os.path
 from typing import Iterator
-from unittest import skip
 from .. import deploy_ostree
 from ..fixtures import FixtureTestCase, OSTreeFixture
 
@@ -77,7 +76,6 @@ class TestDeployWithProvisioners(FixtureTestCase):
             if spwd.name == 'root':
                 self.assertTrue(spwd.password_is('rootpw'))
 
-    @skip('TBD')
     def test_should_create_user(self):
         deployment = self.get_deployment()
         pwd_entry = None
