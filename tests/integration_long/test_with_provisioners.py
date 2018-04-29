@@ -1,11 +1,47 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+import crypt
 import os.path
+from typing import Iterator
 from .. import deploy_ostree
 from ..fixtures import FixtureTestCase, OSTreeFixture
 
 TESTS_DIR = os.path.dirname(__file__)
+
+
+class PasswdEntry:
+    def __init__(self, line: str) -> None:
+        parts = line.split(':')
+        self.name = parts[0]
+        self.pwd = parts[1]
+        self.uid = parts[2]
+        self.gid = parts[3]
+        self.home = parts[5]
+        self.shell = parts[6]
+
+
+class ShadowEntry:
+    def __init__(self, line: str) -> None:
+        parts = line.split(':')
+        self.name = parts[0]
+        self.pwd = parts[1]
+
+    def password_is(self, password: str) -> bool:
+        crypted = crypt.crypt(password, self.pwd)
+        return crypted == self.pwd
+
+
+def passwd(deployment_dir: str) -> Iterator[PasswdEntry]:
+    with open(os.path.join(deployment_dir, 'etc', 'passwd')) as f:
+        for line in f:
+            yield PasswdEntry(line.strip())
+
+
+def shadow(deployment_dir: str) -> Iterator[ShadowEntry]:
+    with open(os.path.join(deployment_dir, 'etc', 'shadow')) as f:
+        for line in f:
+            yield ShadowEntry(line.strip())
 
 
 class TestDeployWithProvisioners(FixtureTestCase):
@@ -36,11 +72,9 @@ class TestDeployWithProvisioners(FixtureTestCase):
 
     def test_should_set_root_password(self):
         deployment = self.get_deployment()
-        with open(os.path.join(deployment, 'etc', 'shadow'), 'r') as f:
-            for line in f:
-                parts = line.strip().split(':')
-                if parts[0] == 'root':
-                    self.assertNotEqual(parts[1], '*')
+        for spwd in shadow(deployment):
+            if spwd.name == 'root':
+                self.assertTrue(spwd.password_is('rootpw'))
 
     def get_deployment(self):
         deployments_dir = '/ostree/deploy/test-stateroot/deploy'
