@@ -9,7 +9,7 @@ from deploy_ostree.steps.http_remote import HttpRemote
 class TestHttpRemote(TestCase):
     @mock.patch('deploy_ostree.steps.http_remote.run')
     def test_should_add_ostree_remote_for_url_in_config(self, mock_run: mock.Mock):
-        cfg = Config(Source.url('https://example.com/ostree'), 'debian/9/i386/desktop', 'remote-name')
+        cfg = Config(Source.url('https://example.com/ostree'), 'debian/9/i386/desktop', remote='remote-name')
 
         steps = HttpRemote.get_steps(cfg)
         for step in steps:

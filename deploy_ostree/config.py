@@ -66,12 +66,15 @@ class Config:
         self,
         source: Source,
         ref: str,
+        *,
+        base_dir: str=os.curdir,
         remote: Optional[str]=None,
         stateroot: Optional[str]=None,
         default_provisioners: Iterable[ProvisionerConfig]=(),
     ) -> None:
         self._source = source
         self.ref = ref
+        self.base_dir = base_dir
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
         self.default_provisioners = list(default_provisioners)
@@ -95,7 +98,7 @@ class Config:
         self.deployment_name = deployment
 
     @classmethod
-    def parse_json(cls, fobj: TextIO):
+    def parse_json(cls, fobj: TextIO, *, base_dir=os.curdir):
         data = json.load(fobj)
 
         if 'url' in data and 'path' in data:
@@ -111,6 +114,7 @@ class Config:
             return cls(
                 source=source,
                 ref=data['ref'],
+                base_dir=base_dir,
                 remote=data.get('remote'),
                 stateroot=data.get('stateroot'),
                 default_provisioners=ProvisionerConfig.from_dicts(data.get('default-provisioners', ())),

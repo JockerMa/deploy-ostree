@@ -112,6 +112,18 @@ class TestConfig(TestCase):
             ProvisionerConfig('prov-2', {'arg': True}),
         ])
 
+    def test_should_take_base_dir_from_argument(self):
+        json = '{"path": "repo", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json), base_dir='/home/user/ostree')
+
+        self.assertEqual(cfg.base_dir, '/home/user/ostree')
+
+    def test_default_base_dir_should_be_curdir(self):
+        json = '{"path": "repo", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.base_dir, os.curdir)
+
     def test_should_raise_config_exception_if_neither_url_nor_path_is_present(self):
         json = '{"ref": "ostree/ref"}'
         with self.assertRaises(InvalidConfigError):
