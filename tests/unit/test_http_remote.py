@@ -30,5 +30,10 @@ class TestHttpRemote(TestCase):
 
         self.assertTrue(HttpRemote.is_relevant(cfg))
 
+    def test_should_not_be_relevant_if_source_is_path(self):
+        cfg = Config(Source.path('path'), 'ref')
+
+        self.assertFalse(HttpRemote.is_relevant(cfg))
+
     def test_title_should_be_str(self):
         self.assertIsInstance(HttpRemote(mock.Mock()).title, str)

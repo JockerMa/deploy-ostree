@@ -136,6 +136,12 @@ class TestConfig(TestCase):
 
         self.assertEqual(cfg.path, 'repo/path')
 
+    def test_path_should_not_include_base_dir_if_absolute(self):
+        json = '{"path": "/srv/ostree", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json), base_dir='/home/user/')
+
+        self.assertEqual(cfg.path, '/srv/ostree')
+
     def test_should_raise_config_exception_if_neither_url_nor_path_is_present(self):
         json = '{"ref": "ostree/ref"}'
         with self.assertRaises(InvalidConfigError):

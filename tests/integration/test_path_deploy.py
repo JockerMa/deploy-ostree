@@ -25,7 +25,7 @@ class TestPathDeploy(FixtureTestCase):
 
     def test_should_add_named_remote(self):
         url = ostree(['remote', 'show-url', self.remote]).stdout.strip()
-        self.assertEqual(url, 'file:%s' % self.commit_fixture.repo_dir)
+        self.assertEqual(url, 'file://%s' % self.commit_fixture.repo_dir.name)
 
     def test_should_pull_ref_from_remote(self):
         refs = [ref.strip() for ref in ostree(['refs']).stdout.splitlines()]
