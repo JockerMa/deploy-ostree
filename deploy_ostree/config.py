@@ -70,7 +70,7 @@ class Config:
         stateroot: Optional[str]=None,
         default_provisioners: Iterable[ProvisionerConfig]=(),
     ) -> None:
-        self.source = source
+        self._source = source
         self.ref = ref
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
@@ -78,8 +78,12 @@ class Config:
         self.deployment_name = None  # type: Optional[str]
 
     @property
-    def url(self):
-        return self.source.value if self.source.is_url else None
+    def url(self) -> Optional[str]:
+        return self._source.value if self._source.is_url else None
+
+    @property
+    def path(self) -> Optional[str]:
+        return self._source.value if self._source.is_path else None
 
     @property
     def deployment_dir(self) -> str:
@@ -93,9 +97,19 @@ class Config:
     @classmethod
     def parse_json(cls, fobj: TextIO):
         data = json.load(fobj)
+
+        if 'url' in data and 'path' in data:
+            raise InvalidConfigError("both 'url' and 'path' are present")
+        elif 'url' in data:
+            source = Source.url(data['url'])
+        elif 'path' in data:
+            source = Source.path(data['path'])
+        else:
+            raise InvalidConfigError("neither 'url' nor 'path' are present")
+
         try:
             return cls(
-                source=Source.url(data['url']),
+                source=source,
                 ref=data['ref'],
                 remote=data.get('remote'),
                 stateroot=data.get('stateroot'),

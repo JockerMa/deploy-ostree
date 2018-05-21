@@ -18,7 +18,28 @@ class TestConfig(TestCase):
         cfg = Config.parse_json(StringIO(json))
 
         self.assertEqual('https://example.com/ostree', cfg.url)
+        self.assertIsNone(cfg.path)
         self.assertEqual('fedora/28/x86_64/workstation', cfg.ref)
+
+    def test_should_parse_config_with_path_and_ref(self):
+        json = '''{
+            "path": "/srv/ostree",
+            "ref": "fedora/28/x86_64/workstation"
+        }'''
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual('/srv/ostree', cfg.path)
+        self.assertIsNone(cfg.url)
+        self.assertEqual('fedora/28/x86_64/workstation', cfg.ref)
+
+    def test_should_raise_config_exception_if_both_url_and_path_are_present(self):
+        json = '''{
+            "url": "https://example.com/ostree",
+            "path": "/srv/ostree",
+            "ref": "fedora/28/x86_64/workstation"
+        }'''
+        with self.assertRaises(InvalidConfigError):
+            Config.parse_json(StringIO(json))
 
     def test_should_parse_config_with_remote_and_stateroot_names(self):
         json = '''{
@@ -37,7 +58,7 @@ class TestConfig(TestCase):
 
     def test_should_parse_config_with_empty_provisioners_list(self):
         json = '''{
-            "url": "http://example.com",
+            "path": "/srv/ostree",
             "ref": "ref",
 
             "default-provisioners": []
@@ -65,7 +86,7 @@ class TestConfig(TestCase):
 
     def test_should_parse_config_with_multiple_provisioners_and_arguments(self):
         json = '''{
-            "url": "http://example.com",
+            "path": "/srv/ostree",
             "ref": "ref",
 
             "default-provisioners": [
@@ -91,19 +112,19 @@ class TestConfig(TestCase):
             ProvisionerConfig('prov-2', {'arg': True}),
         ])
 
-    def test_should_raise_config_exception_if_neither_url_no_path_is_present(self):
+    def test_should_raise_config_exception_if_neither_url_nor_path_is_present(self):
         json = '{"ref": "ostree/ref"}'
-        with self.assertRaises(InvalidConfigError, msg="missing key 'ostree_url'"):
+        with self.assertRaises(InvalidConfigError):
             Config.parse_json(StringIO(json))
 
     def test_should_raise_config_exception_if_url_is_present_and_ref_is_missing(self):
         json = '{"url": "http://example.com"}'
-        with self.assertRaises(InvalidConfigError, msg="missing key 'ref'"):
+        with self.assertRaises(InvalidConfigError):
             Config.parse_json(StringIO(json))
 
     def test_should_raise_config_exception_if_path_is_present_and_ref_is_missing(self):
         json = '{"path": "/os/tree"}'
-        with self.assertRaises(InvalidConfigError, msg="missing key 'ref'"):
+        with self.assertRaises(InvalidConfigError):
             Config.parse_json(StringIO(json))
 
     def test_remote_name_should_be_randomly_generated_if_not_specified(self):
