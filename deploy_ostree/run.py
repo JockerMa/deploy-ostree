@@ -11,8 +11,8 @@ class ProcessResult:
     def __init__(
         self,
         exitcode: int,
-        stdout: Optional[str]=None,
-        stderr: Optional[str]=None
+        stdout: str='',
+        stderr: str=''
     ) -> None:
         self.exitcode = exitcode
         self.stdout = stdout
@@ -58,5 +58,5 @@ def convert_result(result: subprocess.CompletedProcess, encoding: str) -> Proces
         maybe_decode(result.stderr, encoding))
 
 
-def maybe_decode(value: Optional[bytes], encoding: str) -> Optional[str]:
-    return value.decode(encoding) if value is not None else None
+def maybe_decode(value: Optional[bytes], encoding: str) -> str:
+    return value.decode(encoding) if value is not None else ''
