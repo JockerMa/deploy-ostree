@@ -2,14 +2,14 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from unittest import mock, TestCase
-from deploy_ostree.config import Config
+from deploy_ostree.config import Config, Source
 from deploy_ostree.steps.pull_ref import PullRef
 
 
 class TestPullRef(TestCase):
     @mock.patch('deploy_ostree.steps.pull_ref.run')
     def test_should_pull_ref(self, run_mock: mock.Mock):
-        cfg = Config('url', 'fedora/28/x86_64/workstation', remote='ostree-remote')
+        cfg = Config(Source.url('url'), 'fedora/28/x86_64/workstation', remote='ostree-remote')
 
         steps = PullRef.get_steps(cfg)
         for step in steps:

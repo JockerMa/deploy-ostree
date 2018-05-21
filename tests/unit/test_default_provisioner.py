@@ -5,17 +5,17 @@ import os.path
 from unittest import mock, TestCase, skip  # noqa
 import deploy_ostree
 from deploy_ostree.steps.default_provisioner import DefaultProvisioner
-from deploy_ostree.config import Config, ProvisionerConfig
+from deploy_ostree.config import Config, ProvisionerConfig, Source
 
 
 class TestDefaultProvisioner(TestCase):
     def test_should_be_relevant_if_default_provisioners_are_not_empty(self):
-        cfg = Config('url', 'ref', default_provisioners=[ProvisionerConfig('name', {})])
+        cfg = Config(Source.url('url'), 'ref', default_provisioners=[ProvisionerConfig('name', {})])
 
         self.assertTrue(DefaultProvisioner.is_relevant(cfg))
 
     def test_should_not_be_relevant_if_no_default_provisioners(self):
-        cfg = Config('url', 'ref', default_provisioners=[])
+        cfg = Config(Source.url('url'), 'ref', default_provisioners=[])
 
         self.assertFalse(DefaultProvisioner.is_relevant(cfg))
 
@@ -24,7 +24,7 @@ class TestDefaultProvisioner(TestCase):
 
     @mock.patch('deploy_ostree.steps.default_provisioner.run')
     def test_should_run_provisioner_script_per_config(self, run_mock: mock.Mock):
-        cfg = Config('url', 'ref', stateroot='test', default_provisioners=[
+        cfg = Config(Source.url('url'), 'ref', stateroot='test', default_provisioners=[
             ProvisionerConfig('name', {}),
             ProvisionerConfig('name2', {'arg': 'value'}),
         ])

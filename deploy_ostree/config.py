@@ -39,21 +39,47 @@ class ProvisionerConfig:
         return 'ProvisionerConfig(name=%r, args=%r)' % (self.name, self.args)
 
 
+class Source:
+    def __init__(self, type: str, value: str) -> None:
+        self.type = type
+        self.value = value
+
+    @staticmethod
+    def url(value: str):
+        return Source('url', value)
+
+    @staticmethod
+    def path(value: str):
+        return Source('path', value)
+
+    @property
+    def is_url(self):
+        return self.type == 'url'
+
+    @property
+    def is_path(self):
+        return self.type == 'path'
+
+
 class Config:
     def __init__(
         self,
-        url: str,
+        source: Source,
         ref: str,
         remote: Optional[str]=None,
         stateroot: Optional[str]=None,
         default_provisioners: Iterable[ProvisionerConfig]=(),
     ) -> None:
-        self.url = url
+        self.source = source
         self.ref = ref
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
         self.default_provisioners = list(default_provisioners)
         self.deployment_name = None  # type: Optional[str]
+
+    @property
+    def url(self):
+        return self.source.value if self.source.is_url else None
 
     @property
     def deployment_dir(self) -> str:
@@ -69,7 +95,7 @@ class Config:
         data = json.load(fobj)
         try:
             return cls(
-                url=data['url'],
+                source=Source.url(data['url']),
                 ref=data['ref'],
                 remote=data.get('remote'),
                 stateroot=data.get('stateroot'),

@@ -4,7 +4,7 @@
 from io import StringIO
 import os.path
 from unittest import TestCase
-from deploy_ostree.config import Config, ProvisionerConfig, InvalidConfigError
+from deploy_ostree.config import Config, ProvisionerConfig, InvalidConfigError, Source
 
 
 class TestConfig(TestCase):
@@ -91,36 +91,41 @@ class TestConfig(TestCase):
             ProvisionerConfig('prov-2', {'arg': True}),
         ])
 
-    def test_should_raise_config_exception_if_url_is_missing(self):
+    def test_should_raise_config_exception_if_neither_url_no_path_is_present(self):
         json = '{"ref": "ostree/ref"}'
         with self.assertRaises(InvalidConfigError, msg="missing key 'ostree_url'"):
             Config.parse_json(StringIO(json))
 
-    def test_should_raise_config_exception_if_ref_is_missing(self):
+    def test_should_raise_config_exception_if_url_is_present_and_ref_is_missing(self):
         json = '{"url": "http://example.com"}'
         with self.assertRaises(InvalidConfigError, msg="missing key 'ref'"):
             Config.parse_json(StringIO(json))
 
+    def test_should_raise_config_exception_if_path_is_present_and_ref_is_missing(self):
+        json = '{"path": "/os/tree"}'
+        with self.assertRaises(InvalidConfigError, msg="missing key 'ref'"):
+            Config.parse_json(StringIO(json))
+
     def test_remote_name_should_be_randomly_generated_if_not_specified(self):
-        cfg1 = Config('url', 'ref')
-        cfg2 = Config('url', 'ref')
+        cfg1 = Config(Source.url('url'), 'ref')
+        cfg2 = Config(Source.url('url'), 'ref')
 
         self.assertNotEqual(cfg1.remote, cfg2.remote)
 
     def test_stateroot_should_be_randomly_generated_if_not_specified(self):
-        cfg1 = Config('url', 'ref')
-        cfg2 = Config('url', 'ref')
+        cfg1 = Config(Source.url('url'), 'ref')
+        cfg2 = Config(Source.url('url'), 'ref')
 
         self.assertNotEqual(cfg1.stateroot, cfg2.stateroot)
 
     def test_deployment_path_should_raise_exception_if_name_is_not_set(self):
-        cfg = Config('url', 'ref')
+        cfg = Config(Source.url('url'), 'ref')
 
         with self.assertRaises(RuntimeError):
             cfg.deployment_dir
 
     def test_deployment_path_should_return_path_after_setting_name(self):
-        cfg = Config('url', 'ref', stateroot='test-stateroot')
+        cfg = Config(Source.url('url'), 'ref', stateroot='test-stateroot')
         cfg.set_deployment_name('deployment-name')
 
         self.assertEqual(

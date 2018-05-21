@@ -4,7 +4,7 @@
 from io import StringIO
 import os
 from unittest import mock, TestCase
-from deploy_ostree.config import Config
+from deploy_ostree.config import Config, Source
 from deploy_ostree.steps.deploystep import DeployError
 from deploy_ostree.steps.deploy import Deploy, get_root_fs
 
@@ -14,7 +14,7 @@ class TestDeploy(TestCase):
     @mock.patch('deploy_ostree.steps.deploy.get_root_fs')
     @mock.patch('os.listdir')
     def test_should_deploy_commit_and_set_deployment_folder(self, listdir_mock, get_root_fs_mock, run_mock):
-        cfg = Config('url', 'fedora/28/x86_64/atomic-host', remote='fedora-atomic', stateroot='atomic-host')
+        cfg = Config(Source.url('url'), 'fedora/28/x86_64/atomic-host', remote='fedora-atomic', stateroot='atomic-host')
         get_root_fs_mock.return_value = '/dev/mapper/atomic-root'
         listdir_mock.side_effect = [
             ['1234567.0', '1234567.0.origin'],
@@ -39,7 +39,7 @@ class TestDeploy(TestCase):
     @mock.patch('deploy_ostree.steps.deploy.get_root_fs', mock.Mock())
     @mock.patch('os.listdir')
     def test_should_raise_exception_if_nothing_was_added_to_deployments_dir(self, listdir_mock):
-        cfg = Config('url', 'ref')
+        cfg = Config(Source.url('url'), 'ref')
         listdir_mock.return_value = ['abcdef.1.origin', 'abcdef.1']
 
         steps = Deploy.get_steps(cfg)
@@ -51,7 +51,7 @@ class TestDeploy(TestCase):
     @mock.patch('deploy_ostree.steps.deploy.get_root_fs', mock.Mock())
     @mock.patch('os.listdir')
     def test_should_raise_exception_if_too_many_elements_were_added_to_deployments_dir(self, listdir_mock):
-        cfg = Config('url', 'ref')
+        cfg = Config(Source.url('url'), 'ref')
         listdir_mock.side_effect = [
             [],
             ['1234567.0.origin', 'abcdef.1.origin', 'abcdef.1', '1234567.0'],
