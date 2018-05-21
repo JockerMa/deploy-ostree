@@ -67,7 +67,7 @@ class Config:
         source: Source,
         ref: str,
         *,
-        base_dir: str=os.curdir,
+        base_dir: str='',
         remote: Optional[str]=None,
         stateroot: Optional[str]=None,
         default_provisioners: Iterable[ProvisionerConfig]=()
@@ -86,7 +86,7 @@ class Config:
 
     @property
     def path(self) -> Optional[str]:
-        return self._source.value if self._source.is_path else None
+        return os.path.join(self.base_dir, self._source.value) if self._source.is_path else None
 
     @property
     def deployment_dir(self) -> str:
@@ -98,7 +98,7 @@ class Config:
         self.deployment_name = deployment
 
     @classmethod
-    def parse_json(cls, fobj: TextIO, *, base_dir=os.curdir):
+    def parse_json(cls, fobj: TextIO, *, base_dir=''):
         data = json.load(fobj)
 
         if 'url' in data and 'path' in data:
