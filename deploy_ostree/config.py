@@ -70,7 +70,7 @@ class Config:
         base_dir: str=os.curdir,
         remote: Optional[str]=None,
         stateroot: Optional[str]=None,
-        default_provisioners: Iterable[ProvisionerConfig]=(),
+        default_provisioners: Iterable[ProvisionerConfig]=()
     ) -> None:
         self._source = source
         self.ref = ref
