@@ -27,6 +27,6 @@ def main():
     parser = build_argument_parser()
     args = parser.parse_args(sys.argv[1:])
     with open(args.config, encoding='utf-8') as fobj:
-        cfg = Config.parse_json(fobj, base_dir=os.path.dirname(os.path.abspath(args.config)))
+        cfg = Config.parse_json(fobj, base_dir=os.path.dirname(args.config))
     steps = get_deploy_steps(cfg)
     steps.run()

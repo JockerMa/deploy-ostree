@@ -2,29 +2,30 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
+import shutil
 from .. import deploy_ostree, ostree
 from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 
 TESTS_DIR = os.path.dirname(__file__)
 
 
-class TestNamedDeploy(FixtureTestCase):
-    url = 'http://localhost:8000/'
+class TestPathDeploy(FixtureTestCase):
     ref = 'test-commit'
     remote = 'test-remote'
 
-    FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
+    commit_fixture = OSTreeCommitFixture()
+    FIXTURES = [OSTreeFixture(), commit_fixture]
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        deploy_ostree([os.path.join(TESTS_DIR, 'named-deploy.json')])
+        deploy_config = os.path.join(cls.commit_fixture.repo_dir.name, 'deploy.json')
+        shutil.copy(os.path.join(TESTS_DIR, 'path-deploy.json'), deploy_config)
+        deploy_ostree([deploy_config])
 
     def test_should_add_named_remote(self):
         url = ostree(['remote', 'show-url', self.remote]).stdout_str.strip()
-        self.assertEqual(
-            self.url,
-            url)
+        self.assertEqual(url, 'file://%s' % self.commit_fixture.repo_dir.name)
 
     def test_should_pull_ref_from_remote(self):
         refs = [ref.strip() for ref in ostree(['refs']).stdout_str.splitlines()]

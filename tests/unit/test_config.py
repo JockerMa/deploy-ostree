@@ -118,11 +118,29 @@ class TestConfig(TestCase):
 
         self.assertEqual(cfg.base_dir, '/home/user/ostree')
 
-    def test_default_base_dir_should_be_curdir(self):
+    def test_default_base_dir_should_be_empty(self):
         json = '{"path": "repo", "ref": "ref"}'
         cfg = Config.parse_json(StringIO(json))
 
-        self.assertEqual(cfg.base_dir, os.curdir)
+        self.assertEqual(cfg.base_dir, '')
+
+    def test_path_should_include_base_dir(self):
+        json = '{"path": "repo", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json), base_dir='ostree')
+
+        self.assertEqual(cfg.path, os.path.join('ostree', 'repo'))
+
+    def test_path_should_not_specifically_include_base_dir_if_default(self):
+        json = '{"path": "repo/path", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.path, 'repo/path')
+
+    def test_path_should_not_include_base_dir_if_absolute(self):
+        json = '{"path": "/srv/ostree", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json), base_dir='/home/user/')
+
+        self.assertEqual(cfg.path, '/srv/ostree')
 
     def test_should_raise_config_exception_if_neither_url_nor_path_is_present(self):
         json = '{"ref": "ostree/ref"}'

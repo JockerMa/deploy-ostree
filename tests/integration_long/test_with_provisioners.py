@@ -90,7 +90,8 @@ class TestDeployWithProvisioners(FixtureTestCase):
 
         self.assertIsNotNone(pwd_entry)
         self.assertIsNotNone(shadow_entry)
-        self.assertTrue(shadow_entry.password_is('testpw'))
+        if shadow_entry is not None:
+            self.assertTrue(shadow_entry.password_is('testpw'))
 
     def get_deployment(self):
         deployments_dir = '/ostree/deploy/test-stateroot/deploy'

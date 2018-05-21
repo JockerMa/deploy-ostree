@@ -1,0 +1,7 @@
+{
+    "path": ".",
+    "ref": "test-commit",
+
+    "remote": "test-remote",
+    "stateroot": "test-stateroot"
+}

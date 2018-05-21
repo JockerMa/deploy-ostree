@@ -18,6 +18,14 @@ class ProcessResult:
         self.stdout = stdout
         self.stderr = stderr
 
+    @property
+    def stdout_str(self) -> str:
+        return self.stdout or ''
+
+    @property
+    def stderr_str(self) -> str:
+        return self.stderr or ''
+
 
 class ProcessError(RuntimeError):
     def __init__(self, result: ProcessResult) -> None:

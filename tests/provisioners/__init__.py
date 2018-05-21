@@ -12,7 +12,7 @@ PROVISIONER_DIR = os.path.join(os.path.dirname(deploy_ostree.__file__), 'default
 
 
 class ProvisionerTestCase(TestCase):
-    PROVISIONER = None  # type: Optional[str]
+    PROVISIONER = ''
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
