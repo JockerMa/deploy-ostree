@@ -21,11 +21,11 @@ class TestMultipleDeploys(FixtureTestCase):
         remotes = self.get_remotes()
         self.assertEqual(2, len(remotes))
         for remote in remotes:
-            url = ostree(['remote', 'show-url', remote]).stdout.strip()
+            url = ostree(['remote', 'show-url', remote]).stdout_str.strip()
             self.assertEqual('http://localhost:8000/', url)
 
     def test_should_pull_ref_from_remotes(self):
-        refs = [ref.strip() for ref in ostree(['refs']).stdout.splitlines()]
+        refs = [ref.strip() for ref in ostree(['refs']).stdout_str.splitlines()]
         self.assertGreaterEqual(len(refs), 2)
         for remote in self.get_remotes():
             self.assertIn('%s:test-commit' % remote, refs)
@@ -42,4 +42,4 @@ class TestMultipleDeploys(FixtureTestCase):
             self.assertTrue(any(entry.startswith('ostree-%s' % stateroot) for entry in entries))
 
     def get_remotes(self):
-        return [line.strip() for line in ostree(['remote', 'list']).stdout.splitlines()]
+        return [line.strip() for line in ostree(['remote', 'list']).stdout_str.splitlines()]

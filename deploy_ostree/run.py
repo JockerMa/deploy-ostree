@@ -11,12 +11,20 @@ class ProcessResult:
     def __init__(
         self,
         exitcode: int,
-        stdout: str='',
-        stderr: str=''
+        stdout: Optional[str]=None,
+        stderr: Optional[str]=None
     ) -> None:
         self.exitcode = exitcode
         self.stdout = stdout
         self.stderr = stderr
+
+    @property
+    def stdout_str(self) -> str:
+        return self.stdout or ''
+
+    @property
+    def stderr_str(self) -> str:
+        return self.stderr or ''
 
 
 class ProcessError(RuntimeError):
@@ -58,5 +66,5 @@ def convert_result(result: subprocess.CompletedProcess, encoding: str) -> Proces
         maybe_decode(result.stderr, encoding))
 
 
-def maybe_decode(value: Optional[bytes], encoding: str) -> str:
-    return value.decode(encoding) if value is not None else ''
+def maybe_decode(value: Optional[bytes], encoding: str) -> Optional[str]:
+    return value.decode(encoding) if value is not None else None
