@@ -1,5 +1,5 @@
 variables:
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   BRANCH_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   LATEST_TAG: $CI_REGISTRY_IMAGE:latest
 
@@ -19,54 +19,46 @@ lint:
   <<: *python-template
   stage: lint
   script:
-    - flake8 .
-    - mypy .
+    - make lint
 
 unit:
   <<: *python-template
   stage: test
   script:
-    - python3 -m unittest discover -v -t . -s tests/unit
+    - make test/unit
 
 provisioners:
   <<: *python-template
   stage: test
   script:
-    - python3 -m unittest discover -v -t . -s tests/unit
+    - make test/provisioners
 
 .docker-template: &docker-template
   image: docker
   services:
     - docker:dind
   before_script:
+    - apk add --no-cache make
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
 build:
   <<: *docker-template
   stage: build
   script:
-    - docker build -t $IMAGE_TAG .
+    - make IMAGE_TAG=$IMAGE_TAG build/docker
     - docker push $IMAGE_TAG
 
 integration:
   <<: *docker-template
   stage: integration
   script:
-    - docker run --rm -i --privileged -v /ostree -v $PWD/tests:/tests $IMAGE_TAG python3 -m unittest discover -v -t / -s /tests/integration
+    - make IMAGE_TAG=$IMAGE_TAG test/integration
 
 integration-long:
   <<: *docker-template
   stage: integration
   script:
-    - docker run --rm -i --privileged -v /ostree -v $PWD/tests:/tests $IMAGE_TAG python3 -m unittest discover -v -t / -s /tests/integration_long
-
-tag-branch:
-  <<: *docker-template
-  stage: release
-  script:
-    - docker pull $IMAGE_TAG
-    - docker tag $IMAGE_TAG $BRANCH_TAG
-    - docker push $BRANCH_TAG
+    - make IMAGE_TAG=$IMAGE_TAG test/integration_long
 
 tag-latest:
   <<: *docker-template

@@ -1,41 +1,33 @@
+IMAGE_TAG := deploy-ostree:latest
+SRC_DIR := $(PWD)
+
 ifeq ($(OS),Windows_NT)
 	PYTHON := py -3
 else
 	PYTHON := python3
 endif
 
-UNITTEST := $(PYTHON) -m unittest discover -v -t . -s
+LOCAL_UNITTEST := $(PYTHON) -m unittest discover -v -t . -s
 
-dummy:
-	@echo please select a target explicitly
+DOCKER_UNITTEST := docker run --rm -i --privileged -v /ostree -v $(SRC_DIR)/tests:/tests $(IMAGE_TAG) python3 -m unittest discover -v -t / -s
 
-# plain linting/test targets
+all: lint test/unit test/provisioners build/docker test/integration test/integration_long
+
 lint:
 	flake8 .
 	mypy .
 
 test/unit:
-	$(UNITTEST) tests/unit
+	$(LOCAL_UNITTEST) tests/unit
 
 test/provisioners:
-	$(UNITTEST) tests/provisioners
+	$(LOCAL_UNITTEST) tests/provisioners
+
+build/docker:
+	docker build -t $(IMAGE_TAG) .
 
 test/integration:
-	$(UNITTEST) tests/integration
+	$(DOCKER_UNITTEST) tests/integration
 
 test/integration_long:
-	$(UNITTEST) tests/integration_long
-
-test: test/unit test/provisioners test/integration test/integration_long
-
-qc/host: lint test
-
-# Debian
-image/debian:
-	docker build -t deploy-ostree-debian -f Dockerfile.debian .
-
-qc/debian: image/debian
-	docker run --rm --privileged -i -v /ostree deploy-ostree-debian
-
-# combined targets for all Docker versions
-qc: qc/debian
+	$(DOCKER_UNITTEST) tests/integration_long
