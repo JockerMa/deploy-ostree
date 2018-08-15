@@ -11,7 +11,7 @@ LOCAL_UNITTEST := $(PYTHON) -m unittest discover -v -t . -s
 
 DOCKER_UNITTEST := docker run --rm -i --privileged -v /ostree -v $(SRC_DIR)/tests:/tests $(IMAGE_TAG) python3 -m unittest discover -v -t / -s
 
-all: lint test/unit test/provisioners build/docker test/integration test/integration_long
+all: lint test/unit test/provisioners build/docker build/wheel test/integration test/integration_long
 
 lint:
 	flake8 .
@@ -25,6 +25,10 @@ test/provisioners:
 
 build/docker:
 	docker build -t $(IMAGE_TAG) .
+
+build/wheel:
+	$(PYTHON) setup.py bdist_wheel
+	mv dist/*.whl ./
 
 test/integration:
 	$(DOCKER_UNITTEST) tests/integration
