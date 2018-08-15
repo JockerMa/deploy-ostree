@@ -1,6 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+import sys
 from typing import Iterable, List, Type  # noqa
 from .deploystep import DeployStep, DeployError  # noqa
 from .http_remote import HttpRemote
@@ -27,7 +28,13 @@ class DeploySteps:
 
     def cleanup(self):
         for step in reversed(self.steps):
+            self.do_cleanup(step)
+
+    def do_cleanup(self, step: DeployStep):
+        try:
             step.cleanup()
+        except Exception as exc:
+            print('%s (ignored)' % exc, file=sys.stderr)
 
 
 def get_deploy_steps(cfg: Config) -> DeploySteps:

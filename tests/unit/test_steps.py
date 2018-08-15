@@ -87,6 +87,14 @@ class TestDeploySteps(TestCase):
             mock.call.t1.cleanup(),
         ])
 
+    def test_should_ignore_exceptions_in_cleanup(self):
+        teststep = mock_teststep(True, 1)
+        teststep.cleanup.side_effect = Exception('cleanup error')
+
+        deploy_steps = DeploySteps(self.cfg, [teststep])
+        deploy_steps.run()
+        deploy_steps.cleanup()
+
 
 class TestGetDeploySteps(TestCase):
     cfg = mock.Mock()
