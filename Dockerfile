@@ -1,6 +1,7 @@
 FROM debian:9-slim
 RUN apt-get update && \
     apt-get install -y \
+        ca-certificates \
         python3 \
         python3-setuptools && \
     rm -rf /var/lib/apt/lists
