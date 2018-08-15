@@ -33,6 +33,15 @@ provisioners:
   script:
     - make test/provisioners
 
+build-wheel:
+  <<: *python-template
+  stage: build
+  script:
+    - make build/wheel
+  artifacts:
+    paths:
+      - dist/*.whl
+
 .docker-template: &docker-template
   image: docker
   services:
@@ -41,7 +50,7 @@ provisioners:
     - apk add --no-cache make
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
-build:
+build-docker:
   <<: *docker-template
   stage: build
   script:
