@@ -27,3 +27,6 @@ class DeployStep:
 
     def run(self):
         raise NotImplementedError
+
+    def cleanup(self):
+        pass

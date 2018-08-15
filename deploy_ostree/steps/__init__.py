@@ -25,6 +25,10 @@ class DeploySteps:
             print('==>', step.title)
             step.run()
 
+    def cleanup(self):
+        for step in reversed(self.steps):
+            step.cleanup()
+
 
 def get_deploy_steps(cfg: Config) -> DeploySteps:
     return DeploySteps(cfg, [
