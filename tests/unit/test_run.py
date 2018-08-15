@@ -39,6 +39,16 @@ class TestRun(TestCase):
         self.assertEqual('stderr', result.stderr)
 
     @mock.patch('subprocess.run')
+    def test_result_should_contain_process_args(self, mock_run: mock.Mock):
+        args = ['mount', '-o', 'bind', '/', '/subdir']
+        mock_run.return_value = subprocess.CompletedProcess([], 0)
+
+        result = run(args)
+
+        self.assertEqual(result.args, args)
+        self.assertEqual(result.args_string, 'mount -o bind / /subdir')
+
+    @mock.patch('subprocess.run')
     def test_should_not_raise_if_check_is_true_and_exitcode_is_zero(self, mock_run: mock.Mock):
         args = ['mount']
         mock_run.return_value = subprocess.CompletedProcess([], 0)
@@ -49,11 +59,12 @@ class TestRun(TestCase):
 
     @mock.patch('subprocess.run')
     def test_should_raise_exception_if_check_is_true_and_exitcode_is_nonzero(self, mock_run: mock.Mock):
-        args = ['mount']
+        args = ['mount', '-o', 'bind', '/', '/subdir']
         mock_run.return_value = subprocess.CompletedProcess([], -1)
 
-        with self.assertRaises(ProcessError):
+        with self.assertRaises(ProcessError) as cm:
             run(args, check=True)
+        self.assertEqual(str(cm.exception), "'mount -o bind / /subdir' failed with status -1")
 
     @mock.patch('subprocess.run')
     @mock.patch('os.environ', {'HOME': '/home/user', 'USER': 'user'})

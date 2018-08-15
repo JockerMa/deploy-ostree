@@ -10,10 +10,12 @@ from typing import Dict, Optional
 class ProcessResult:
     def __init__(
         self,
+        args,
         exitcode: int,
         stdout: Optional[str]=None,
         stderr: Optional[str]=None
     ) -> None:
+        self.args = args
         self.exitcode = exitcode
         self.stdout = stdout
         self.stderr = stderr
@@ -26,10 +28,14 @@ class ProcessResult:
     def stderr_str(self) -> str:
         return self.stderr or ''
 
+    @property
+    def args_string(self) -> str:
+        return ' '.join(self.args)
+
 
 class ProcessError(RuntimeError):
     def __init__(self, result: ProcessResult) -> None:
-        super().__init__('process returned status %s' % result.exitcode)
+        super().__init__("'%s' failed with status %s" % (result.args_string, result.exitcode))
         self.process_result = result
 
 
@@ -45,7 +51,7 @@ def run(
         stdout=subprocess.PIPE if capture_output else None,
         stderr=subprocess.PIPE if capture_output else None,
         env=get_combined_env(env))
-    result = convert_result(completed_process, encoding)
+    result = convert_result(completed_process, args, encoding)
     if check and result.exitcode != 0:
         raise ProcessError(result)
     return result
@@ -59,8 +65,9 @@ def get_combined_env(env: Optional[Dict[str, str]]) -> Optional[Dict[str, str]]:
     return combined_env
 
 
-def convert_result(result: subprocess.CompletedProcess, encoding: str) -> ProcessResult:
+def convert_result(result: subprocess.CompletedProcess, args, encoding: str) -> ProcessResult:
     return ProcessResult(
+        args,
         result.returncode,
         maybe_decode(result.stdout, encoding),
         maybe_decode(result.stderr, encoding))
