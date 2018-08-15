@@ -13,12 +13,12 @@ class MountVar(DeployStep):
 
     @property
     def title(self) -> str:
-        return 'Mounting /var'
+        return 'Mounting stateroot /var'
 
     def run(self):
         run([
             'mount',
             '-o', 'bind',
-            os.path.join('/ostree', 'deploy', self.cfg.stateroot, 'var'),
+            self.cfg.var_dir,
             os.path.join(self.cfg.deployment_dir, 'var')
         ], check=True)
