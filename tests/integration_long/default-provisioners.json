@@ -19,6 +19,12 @@
             "provisioner": "create-user",
             "username": "testuser",
             "password": "testpw"
+        },
+        {
+            "provisioner": "create-user",
+            "username": "shell-user",
+            "password": "testpw",
+            "shell": "/my/custom/shell"
         }
     ]
 }

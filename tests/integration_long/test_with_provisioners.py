@@ -76,22 +76,31 @@ class TestDeployWithProvisioners(FixtureTestCase):
             if spwd.name == 'root':
                 self.assertTrue(spwd.password_is('rootpw'))
 
-    def test_should_create_user(self):
-        deployment = self.get_deployment()
-        pwd_entry = None
-        shadow_entry = None
-
-        for pwd in passwd(deployment):
-            if pwd.name == 'testuser':
-                pwd_entry = pwd
-        for spwd in shadow(deployment):
-            if spwd.name == 'testuser':
-                shadow_entry = spwd
-
+    def test_should_create_test_user(self):
+        pwd_entry = self.get_pwd('testuser')
+        shadow_entry = self.get_shadow('testuser')
         self.assertIsNotNone(pwd_entry)
-        self.assertIsNotNone(shadow_entry)
-        if shadow_entry is not None:
-            self.assertTrue(shadow_entry.password_is('testpw'))
+        self.assertTrue(shadow_entry.password_is('testpw'))
+
+    def test_should_create_test_user_with_default_shell(self):
+        testuser = self.get_pwd('testuser')
+        self.assertEqual(testuser.shell, '')
+
+    def test_should_create_user_with_custom_shell(self):
+        pwd = self.get_pwd('shell-user')
+        self.assertEqual(pwd.shell, '/my/custom/shell')
+
+    def get_pwd(self, name) -> PasswdEntry:
+        for pwd in passwd(self.get_deployment()):
+            if pwd.name == name:
+                return pwd
+        self.fail('no passwd entry for %s' % name)
+
+    def get_shadow(self, name) -> ShadowEntry:
+        for spwd in shadow(self.get_deployment()):
+            if spwd.name == name:
+                return spwd
+        self.fail('no shadow entry for %s' % name)
 
     def get_deployment(self):
         deployments_dir = '/ostree/deploy/test-stateroot/deploy'
