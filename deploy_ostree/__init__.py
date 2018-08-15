@@ -6,6 +6,7 @@ import os.path
 import sys
 
 from .config import Config
+from .run import ProcessError
 from .steps import get_deploy_steps
 
 
@@ -29,4 +30,9 @@ def main():
     with open(args.config, encoding='utf-8') as fobj:
         cfg = Config.parse_json(fobj, base_dir=os.path.dirname(args.config))
     steps = get_deploy_steps(cfg)
-    steps.run()
+
+    try:
+        steps.run()
+    except ProcessError as exc:
+        print(exc, file=sys.stderr)
+        sys.exit(1)
