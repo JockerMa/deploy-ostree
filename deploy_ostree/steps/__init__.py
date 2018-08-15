@@ -8,6 +8,7 @@ from .file_remote import FileRemote
 from .pull_ref import PullRef
 from .create_stateroot import CreateStateroot
 from .deploy import Deploy
+from .mount_var import MountVar
 from .default_provisioner import DefaultProvisioner
 from ..config import Config
 
@@ -32,5 +33,6 @@ def get_deploy_steps(cfg: Config) -> DeploySteps:
         PullRef,
         CreateStateroot,
         Deploy,
+        MountVar,
         DefaultProvisioner,
     ])

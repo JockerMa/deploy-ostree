@@ -77,6 +77,7 @@ class TestGetDeploySteps(TestCase):
             'PullRef',
             'CreateStateroot',
             'Deploy',
+            'MountVar',
             'DefaultProvisioner',
         ]]
 
