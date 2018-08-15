@@ -183,3 +183,19 @@ class TestConfig(TestCase):
             cfg.deployment_dir,
             os.path.join('/ostree', 'deploy', 'test-stateroot', 'deploy', 'deployment-name')
         )
+
+    def test_var_dir_should_be_path_to_stateroot_var(self):
+        cfg = Config(Source.url('url'), 'ref', stateroot='test-stateroot')
+
+        self.assertEqual(
+            cfg.var_dir,
+            os.path.join('/ostree', 'deploy', 'test-stateroot', 'var')
+        )
+
+    def test_var_dir_should_be_path_to_stateroot_var_for_randomly_generated_stateroot(self):
+        cfg = Config(Source.url('url'), 'ref')
+
+        self.assertEqual(
+            cfg.var_dir,
+            os.path.join('/ostree', 'deploy', cfg.stateroot, 'var')
+        )

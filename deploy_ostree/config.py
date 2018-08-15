@@ -89,6 +89,10 @@ class Config:
         return os.path.join(self.base_dir, self._source.value) if self._source.is_path else None
 
     @property
+    def var_dir(self) -> str:
+        return os.path.join('/ostree', 'deploy', self.stateroot, 'var')
+
+    @property
     def deployment_dir(self) -> str:
         if self.deployment_name is None:
             raise RuntimeError('deployment name not set')

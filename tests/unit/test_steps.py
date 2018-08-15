@@ -65,6 +65,36 @@ class TestDeploySteps(TestCase):
 
         verify_relevant(teststep, self.cfg, 4)
 
+    def test_should_cleanup_all_steps_in_reverse_order(self):
+        mgr = mock.Mock()
+        teststep1 = mock_teststep(True, 1)
+        teststep2 = mock_teststep(True, 1)
+        teststep3 = mock_teststep(True, 1)
+        mgr.attach_mock(teststep1, 't1')
+        mgr.attach_mock(teststep2, 't2')
+        mgr.attach_mock(teststep3, 't3')
+
+        deploy_steps = DeploySteps(self.cfg, [teststep1, teststep2, teststep3])
+        deploy_steps.run()
+        deploy_steps.cleanup()
+
+        self.assertEqual(mgr.mock_calls[6:], [
+            mock.call.t1.run(),
+            mock.call.t2.run(),
+            mock.call.t3.run(),
+            mock.call.t3.cleanup(),
+            mock.call.t2.cleanup(),
+            mock.call.t1.cleanup(),
+        ])
+
+    def test_should_ignore_exceptions_in_cleanup(self):
+        teststep = mock_teststep(True, 1)
+        teststep.cleanup.side_effect = Exception('cleanup error')
+
+        deploy_steps = DeploySteps(self.cfg, [teststep])
+        deploy_steps.run()
+        deploy_steps.cleanup()
+
 
 class TestGetDeploySteps(TestCase):
     cfg = mock.Mock()
@@ -77,6 +107,7 @@ class TestGetDeploySteps(TestCase):
             'PullRef',
             'CreateStateroot',
             'Deploy',
+            'MountVar',
             'DefaultProvisioner',
         ]]
 

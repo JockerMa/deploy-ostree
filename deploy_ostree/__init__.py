@@ -36,3 +36,5 @@ def main():
     except ProcessError as exc:
         print(exc, file=sys.stderr)
         sys.exit(1)
+    finally:
+        steps.cleanup()

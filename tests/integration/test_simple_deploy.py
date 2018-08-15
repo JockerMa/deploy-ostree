@@ -33,16 +33,18 @@ class TestSimpleDeploy(FixtureTestCase):
         self.assertTrue(os.path.isdir(os.path.join(stateroot, 'var')))
 
     def test_should_deploy_commit(self):
-        deployments_dir = os.path.join(self.get_stateroot(), 'deploy')
-        elems = [elem for elem in os.listdir(deployments_dir) if not elem.endswith('.origin')]
-        self.assertEqual(1, len(elems))
-        deployment = os.path.join(deployments_dir, elems[0])
-        self.assertTrue(os.path.isfile(os.path.join(deployment, 'etc', 'os-release')))
+        self.assertTrue(os.path.isfile(os.path.join(self.get_deployment_dir(), 'etc', 'os-release')))
 
     def test_should_create_boot_loader_entry(self):
         stateroot_name = os.path.basename(self.get_stateroot())
         entry_file = os.path.join('/boot/loader/entries', 'ostree-%s-0.conf' % stateroot_name)
         self.assertTrue(os.path.isfile(entry_file))
+
+    def get_deployment_dir(self):
+        deployments_dir = os.path.join(self.get_stateroot(), 'deploy')
+        elems = [elem for elem in os.listdir(deployments_dir) if not elem.endswith('.origin')]
+        self.assertEqual(1, len(elems))
+        return os.path.join(deployments_dir, elems[0])
 
     def get_stateroot(self):
         deploy_dir = '/ostree/deploy'
