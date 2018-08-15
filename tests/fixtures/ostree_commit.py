@@ -17,6 +17,8 @@ def touch(path):
 
 
 def create_test_tree(commit_dir: str):
+    os.makedirs(os.path.join(commit_dir, 'var'), mode=0o755)
+
     kern_dir = os.path.join(commit_dir, 'usr', 'lib', 'modules', '4.8')
     os.makedirs(kern_dir)
     touch(os.path.join(kern_dir, 'vmlinuz'))
