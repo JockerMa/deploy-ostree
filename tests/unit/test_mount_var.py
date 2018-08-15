@@ -31,6 +31,21 @@ class TestMountVar(TestCase):
             os.path.join('/ostree', 'deploy', 'test', 'deploy', 'test-deploy.0', 'var'),
         ], check=True)
 
+    @mock.patch('deploy_ostree.steps.mount_var.run')
+    def test_should_unmount_on_cleanup(self, run_mock: mock.Mock):
+        cfg = Config(Source.url('url'), 'ref', stateroot='test')
+        cfg.set_deployment_name('test-deploy.0')
+
+        steps = MountVar.get_steps(cfg)
+        for step in reversed(steps):
+            step.cleanup()
+
+        run_mock.assert_called_once_with([
+            'umount',
+            '--lazy',
+            os.path.join('/ostree', 'deploy', 'test', 'deploy', 'test-deploy.0', 'var'),
+        ], check=True)
+
     def test_should_be_relevant(self):
         self.assertTrue(MountVar.is_relevant(mock.Mock()))
 

@@ -20,5 +20,12 @@ class MountVar(DeployStep):
             'mount',
             '-o', 'bind',
             self.cfg.var_dir,
-            os.path.join(self.cfg.deployment_dir, 'var')
+            os.path.join(self.cfg.deployment_dir, 'var'),
+        ], check=True)
+
+    def cleanup(self):
+        run([
+            'umount',
+            '--lazy',
+            os.path.join(self.cfg.deployment_dir, 'var'),
         ], check=True)
