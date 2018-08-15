@@ -2,7 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os
-from typing import Iterable
+from typing import Sequence
 import deploy_ostree
 from . import DeployStep
 from ..config import Config, ProvisionerConfig
@@ -31,6 +31,5 @@ class DefaultProvisioner(DeployStep):
         return bool(config.default_provisioners)
 
     @classmethod
-    def get_steps(cls, config: Config) -> Iterable[DeployStep]:
-        for provisioner in config.default_provisioners:
-            yield cls(config, provisioner)
+    def get_steps(cls, config: Config) -> Sequence[DeployStep]:
+        return [cls(config, provisioner) for provisioner in config.default_provisioners]

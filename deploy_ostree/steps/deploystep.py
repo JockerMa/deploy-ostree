@@ -1,7 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-from typing import Iterable, List, Type  # noqa
+from typing import Sequence  # noqa
 from ..config import Config
 
 
@@ -18,7 +18,7 @@ class DeployStep:
         return True
 
     @classmethod
-    def get_steps(cls, cfg: Config) -> 'Iterable[DeployStep]':
+    def get_steps(cls, cfg: Config) -> 'Sequence[DeployStep]':
         return [cls(cfg)]
 
     @property
