@@ -40,7 +40,7 @@ build-wheel:
     - make build/wheel
   artifacts:
     paths:
-      - dist/*.whl
+      - '*.whl'
 
 .docker-template: &docker-template
   image: docker

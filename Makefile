@@ -28,6 +28,7 @@ build/docker:
 
 build/wheel:
 	$(PYTHON) setup.py bdist_wheel
+	mv dist/*.whl ./
 
 test/integration:
 	$(DOCKER_UNITTEST) tests/integration
