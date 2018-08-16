@@ -54,10 +54,10 @@ integration:
   <<: *docker-template
   stage: integration
   script:
-    - make test/integration
+    - make build/docker test/integration
 
 integration-long:
   <<: *docker-template
   stage: integration
   script:
-    - make test/integration_long
+    - make build/docker test/integration_long

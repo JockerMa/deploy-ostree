@@ -7,7 +7,7 @@ else
 	PYTHON := python3
 endif
 
-all: lint test/unit test/provisioners build/wheel test/integration test/integration_long
+all: lint test/unit test/provisioners build/wheel build/docker test/integration test/integration_long
 
 # local checks
 LOCAL_UNITTEST := $(PYTHON) -m unittest discover -v -t $(SRC_DIR) -s
@@ -25,22 +25,21 @@ test/provisioners:
 # package
 PACKAGE := deploy_ostree-$(VERSION)-py3-none-any.whl
 
-build/wheel: dist/$(PACKAGE)
-dist/$(PACKAGE): export DEPLOY_OSTREE_VERSION=$(VERSION)
-dist/$(PACKAGE):
+build/wheel: export DEPLOY_OSTREE_VERSION=$(VERSION)
+build/wheel:
 	$(PYTHON) setup.py bdist_wheel
 
 # dockerized tests
 IMAGE_TAG := deploy-ostree
 DOCKER_UNITTEST := docker run --rm -i --privileged -v /ostree -v $(SRC_DIR)/tests:/tests $(IMAGE_TAG) python3 -m unittest discover -v -t / -s
 
-build/docker: dist/$(PACKAGE)
+build/docker:
 	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(PACKAGE) .
 
-test/integration: build/docker
+test/integration:
 	$(DOCKER_UNITTEST) tests/integration
 
-test/integration_long: build/docker
+test/integration_long:
 	$(DOCKER_UNITTEST) tests/integration_long
 
 # cleanup
