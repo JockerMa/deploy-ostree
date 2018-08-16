@@ -2,7 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from setuptools import setup, find_packages
-from os import path
+from os import getenv, path
 
 
 here = path.abspath(path.dirname(__file__))
@@ -10,9 +10,11 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+version = getenv('DEPLOY_OSTREE_VERSION') or 'master'
+
 setup(
     name='deploy-ostree',
-    version='0.1.0',
+    version=version,
     description='Deploy and configure an OSTree commit',
 
     long_description=long_description,
