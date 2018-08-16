@@ -40,7 +40,7 @@ build-wheel:
     - make build/wheel
   artifacts:
     paths:
-      - '*.whl'
+      - dist/*.whl
 
 .docker-template: &docker-template
   image: docker
@@ -50,31 +50,14 @@ build-wheel:
     - apk add --no-cache make
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
-build-docker:
-  <<: *docker-template
-  stage: build
-  script:
-    - make IMAGE_TAG=$IMAGE_TAG build/docker
-    - docker push $IMAGE_TAG
-
 integration:
   <<: *docker-template
   stage: integration
   script:
-    - make IMAGE_TAG=$IMAGE_TAG test/integration
+    - make build/docker test/integration
 
 integration-long:
   <<: *docker-template
   stage: integration
   script:
-    - make IMAGE_TAG=$IMAGE_TAG test/integration_long
-
-tag-latest:
-  <<: *docker-template
-  stage: release
-  only:
-    - master
-  script:
-    - docker pull $IMAGE_TAG
-    - docker tag $IMAGE_TAG $LATEST_TAG
-    - docker push $LATEST_TAG
+    - make build/docker test/integration_long
