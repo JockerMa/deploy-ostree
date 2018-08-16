@@ -90,6 +90,11 @@ class TestDeployWithProvisioners(FixtureTestCase):
         pwd = self.get_pwd('shell-user')
         self.assertEqual(pwd.shell, '/my/custom/shell')
 
+    def test_should_create_home_directories(self):
+        homedir = os.path.join('/ostree', 'deploy', 'test-stateroot', 'var', 'home')
+        self.assertTrue(os.path.isfile(os.path.join(homedir, 'testuser', '.bashrc')))
+        self.assertTrue(os.path.isfile(os.path.join(homedir, 'shell-user', '.bashrc')))
+
     def get_pwd(self, name) -> PasswdEntry:
         for pwd in passwd(self.get_deployment()):
             if pwd.name == name:
