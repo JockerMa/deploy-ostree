@@ -13,8 +13,14 @@ class TestFailingProvisioner(FixtureTestCase):
     FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
 
     def test_should_fail_and_clean_up_safely(self):
-        result = deploy_ostree([os.path.join(TESTS_DIR, 'failing-provisioner.json')], check=False)
+        result = deploy_ostree(
+            [os.path.join(TESTS_DIR, 'failing-provisioner.json')],
+            check=False,
+            capture_output=True
+        )
 
+        # we expect chpasswd to try to run, but not work
+        self.assertIn('chpasswd', result.stderr_str)
         self.assertEqual(result.exitcode, 1)
         var_mount = os.path.join(self.get_deployment_dir(), 'var')
         mount = run(['mount'], capture_output=True)
