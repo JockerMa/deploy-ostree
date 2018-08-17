@@ -3,5 +3,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 set -eu
 
-chroot $1 useradd -M -s "${DEPLOY_OSTREE_shell:-}" ${DEPLOY_OSTREE_username}
+mkdir -p $1/$(readlink $1/home)
+
+chroot $1 useradd -s "${DEPLOY_OSTREE_shell:-}" ${DEPLOY_OSTREE_username}
 echo ${DEPLOY_OSTREE_username}:${DEPLOY_OSTREE_password} | chroot $1 chpasswd
