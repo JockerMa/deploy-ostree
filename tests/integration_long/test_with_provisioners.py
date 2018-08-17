@@ -2,7 +2,8 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import crypt
-import os.path
+import os
+import stat
 from typing import Iterator
 from .. import deploy_ostree
 from ..fixtures import FixtureTestCase, OSTreeFixture
@@ -15,8 +16,8 @@ class PasswdEntry:
         parts = line.split(':')
         self.name = parts[0]
         self.pwd = parts[1]
-        self.uid = parts[2]
-        self.gid = parts[3]
+        self.uid = int(parts[2])
+        self.gid = int(parts[3])
         self.home = parts[5]
         self.shell = parts[6]
 
@@ -50,6 +51,8 @@ class TestDeployWithProvisioners(FixtureTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        with open('/authorized_keys', 'w') as f:
+            f.write('authorized keys file')
         deploy_ostree([os.path.join(TESTS_DIR, 'default-provisioners.json')])
 
     def test_should_copy_etc_fstab_from_host(self):
@@ -94,6 +97,22 @@ class TestDeployWithProvisioners(FixtureTestCase):
         homedir = os.path.join('/ostree', 'deploy', 'test-stateroot', 'var', 'home')
         self.assertTrue(os.path.isfile(os.path.join(homedir, 'testuser', '.bashrc')))
         self.assertTrue(os.path.isfile(os.path.join(homedir, 'shell-user', '.bashrc')))
+
+    def test_should_copy_authorized_keys_file(self):
+        ssh_dir = os.path.join('/ostree', 'deploy', 'test-stateroot', 'var', 'home', 'testuser', '.ssh')
+        pwd = self.get_pwd('testuser')
+
+        ssh_dir_stat = os.stat(ssh_dir)
+        self.assertTrue(stat.S_ISDIR(ssh_dir_stat.st_mode))
+        self.assertEqual(stat.S_IMODE(ssh_dir_stat.st_mode), 0o700)
+        self.assertEqual(ssh_dir_stat.st_uid, pwd.uid)
+        self.assertEqual(ssh_dir_stat.st_gid, pwd.gid)
+
+        keysfile_stat = os.stat(os.path.join(ssh_dir, 'authorized_keys'))
+        self.assertTrue(stat.S_ISREG(keysfile_stat.st_mode))
+        self.assertEqual(stat.S_IMODE(keysfile_stat.st_mode), 0o600)
+        self.assertEqual(keysfile_stat.st_uid, pwd.uid)
+        self.assertEqual(keysfile_stat.st_gid, pwd.gid)
 
     def get_pwd(self, name) -> PasswdEntry:
         for pwd in passwd(self.get_deployment()):
