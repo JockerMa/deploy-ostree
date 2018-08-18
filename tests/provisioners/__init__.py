@@ -36,7 +36,15 @@ class ProvisionerTestCase(TestCase):
     def provision(self, args: Dict[str, str]={}):
         env = {'DEPLOY_OSTREE_%s' % key: value for key, value in args.items()}
         run(
-            [os.path.join(PROVISIONER_DIR, self.PROVISIONER), self.path()],
+            [self.provisioner_path, self.path()],
             check=True,
             env=env
         )
+
+    @property
+    def provisioner_path(self):
+        return os.path.join(PROVISIONER_DIR, self.PROVISIONER)
+
+    @property
+    def is_executable(self):
+        return bool(os.access(self.provisioner_path, os.X_OK))

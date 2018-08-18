@@ -15,6 +15,9 @@ def sh(cmd: str) -> str:
 class TestEtcNetworkInterfaces(ProvisionerTestCase):
     PROVISIONER = 'etc-network-interfaces'
 
+    def test_should_have_execute_bit(self):
+        self.assertTrue(self.is_executable)
+
     def test_should_create_lo_file(self):
         self.makedirs('etc', 'network', 'interfaces.d')
 
