@@ -18,12 +18,8 @@ class FileRemote(DeployStep):
 
     def run(self):
         run([
-            'ostree',
-            'remote',
-            'add',
+            'ostree', 'remote', 'add',
             '--no-gpg-verify',
-            '--if-not-exists',
-            '--repo=/ostree/repo',
             self.remote,
             'file://%s' % os.path.abspath(self.path)
         ], check=True)

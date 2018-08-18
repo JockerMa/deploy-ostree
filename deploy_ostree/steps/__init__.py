@@ -4,6 +4,7 @@
 import sys
 from typing import Iterable, List, Type  # noqa
 from .deploystep import DeployStep, DeployError  # noqa
+from .delete_remote import DeleteRemote
 from .http_remote import HttpRemote
 from .file_remote import FileRemote
 from .pull_ref import PullRef
@@ -39,6 +40,7 @@ class DeploySteps:
 
 def get_deploy_steps(cfg: Config) -> DeploySteps:
     return DeploySteps(cfg, [
+        DeleteRemote,
         HttpRemote,
         FileRemote,
         PullRef,

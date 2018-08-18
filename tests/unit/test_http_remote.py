@@ -16,11 +16,8 @@ class TestHttpRemote(TestCase):
             step.run()
 
         mock_run.assert_called_once_with([
-            'ostree',
-            'remote', 'add',
+            'ostree', 'remote', 'add',
             '--no-gpg-verify',
-            '--if-not-exists',
-            '--repo=/ostree/repo',
             'remote-name',
             'https://example.com/ostree'
         ], check=True)

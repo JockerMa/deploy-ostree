@@ -102,6 +102,7 @@ class TestGetDeploySteps(TestCase):
     @mock.patch('deploy_ostree.steps.DeploySteps')
     def test_should_pass_all_deploy_steps(self, mock_deploysteps):
         mocks = [(clsname, mock.Mock()) for clsname in [
+            'DeleteRemote',
             'HttpRemote',
             'FileRemote',
             'PullRef',
