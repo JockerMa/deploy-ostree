@@ -56,78 +56,81 @@ class TestDeployWithProvisioners(FixtureTestCase):
         deploy_ostree([os.path.join(TESTS_DIR, 'default-provisioners.json')])
 
     def test_should_copy_etc_fstab_from_host(self):
-        deployment = self.get_deployment()
-        with open(os.path.join(deployment, 'etc', 'fstab'), 'r') as f:
-            deployment_fstab = f.read()
-        with open('/etc/fstab', 'r') as f:
-            host_fstab = f.read()
-        self.assertEqual(deployment_fstab, host_fstab)
+        self.assert_files_equal('/etc/fstab', self.deployment('etc', 'fstab'))
 
     def test_should_create_interfaces_file_for_loopback(self):
-        deployment = self.get_deployment()
-        with open(os.path.join(deployment, 'etc', 'network', 'interfaces.d', 'lo'), 'r') as f:
-            self.assertEqual(f.read().strip(), 'auto lo\niface lo inet loopback')
+        self.assert_file_content(
+            self.deployment('etc', 'network', 'interfaces.d', 'lo'),
+            'auto lo\niface lo inet loopback\n'
+        )
 
     def test_should_create_interfaces_file_for_specified_interface(self):
-        deployment = self.get_deployment()
-        with open(os.path.join(deployment, 'etc', 'network', 'interfaces.d', 'default'), 'r') as f:
-            self.assertEqual(f.read().strip(), 'allow-hotplug enp0s3\niface enp0s3 inet dhcp')
+        self.assert_file_content(
+            self.deployment('etc', 'network', 'interfaces.d', 'default'),
+            'allow-hotplug enp0s3\niface enp0s3 inet dhcp\n'
+        )
 
     def test_should_set_root_password(self):
-        deployment = self.get_deployment()
-        for spwd in shadow(deployment):
-            if spwd.name == 'root':
-                self.assertTrue(spwd.password_is('rootpw'))
+        self.assertTrue(self.get_shadow('root').password_is('rootpw'))
 
     def test_should_create_test_user(self):
-        pwd_entry = self.get_pwd('testuser')
-        shadow_entry = self.get_shadow('testuser')
-        self.assertIsNotNone(pwd_entry)
-        self.assertTrue(shadow_entry.password_is('testpw'))
+        self.assertIsNotNone(self.get_pwd('testuser'))
+        self.assertTrue(self.get_shadow('testuser').password_is('testpw'))
 
     def test_should_create_test_user_with_default_shell(self):
-        testuser = self.get_pwd('testuser')
-        self.assertEqual(testuser.shell, '')
+        self.assertEqual(self.get_pwd('testuser').shell, '')
 
     def test_should_create_user_with_custom_shell(self):
-        pwd = self.get_pwd('shell-user')
-        self.assertEqual(pwd.shell, '/my/custom/shell')
+        self.assertEqual(self.get_pwd('shell-user').shell, '/my/custom/shell')
 
     def test_should_create_home_directories(self):
-        homedir = os.path.join('/ostree', 'deploy', 'test-stateroot', 'var', 'home')
-        self.assertTrue(os.path.isfile(os.path.join(homedir, 'testuser', '.bashrc')))
-        self.assertTrue(os.path.isfile(os.path.join(homedir, 'shell-user', '.bashrc')))
+        self.assertTrue(os.path.isfile(self.var('home', 'testuser', '.bashrc')))
+        self.assertTrue(os.path.isfile(self.var('home', 'shell-user', '.bashrc')))
 
     def test_should_copy_authorized_keys_file(self):
-        ssh_dir = os.path.join('/ostree', 'deploy', 'test-stateroot', 'var', 'home', 'testuser', '.ssh')
+        ssh_dir = self.var('home', 'testuser', '.ssh')
+        auth_keys = os.path.join(ssh_dir, 'authorized_keys')
         pwd = self.get_pwd('testuser')
 
-        ssh_dir_stat = os.stat(ssh_dir)
-        self.assertTrue(stat.S_ISDIR(ssh_dir_stat.st_mode))
-        self.assertEqual(stat.S_IMODE(ssh_dir_stat.st_mode), 0o700)
-        self.assertEqual(ssh_dir_stat.st_uid, pwd.uid)
-        self.assertEqual(ssh_dir_stat.st_gid, pwd.gid)
+        self.assert_file_mode(ssh_dir, pwd.uid, 0o700)
+        self.assert_file_mode(auth_keys, pwd.uid, 0o600)
+        self.assert_file_content(auth_keys, 'authorized keys file')
 
-        keysfile_stat = os.stat(os.path.join(ssh_dir, 'authorized_keys'))
-        self.assertTrue(stat.S_ISREG(keysfile_stat.st_mode))
-        self.assertEqual(stat.S_IMODE(keysfile_stat.st_mode), 0o600)
-        self.assertEqual(keysfile_stat.st_uid, pwd.uid)
-        self.assertEqual(keysfile_stat.st_gid, pwd.gid)
-
+    # helper functions
     def get_pwd(self, name) -> PasswdEntry:
-        for pwd in passwd(self.get_deployment()):
+        for pwd in passwd(self.deployment()):
             if pwd.name == name:
                 return pwd
         self.fail('no passwd entry for %s' % name)
 
     def get_shadow(self, name) -> ShadowEntry:
-        for spwd in shadow(self.get_deployment()):
+        for spwd in shadow(self.deployment()):
             if spwd.name == name:
                 return spwd
         self.fail('no shadow entry for %s' % name)
 
-    def get_deployment(self):
+    def var(self, *args):
+        return os.path.join('/ostree', 'deploy', 'test-stateroot', 'var', *args)
+
+    def deployment(self, *args):
         deployments_dir = '/ostree/deploy/test-stateroot/deploy'
         elems = [elem for elem in os.listdir(deployments_dir) if not elem.endswith('.origin')]
         self.assertEqual(len(elems), 1)
-        return os.path.join(deployments_dir, elems[0])
+        deployment = os.path.join(deployments_dir, elems[0])
+        return os.path.join(deployment, *args)
+
+    # helper asserts
+    def assert_file_content(self, path, expected_content):
+        with open(path, 'r') as f:
+            file_content = f.read()
+        self.assertEqual(file_content, expected_content)
+
+    def assert_files_equal(self, path1, path2):
+        with open(path1, 'r') as f:
+            self.assert_file_content(path2, f.read())
+
+    def assert_file_mode(self, path, owner, mode):
+        statresult = os.stat(path)
+        self.assertEqual(stat.S_IMODE(statresult.st_mode), mode)
+        self.assertEqual(statresult.st_uid, owner)
+        self.assertEqual(statresult.st_gid, owner)
