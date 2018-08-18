@@ -19,11 +19,8 @@ class TestFileRemote(TestCase):
             step.run()
 
         mock_run.assert_called_once_with([
-            'ostree',
-            'remote', 'add',
+            'ostree', 'remote', 'add',
             '--no-gpg-verify',
-            '--if-not-exists',
-            '--repo=/ostree/repo',
             'remote-name',
             'file:///srv/ostree/debian/repo'
         ], check=True)
@@ -39,11 +36,8 @@ class TestFileRemote(TestCase):
             step.run()
 
         mock_run.assert_called_once_with([
-            'ostree',
-            'remote', 'add',
+            'ostree', 'remote', 'add',
             '--no-gpg-verify',
-            '--if-not-exists',
-            '--repo=/ostree/repo',
             'remote-name',
             'file://%s' % repo_abs_path
         ], check=True)

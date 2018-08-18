@@ -17,12 +17,8 @@ class HttpRemote(DeployStep):
 
     def run(self):
         run([
-            'ostree',
-            'remote',
-            'add',
+            'ostree', 'remote', 'add',
             '--no-gpg-verify',
-            '--if-not-exists',
-            '--repo=/ostree/repo',
             self.remote,
             self.url
         ], check=True)
