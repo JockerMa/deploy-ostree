@@ -1,0 +1,5 @@
+{
+    "url": "http://localhost:8000/",
+    "ref": "test-commit",
+    "remote": "test-remote"
+}
