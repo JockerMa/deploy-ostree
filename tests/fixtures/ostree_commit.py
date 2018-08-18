@@ -32,16 +32,19 @@ def create_test_tree(commit_dir: str):
 
 
 class OSTreeCommitFixture(Fixture):
-    def __init__(self, branch: str='test-commit', port: int=8000) -> None:
+    def __init__(self, branch: str='test-commit', mode: str='archive', http: bool= True, port: int=8000) -> None:
         self.http_server = None
         self.repo_dir = None
         self.branch = branch
+        self.mode = mode
+        self.http = http
         self.port = port
 
     def setUp(self):
         self.setup_repo()
         self.create_test_commit()
-        self.start_http_server()
+        if self.http:
+            self.start_http_server()
 
     def tearDown(self):
         if self.http_server:
@@ -53,7 +56,7 @@ class OSTreeCommitFixture(Fixture):
 
     def setup_repo(self):
         self.repo_dir = TemporaryDirectory()
-        ostree(['init', '--repo', self.repo_dir.name, '--mode=archive-z2'])
+        ostree(['init', '--repo', self.repo_dir.name, '--mode', self.mode])
 
     def create_test_commit(self):
         with TemporaryDirectory() as commit_dir:
