@@ -25,6 +25,11 @@
             "username": "shell-user",
             "password": "testpw",
             "shell": "/my/custom/shell"
+        },
+        {
+            "provisioner": "authorized-keys",
+            "path": "/authorized_keys",
+            "user": "testuser"
         }
     ]
 }

@@ -4,8 +4,8 @@
 from . import ProvisionerTestCase
 
 
-class TestRootPassword(ProvisionerTestCase):
-    PROVISIONER = 'root-password'
+class TestAuthorizedKeys(ProvisionerTestCase):
+    PROVISIONER = 'authorized-keys'
 
     def test_should_have_execute_bit(self):
         self.assertTrue(self.is_executable)

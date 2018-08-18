@@ -8,6 +8,9 @@ from . import ProvisionerTestCase
 class TestEtcFstab(ProvisionerTestCase):
     PROVISIONER = 'etc-fstab'
 
+    def test_should_have_execute_bit(self):
+        self.assertTrue(self.is_executable)
+
     def test_should_copy_fstab_from_host(self):
         self.makedirs('etc')
 
