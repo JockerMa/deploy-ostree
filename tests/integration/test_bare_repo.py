@@ -13,7 +13,7 @@ class TestBareRepo(FixtureTestCase):
     ref = 'test-commit'
     remote = 'test-remote'
 
-    commit_fixture = OSTreeCommitFixture(mode='bare', http=False)
+    commit_fixture = OSTreeCommitFixture(mode='bare-user', http=False)
     FIXTURES = [OSTreeFixture(), commit_fixture]
 
     @classmethod
