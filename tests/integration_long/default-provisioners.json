@@ -30,6 +30,10 @@
             "provisioner": "authorized-keys",
             "path": "/authorized_keys",
             "user": "testuser"
+        },
+        {
+            "provisioner": "passwordless-sudo",
+            "user": "testuser"
         }
     ]
 }

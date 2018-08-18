@@ -96,6 +96,11 @@ class TestDeployWithProvisioners(FixtureTestCase):
         self.assert_file_mode(auth_keys, pwd.uid, 0o600)
         self.assert_file_content(auth_keys, 'authorized keys file')
 
+    def test_should_create_sudoers_file(self):
+        sudoers_file = self.deployment('etc', 'sudoers.d', 'testuser-passwordless-sudo')
+        self.assert_file_mode(sudoers_file, 0, 0o440)
+        self.assert_file_content(sudoers_file, 'testuser ALL=(ALL) NOPASSWD: ALL\n')
+
     # helper functions
     def get_pwd(self, name) -> PasswdEntry:
         for pwd in passwd(self.deployment()):
