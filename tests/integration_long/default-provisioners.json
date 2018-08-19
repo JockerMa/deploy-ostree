@@ -34,6 +34,18 @@
         {
             "provisioner": "passwordless-sudo",
             "user": "testuser"
+        },
+
+        {
+            "provisioner": "create-user",
+            "username": "existing-user",
+            "password": "original-password"
+        },
+        {
+            "provisioner": "create-user",
+            "username": "existing-user",
+            "password": "overwritten-password",
+            "shell": "/new/shell"
         }
     ]
 }

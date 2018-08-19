@@ -101,6 +101,10 @@ class TestDeployWithProvisioners(FixtureTestCase):
         self.assert_file_mode(sudoers_file, 0, 0o440)
         self.assert_file_content(sudoers_file, 'testuser ALL=(ALL) NOPASSWD: ALL\n')
 
+    def test_should_recreate_existing_user_with_new_parameters(self):
+        self.assertEqual(self.get_pwd('existing-user').shell, '/new/shell')
+        self.assertTrue(self.get_shadow('existing-user').password_is('overwritten-password'))
+
     # helper functions
     def get_pwd(self, name) -> PasswdEntry:
         for pwd in passwd(self.deployment()):

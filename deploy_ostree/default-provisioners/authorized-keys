@@ -3,7 +3,7 @@ set -eu
 
 cp ${DEPLOY_OSTREE_path} $1/var/authorized_keys
 
-chroot $1  > /dev/null <<EOF
+chroot $1 /bin/sh <<EOF
 ssh=~${DEPLOY_OSTREE_user}/.ssh
 mkdir -p \$ssh
 mv /var/authorized_keys \$ssh/authorized_keys
