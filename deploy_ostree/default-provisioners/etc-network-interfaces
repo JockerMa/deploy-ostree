@@ -12,7 +12,7 @@ EOF
 
 DEFAULT_IFACE=$(sed -n 2p /proc/net/route | cut -f1)
 IFACE=${DEPLOY_OSTREE_interface:-${DEFAULT_IFACE}}
-cat > $1/etc/network/interfaces.d/default <<EOF
+cat > $1/etc/network/interfaces.d/${IFACE} <<EOF
 allow-hotplug $IFACE
 iface $IFACE inet dhcp
 EOF
