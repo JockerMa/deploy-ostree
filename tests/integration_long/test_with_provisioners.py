@@ -66,7 +66,7 @@ class TestDeployWithProvisioners(FixtureTestCase):
 
     def test_should_create_interfaces_file_for_specified_interface(self):
         self.assert_file_content(
-            self.deployment('etc', 'network', 'interfaces.d', 'default'),
+            self.deployment('etc', 'network', 'interfaces.d', 'enp0s3'),
             'allow-hotplug enp0s3\niface enp0s3 inet dhcp\n'
         )
 

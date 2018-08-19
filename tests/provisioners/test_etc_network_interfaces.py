@@ -39,7 +39,7 @@ class TestEtcNetworkInterfaces(ProvisionerTestCase):
 
         self.provision()
 
-        with open(self.path('etc', 'network', 'interfaces.d', 'default'), 'r') as f:
+        with open(self.path('etc', 'network', 'interfaces.d', iface), 'r') as f:
             self.assertEqual(
                 f.read().strip(),
                 'allow-hotplug %(iface)s\n'
@@ -48,7 +48,7 @@ class TestEtcNetworkInterfaces(ProvisionerTestCase):
     def test_should_create_file_for_specified_interface(self):
         self.provision({'interface': 'test-interface'})
 
-        with open(self.path('etc', 'network', 'interfaces.d', 'default'), 'r') as f:
+        with open(self.path('etc', 'network', 'interfaces.d', 'test-interface'), 'r') as f:
             self.assertEqual(
                 f.read().strip(),
                 'allow-hotplug test-interface\n'
