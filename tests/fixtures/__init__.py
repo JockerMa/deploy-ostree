@@ -6,11 +6,13 @@ from typing import List, Type  # noqa
 from .fixture import Fixture  # noqa
 from .ostree import OSTreeFixture
 from .ostree_commit import OSTreeCommitFixture
+from .http_server import HttpServerFixture
 
 __all__ = [
     'FixtureTestCase',
     'OSTreeFixture',
-    'OSTreeCommitFixture'
+    'OSTreeCommitFixture',
+    'HttpServerFixture',
 ]
 
 

@@ -2,12 +2,11 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os
-import subprocess
-import sys
 from tempfile import TemporaryDirectory
 from typing import Optional  # noqa
 import uuid
 from .fixture import Fixture
+from .http_server import HttpServerFixture
 from .. import ostree
 
 
@@ -32,7 +31,7 @@ def create_test_tree(commit_dir: str):
 
 
 class OSTreeCommitFixture(Fixture):
-    def __init__(self, branch: str='test-commit', mode: str='archive', http: bool= True, port: int=8000) -> None:
+    def __init__(self, branch: str='test-commit', mode: str='archive', http: bool=True, port: int=8000) -> None:
         self.http_server = None
         self.repo_dir = None
         self.branch = branch
@@ -48,8 +47,7 @@ class OSTreeCommitFixture(Fixture):
 
     def tearDown(self):
         if self.http_server:
-            self.http_server.kill()
-            self.http_server = None
+            self.http_server.tearDown()
         if self.repo_dir:
             self.repo_dir.cleanup()
             self.repo_dir = None
@@ -64,7 +62,5 @@ class OSTreeCommitFixture(Fixture):
             ostree(['commit', '--repo', self.repo_dir.name, '--branch', self.branch, commit_dir])
 
     def start_http_server(self):
-        self.http_server = subprocess.Popen(
-            [sys.executable, '-mhttp.server', str(self.port), '--bind', '127.0.0.1'],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            cwd=self.repo_dir.name)
+        self.http_server = HttpServerFixture(self.repo_dir.name, self.port)
+        self.http_server.setUp()
