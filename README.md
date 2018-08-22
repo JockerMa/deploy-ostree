@@ -37,11 +37,8 @@ master branch. All artifacts for the master branch can be found at:
 
 https://gitlab.com/fkrull/deploy-ostree/-/jobs/artifacts/master/browse/dist?job=build-wheel
 
-The current package can be downloaded directly from:
-
-https://gitlab.com/fkrull/deploy-ostree/-/jobs/artifacts/master/raw/dist/deploy_ostree-1.0.0-py3-none-any.whl?job=build-wheel
-
-The package can be installed directly from this URL with `pip`:
+The current package can also be installed directly with `pip` using the
+following URL:
 
 ```shell
 $ pip3 install "https://gitlab.com/fkrull/deploy-ostree/-/jobs/artifacts/master/raw/dist/deploy_ostree-1.0.0-py3-none-any.whl?job=build-wheel"
