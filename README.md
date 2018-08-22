@@ -40,13 +40,13 @@ https://gitlab.com/fkrull/deploy-ostree/-/jobs/artifacts/master/browse/dist?job=
 The current package can also be installed directly with `pip` using the
 following URL:
 
-```shell
+```console
 $ pip3 install "https://gitlab.com/fkrull/deploy-ostree/-/jobs/artifacts/master/raw/dist/deploy_ostree-1.0.0-py3-none-any.whl?job=build-wheel"
 ```
 
 ## Usage
 
-```shell
+```console
 # deploy-ostree <config path or HTTP URL>
 ```
 
@@ -60,7 +60,7 @@ SELinux-using deployed systems might require disabling SELinux before deploying
 to avoid clashes between the host's SELinux policies and the SELinux labels in
 the deployed tree. To temporarily disable SELinux:
 
-```shell
+```console
 # setenforce 0
 ```
 
