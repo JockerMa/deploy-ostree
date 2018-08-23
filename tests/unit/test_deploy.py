@@ -35,6 +35,38 @@ class TestDeploy(TestCase):
             ], check=True)
         self.assertEqual(cfg.deployment_dir, os.path.join('/ostree', 'deploy', 'atomic-host', 'deploy', 'abcdef.1'))
 
+    @mock.patch('deploy_ostree.steps.deploy.run')
+    @mock.patch('deploy_ostree.steps.deploy.get_root_fs')
+    @mock.patch('os.listdir')
+    def test_should_add_additional_kernel_args(self, listdir_mock, get_root_fs_mock, run_mock):
+        cfg = Config(
+            Source.url('url'),
+            'ref',
+            remote='remote',
+            stateroot='os',
+            kernel_args=['quiet', 'splash']
+        )
+        get_root_fs_mock.return_value = '/dev/rootfs'
+        listdir_mock.side_effect = [
+            [],
+            ['1234567.0', '1234567.0.origin'],
+        ]
+
+        steps = Deploy.get_steps(cfg)
+        for step in steps:
+            step.run()
+
+        run_mock.assert_called_once_with([
+                'ostree',
+                'admin',
+                'deploy',
+                '--os=os',
+                'remote:ref',
+                '--karg=root=/dev/rootfs',
+                '--karg-append=quiet',
+                '--karg-append=splash',
+            ], check=True)
+
     @mock.patch('deploy_ostree.steps.deploy.run', mock.Mock())
     @mock.patch('deploy_ostree.steps.deploy.get_root_fs', mock.Mock())
     @mock.patch('os.listdir')

@@ -70,6 +70,7 @@ class Config:
         base_dir: str='',
         remote: Optional[str]=None,
         stateroot: Optional[str]=None,
+        kernel_args: Iterable[str]=(),
         default_provisioners: Iterable[ProvisionerConfig]=()
     ) -> None:
         self._source = source
@@ -77,6 +78,7 @@ class Config:
         self.base_dir = base_dir
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
+        self.kernel_args = list(kernel_args)
         self.default_provisioners = list(default_provisioners)
         self.deployment_name = None  # type: Optional[str]
 
@@ -121,6 +123,7 @@ class Config:
                 base_dir=base_dir,
                 remote=data.get('remote'),
                 stateroot=data.get('stateroot'),
+                kernel_args=data.get('kernel-args', ()),
                 default_provisioners=ProvisionerConfig.from_dicts(data.get('default-provisioners', ())),
             )
         except KeyError as exc:

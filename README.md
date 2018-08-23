@@ -83,6 +83,8 @@ keys are documented below. Any unknown keys are ignored.
   replaced. By default, a random name is used.
 * **stateroot**: name of the OSTree stateroot to use. By default, a random name
   is generated.
+* **kernel-args**: list of additional kernel arguments. The root partition is
+  always determined and included in the kernel command line automatically.
 * **default-provisioners**: list of provisioners to run after the OSTree commit
   is checked out. This must be an array of JSON objects. Each provisioner object
   must have a key `provisioner` specifying one of the default provisioners
@@ -166,6 +168,7 @@ set up `/etc/fstab`, and create a user and set it up for passwordless `sudo`.
     "ref": "centos-atomic-host/7/x86_64/standard",
     "remote": "centos-atomic",
     "stateroot": "centos-atomic-host",
+    "kernel-args": ["quiet", "splash"],
 
     "default-provisioners": [
         {
