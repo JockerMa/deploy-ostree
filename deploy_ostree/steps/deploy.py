@@ -32,14 +32,17 @@ class Deploy(DeployStep):
 
     def run(self):
         items_diff = NewItemsHelper(self.deployments_dir)
-        run([
+        args = [
             'ostree',
             'admin',
             'deploy',
             '--os=%s' % self.cfg.stateroot,
             '%s:%s' % (self.cfg.remote, self.cfg.ref),
             '--karg=root=%s' % get_root_fs()
-        ], check=True)
+        ]
+        for additional_argument in self.cfg.kernel_args:
+            args.append('--karg-append=%s' % additional_argument)
+        run(args, check=True)
         new_items = items_diff.get_new_items()
 
         if len(new_items) != 1:
