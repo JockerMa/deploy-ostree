@@ -1,0 +1,12 @@
+{
+    "url": "http://localhost:8000/",
+    "ref": "test-commit",
+    "stateroot": "test",
+
+    "kernel-args": [
+        "quiet",
+        "splash",
+        "arg=1",
+        "arg=2"
+    ]
+}
