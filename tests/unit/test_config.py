@@ -112,6 +112,39 @@ class TestConfig(TestCase):
             ProvisionerConfig('prov-2', {'arg': True}),
         ])
 
+    def test_kernel_args_should_be_empty_if_not_specified(self):
+        json = '''{
+            "path": "/srv/ostree",
+            "ref": "ref"
+        }'''
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.kernel_args, [])
+
+    def test_should_parse_config_with_kernel_args(self):
+        json = '''{
+            "path": "/srv/ostree",
+            "ref": "ref",
+            "kernel-args": [
+                "arg1",
+                "arg2",
+                "arg3"
+            ]
+        }'''
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.kernel_args, ['arg1', 'arg2', 'arg3'])
+
+    def test_should_parse_config_with_empty_kernel_args(self):
+        json = '''{
+            "path": "/srv/ostree",
+            "ref": "ref",
+            "kernel-args": []
+        }'''
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.kernel_args, [])
+
     def test_should_take_base_dir_from_argument(self):
         json = '{"path": "repo", "ref": "ref"}'
         cfg = Config.parse_json(StringIO(json), base_dir='/home/user/ostree')
