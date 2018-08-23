@@ -2,7 +2,6 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
-from unittest import skip
 from .. import deploy_ostree
 from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 
@@ -21,7 +20,6 @@ class TestKernelArgs(FixtureTestCase):
         options = self.find_line(self.bootloader_entry, 'options')
         self.assertIn('root=', options)
 
-    @skip('to be implemented')
     def test_should_add_custom_kernel_args(self):
         options = self.find_line(self.bootloader_entry, 'options')
         self.assertIn('quiet', options)
