@@ -25,10 +25,12 @@ be fine in long-lived system.
 [python]: https://python.org
 [ostree]: https://ostree.readthedocs.io
 
-`deploy-ostree` requires an initial OSTree setup and a working OSTree-capable
-bootloader configuration. The former can be achieved by running
-`ostree admin init-fs` on a non-OSTree system, but the latter may be easiest to
-get by starting from an OSTree system in the first place.
+Running `deploy-ostree` from inside a libostree deployment requires no
+additional configuration (provided the bootloader is set up correctly). To run
+`deploy-ostree` on a system that's not using libostree, you need to first run
+`ostree admin init-fs /` to set up the libostree system repository and directory
+structure. In addition, you may need to set up the bootloader. How to do this
+depends on the OS, the architecture, and the bootloader in use.
 
 ## Installation
 

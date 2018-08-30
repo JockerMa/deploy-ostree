@@ -29,8 +29,9 @@ class TestKernelArgs(FixtureTestCase):
 
     @property
     def bootloader_entry(self):
-        stateroot = 'test'
-        return os.path.join('/boot/loader/entries', 'ostree-%s-0.conf' % stateroot)
+        entries_dir = '/boot/loader/entries'
+        conf = os.listdir(entries_dir)[0]
+        return os.path.join(entries_dir, conf)
 
     def find_line(self, path, prefix):
         with open(path, 'r') as f:
