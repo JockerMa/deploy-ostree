@@ -37,6 +37,4 @@ class TestMultipleNamedDeploys(FixtureTestCase):
     def test_should_create_boot_loader_entries(self):
         entries = os.listdir('/boot/loader/entries')
         self.assertEqual(2, len(entries))
-        self.assertSetEqual(
-            {'ostree-test-stateroot-0.conf', 'ostree-test-stateroot-1.conf'},
-            set(entries))
+        self.assertTrue(all('test-stateroot' in entry for entry in entries))

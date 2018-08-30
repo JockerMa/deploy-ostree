@@ -39,7 +39,7 @@ class TestMultipleDeploys(FixtureTestCase):
         entries = os.listdir('/boot/loader/entries')
         self.assertEqual(2, len(entries))
         for stateroot in stateroots:
-            self.assertTrue(any(entry.startswith('ostree-%s' % stateroot) for entry in entries))
+            self.assertTrue(any(stateroot in entry for entry in entries))
 
     def get_remotes(self):
         return [line.strip() for line in ostree(['remote', 'list']).stdout_str.splitlines()]

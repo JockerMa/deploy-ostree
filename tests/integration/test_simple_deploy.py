@@ -36,9 +36,10 @@ class TestSimpleDeploy(FixtureTestCase):
         self.assertTrue(os.path.isfile(os.path.join(self.get_deployment_dir(), 'etc', 'os-release')))
 
     def test_should_create_boot_loader_entry(self):
+        entries = os.listdir('/boot/loader/entries')
         stateroot_name = os.path.basename(self.get_stateroot())
-        entry_file = os.path.join('/boot/loader/entries', 'ostree-%s-0.conf' % stateroot_name)
-        self.assertTrue(os.path.isfile(entry_file))
+        self.assertEqual(1, len(entries))
+        self.assertIn(stateroot_name, entries[0])
 
     def get_deployment_dir(self):
         deployments_dir = os.path.join(self.get_stateroot(), 'deploy')
