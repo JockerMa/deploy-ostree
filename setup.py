@@ -20,18 +20,11 @@ def long_description():
 # get the version from the changelog
 def get_version():
     with open(os.path.join(here, 'CHANGELOG.md'), encoding='utf-8') as f:
-        has_unreleased = False
         for line in f:
             match = re.match(r'## (\S+)\s+', line)
-            if not match:
-                continue
-            if match.group(1) == '[Unreleased]':
-                has_unreleased = True
-            elif has_unreleased:
-                return '%s.post%s.dev1' % (match.group(1), timestamp)
-            else:
+            if match:
                 return match.group(1)
-    return '0.0.0.dev%s' % timestamp
+    raise Exception('no version in changelog')
 
 
 setup(
@@ -63,7 +56,7 @@ setup(
     zip_safe=False,
     install_requires=[],
     extras_require={
-        'dev': ['flake8', 'mypy'],
+        'dev': ['flake8', 'mypy', 'twine'],
     },
     package_data={
         'deploy_ostree': ['default-provisioners/*'],
