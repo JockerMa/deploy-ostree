@@ -53,9 +53,10 @@ setup(
     long_description_content_type='text/markdown',
     author='Felix Krull',
     author_email='f_krull@gmx.de',
+    url='https://gitlab.com/fkrull/deploy-ostree',
 
     classifiers=[
-        'Development Status :: 5 - Stable',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Environment :: Console',
         'Topic :: System :: Boot',
