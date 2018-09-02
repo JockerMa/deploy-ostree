@@ -4,11 +4,13 @@
 from datetime import datetime
 from setuptools import setup, find_packages
 import os.path
+import os
 import re
 
 
 timestamp = datetime.utcnow().strftime('%Y%m%d%H%M%S')
 here = os.path.abspath(os.path.dirname(__file__))
+release_version = os.getenv('RELEASE_VERSION')
 
 
 # get the long description from the readme
@@ -18,13 +20,28 @@ def long_description():
 
 
 # get the version from the changelog
-def get_version():
+def get_changelog_version():
     with open(os.path.join(here, 'CHANGELOG.md'), encoding='utf-8') as f:
         for line in f:
             match = re.match(r'## (\S+)\s+', line)
             if match:
                 return match.group(1)
     raise Exception('no version in changelog')
+
+
+def get_dev_version(base_version):
+    return '%s.dev%s' % (base_version, timestamp)
+
+
+def get_version():
+    changelog_version = get_changelog_version()
+    if not release_version:
+        return get_dev_version(changelog_version)
+    elif release_version == changelog_version:
+        return changelog_version
+    else:
+        raise Exception('expected version %s, got %s' %
+                        (release_version, changelog_version))
 
 
 setup(
