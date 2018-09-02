@@ -1,5 +1,4 @@
 variables:
-  PYPI_URL: https://test.pypi.org/legacy/
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   BRANCH_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   LATEST_TAG: $CI_REGISTRY_IMAGE:latest
@@ -11,6 +10,7 @@ stages:
   - integration
   - release
 
+# linting
 .python-template: &python-template
   image: python:3.5
   before_script:
@@ -22,6 +22,7 @@ lint:
   script:
     - make lint
 
+# unit-style tests
 unit:
   <<: *python-template
   stage: test
@@ -34,6 +35,7 @@ provisioners:
   script:
     - make test/provisioners
 
+# package
 build-wheel:
   <<: *python-template
   stage: build
@@ -43,6 +45,7 @@ build-wheel:
     paths:
       - dist/*.whl
 
+# integration tests
 .docker-template: &docker-template
   image: docker
   services:
@@ -63,10 +66,32 @@ integration-long:
   script:
     - make build/docker test/integration_long
 
-release:
+# release
+.release-template: &release-template
   stage: release
   image: python
   before_script:
     - pip install twine
   script:
-    - twine upload --repository-url $PYPI_URL dist/*.whl
+    - twine upload --repository-url $CI_ENVIRONMENT_URL dist/*.whl
+
+release-test:
+  <<: *release-template
+  variables:
+    TWINE_USERNAME: $PYPI_TEST_USERNAME
+    TWINE_PASSWORD: $PYPI_TEST_PASSWORD
+  environment:
+    name: test
+    url: https://test.pypi.org/legacy/
+  when: manual
+
+release-pypi:
+  <<: *release-template
+  variables:
+    TWINE_USERNAME: $PYPI_USERNAME
+    TWINE_PASSWORD: $PYPI_PASSWORD
+  environment:
+    name: pypi
+    url: https://upload.pypi.org/legacy/
+  only:
+    - /^v.+$/
