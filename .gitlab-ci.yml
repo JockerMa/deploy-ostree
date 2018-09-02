@@ -67,31 +67,27 @@ integration-long:
     - make build/docker test/integration_long
 
 # release
-.release-template: &release-template
-  stage: release
-  image: python
-  before_script:
-    - pip install twine
-  script:
-    - twine upload --repository-url $PYPI_URL dist/*.whl
-
 release-test:
-  <<: *release-template
+  <<: *python-template
+  stage: release
+  when: manual
   variables:
     TWINE_USERNAME: $PYPI_TEST_USERNAME
     TWINE_PASSWORD: $PYPI_TEST_PASSWORD
-    PYPI_URL: https://test.pypi.org/legacy/
   environment:
     name: test.pypi.org
-  when: manual
+  script:
+    - make release/test
 
-release-pypi:
-  <<: *release-template
-  variables:
-    TWINE_USERNAME: $PYPI_USERNAME
-    TWINE_PASSWORD: $PYPI_PASSWORD
-    PYPI_URL: https://upload.pypi.org/legacy/
-  environment:
-    name: pypi.org
+release-test:
+  <<: *python-template
+  stage: release
   only:
     - /^v.+$/
+  variables:
+    TWINE_USERNAME: $PYPI_TEST_USERNAME
+    TWINE_PASSWORD: $PYPI_TEST_PASSWORD
+  environment:
+    name: pypi.org
+  script:
+    - make release/pypi

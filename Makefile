@@ -38,6 +38,13 @@ test/integration:
 test/integration_long:
 	$(DOCKER_UNITTEST) tests/integration_long
 
+# push to PyPI
+release/test:
+	twine upload --repository-url https://test.pypi.org/legacy/ dist/*.whl
+
+release/pypi:
+	twine upload --repository-url https://upload.pypi.org/legacy/ dist/*.whl
+
 # cleanup
 clean:
 	-rm -rf dist/*.whl
