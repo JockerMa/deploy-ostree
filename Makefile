@@ -1,4 +1,3 @@
-VERSION := 1.0.0
 SRC_DIR := $(PWD)
 
 ifeq ($(OS),Windows_NT)
@@ -22,11 +21,8 @@ test/unit:
 test/provisioners:
 	$(LOCAL_UNITTEST) tests/provisioners
 
-# package
-PACKAGE := deploy_ostree-$(VERSION)-py3-none-any.whl
-
-build/wheel: export DEPLOY_OSTREE_VERSION=$(VERSION)
 build/wheel:
+	-rm -f dist/*.whl
 	$(PYTHON) setup.py bdist_wheel
 
 # dockerized tests
@@ -34,7 +30,7 @@ IMAGE_TAG := deploy-ostree
 DOCKER_UNITTEST := docker run --rm -i --privileged -v /ostree -v $(SRC_DIR)/tests:/tests $(IMAGE_TAG) python3 -m unittest discover -v -t / -s
 
 build/docker:
-	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(PACKAGE) .
+	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(shell ls -1 dist/*.whl | xargs basename) .
 
 test/integration:
 	$(DOCKER_UNITTEST) tests/integration
