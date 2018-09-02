@@ -21,8 +21,7 @@ test/unit:
 test/provisioners:
 	$(LOCAL_UNITTEST) tests/provisioners
 
-build/wheel:
-	-rm -f dist/*.whl
+build/wheel: clean/wheels
 	$(PYTHON) $(SRC_DIR)/setup.py bdist_wheel
 
 # dockerized tests
@@ -46,6 +45,8 @@ release/pypi:
 	twine upload --repository-url https://upload.pypi.org/legacy/ dist/*.whl
 
 # cleanup
-clean:
-	-rm -rf dist/*.whl
+clean: clean/wheels
 	-docker image rm $(IMAGE_TAG)
+
+clean/wheels:
+	-rm -rf dist/*.whl
