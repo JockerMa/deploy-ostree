@@ -36,16 +36,10 @@ depends on the OS, the architecture, and the bootloader in use.
 
 ## Installation
 
-The recommended installation method is to download the latest package from the
-master branch. All artifacts for the master branch can be found at:
-
-https://gitlab.com/fkrull/deploy-ostree/-/jobs/artifacts/master/browse/dist?job=build-wheel
-
-The current package can also be installed directly with `pip` using the
-following URL:
+You can install deploy-ostree using pip:
 
 ```console
-$ pip3 install "https://gitlab.com/fkrull/deploy-ostree/-/jobs/artifacts/master/raw/dist/deploy_ostree-1.0.0-py3-none-any.whl?job=build-wheel"
+$ pip3 install deploy-ostree
 ```
 
 ## Usage
