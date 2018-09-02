@@ -82,7 +82,7 @@ release-test:
     TWINE_PASSWORD: $PYPI_TEST_PASSWORD
     PYPI_URL: https://test.pypi.org/legacy/
   environment:
-    name: test
+    name: test.pypi.org
   when: manual
 
 release-pypi:
@@ -92,6 +92,6 @@ release-pypi:
     TWINE_PASSWORD: $PYPI_PASSWORD
     PYPI_URL: https://upload.pypi.org/legacy/
   environment:
-    name: pypi
+    name: pypi.org
   only:
     - /^v.+$/
