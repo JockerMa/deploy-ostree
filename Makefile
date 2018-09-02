@@ -21,6 +21,7 @@ test/unit:
 test/provisioners:
 	$(LOCAL_UNITTEST) tests/provisioners
 
+# package
 build/wheel: clean/wheels
 	$(PYTHON) $(SRC_DIR)/setup.py bdist_wheel
 
