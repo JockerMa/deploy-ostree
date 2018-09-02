@@ -45,6 +45,17 @@ build-wheel:
     paths:
       - dist/*.whl
 
+build-release-wheel:
+  <<: *python-template
+  stage: build
+  only:
+    - /^v.+$/
+  script:
+    - make build/release-wheel
+  artifacts:
+    paths:
+      - dist/*.whl
+
 # integration tests
 .docker-template: &docker-template
   image: docker
@@ -79,14 +90,14 @@ release-test:
   script:
     - make release/test
 
-release-test:
+release-pypi:
   <<: *python-template
   stage: release
   only:
     - /^v.+$/
   variables:
-    TWINE_USERNAME: $PYPI_TEST_USERNAME
-    TWINE_PASSWORD: $PYPI_TEST_PASSWORD
+    TWINE_USERNAME: $PYPI_USERNAME
+    TWINE_PASSWORD: $PYPI_PASSWORD
   environment:
     name: pypi.org
   script:
