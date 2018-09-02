@@ -71,6 +71,7 @@ release-test:
     TWINE_PASSWORD: $PYPI_TEST_PASSWORD
   environment:
     name: test.pypi.org
+    url: https://test.pypi.org/project/deploy-ostree
   script:
     - make release/test
 
@@ -84,5 +85,6 @@ release-pypi:
     TWINE_PASSWORD: $PYPI_PASSWORD
   environment:
     name: pypi.org
+    url: https://pypi.org/project/deploy-ostree
   script:
     - make release/pypi
