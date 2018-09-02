@@ -47,7 +47,10 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
+        'Environment :: Console',
+        'Topic :: System :: Boot',
+        'Topic :: System :: Operating System',
+        'Operating System :: POSIX :: Linux',
         'License :: OSI Approved :: MIT License',
 
         'Programming Language :: Python :: 3',
