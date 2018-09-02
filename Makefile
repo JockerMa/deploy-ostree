@@ -23,7 +23,7 @@ test/provisioners:
 
 build/wheel:
 	-rm -f dist/*.whl
-	$(PYTHON) setup.py bdist_wheel
+	$(PYTHON) $(SRC_DIR)/setup.py bdist_wheel
 
 # dockerized tests
 IMAGE_TAG := deploy-ostree
