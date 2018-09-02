@@ -1,8 +1,3 @@
-variables:
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-  BRANCH_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-  LATEST_TAG: $CI_REGISTRY_IMAGE:latest
-
 stages:
   - lint
   - test
@@ -10,6 +5,7 @@ stages:
   - integration
   - release
 
+# linting
 .python-template: &python-template
   image: python:3.5
   before_script:
@@ -21,6 +17,7 @@ lint:
   script:
     - make lint
 
+# unit-style tests
 unit:
   <<: *python-template
   stage: test
@@ -33,15 +30,17 @@ provisioners:
   script:
     - make test/provisioners
 
+# package
 build-wheel:
   <<: *python-template
   stage: build
   script:
-    - make build/wheel
+    - make build/wheel RELEASE_VERSION=$(echo $CI_COMMIT_TAG | sed -e s/^v//)
   artifacts:
     paths:
       - dist/*.whl
 
+# integration tests
 .docker-template: &docker-template
   image: docker
   services:
@@ -61,3 +60,31 @@ integration-long:
   stage: integration
   script:
     - make build/docker test/integration_long
+
+# release
+release-test:
+  <<: *python-template
+  stage: release
+  when: manual
+  variables:
+    TWINE_USERNAME: $PYPI_TEST_USERNAME
+    TWINE_PASSWORD: $PYPI_TEST_PASSWORD
+  environment:
+    name: test.pypi.org
+    url: https://test.pypi.org/project/deploy-ostree
+  script:
+    - make release/test
+
+release-pypi:
+  <<: *python-template
+  stage: release
+  only:
+    - /^v.+$/
+  variables:
+    TWINE_USERNAME: $PYPI_USERNAME
+    TWINE_PASSWORD: $PYPI_PASSWORD
+  environment:
+    name: pypi.org
+    url: https://pypi.org/project/deploy-ostree
+  script:
+    - make release/pypi

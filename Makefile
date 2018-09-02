@@ -1,4 +1,3 @@
-VERSION := 1.0.0
 SRC_DIR := $(PWD)
 
 ifeq ($(OS),Windows_NT)
@@ -23,18 +22,15 @@ test/provisioners:
 	$(LOCAL_UNITTEST) tests/provisioners
 
 # package
-PACKAGE := deploy_ostree-$(VERSION)-py3-none-any.whl
-
-build/wheel: export DEPLOY_OSTREE_VERSION=$(VERSION)
-build/wheel:
-	$(PYTHON) setup.py bdist_wheel
+build/wheel: clean/wheels
+	$(PYTHON) $(SRC_DIR)/setup.py bdist_wheel
 
 # dockerized tests
 IMAGE_TAG := deploy-ostree
 DOCKER_UNITTEST := docker run --rm -i --privileged -v /ostree -v $(SRC_DIR)/tests:/tests $(IMAGE_TAG) python3 -m unittest discover -v -t / -s
 
 build/docker:
-	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(PACKAGE) .
+	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(shell ls -1 dist/*.whl | xargs basename) .
 
 test/integration:
 	$(DOCKER_UNITTEST) tests/integration
@@ -42,7 +38,16 @@ test/integration:
 test/integration_long:
 	$(DOCKER_UNITTEST) tests/integration_long
 
+# push to PyPI
+release/test:
+	twine upload --repository-url https://test.pypi.org/legacy/ dist/*.whl
+
+release/pypi:
+	twine upload --repository-url https://upload.pypi.org/legacy/ dist/*.whl
+
 # cleanup
-clean:
-	-rm -rf dist/*.whl
+clean: clean/wheels
 	-docker image rm $(IMAGE_TAG)
+
+clean/wheels:
+	-rm -rf dist/*.whl

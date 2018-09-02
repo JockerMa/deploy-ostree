@@ -1,6 +1,8 @@
 # deploy-ostree: deploy and provision an OSTree commit
 
-[![pipeline status](https://gitlab.com/fkrull/deploy-ostree/badges/master/pipeline.svg)](https://gitlab.com/fkrull/deploy-ostree/commits/master)
+[![pipeline status](https://gitlab.com/fkrull/deploy-ostree/badges/master/pipeline.svg)](https://gitlab.com/fkrull/deploy-ostree/pipelines)
+[![PyPI](https://img.shields.io/pypi/v/deploy-ostree.svg)](https://pypi.org/project/deploy-ostree/)
+[![python versions](https://img.shields.io/pypi/pyversions/deploy-ostree.svg)](https://pypi.org/project/deploy-ostree/)
 
 `deploy-ostree` is a tool to deploy and configure an [OSTree][ostree] commit
 without user input from a simple configuration file. It will:
@@ -196,3 +198,9 @@ there's not a lot of OSTree systems to demonstrate with so here we are.
 
 [centos-atomic]: https://wiki.centos.org/SpecialInterestGroup/Atomic/Download
 [cloud-init]: http://www.projectatomic.io/blog/2014/10/getting-started-with-cloud-init/
+
+## Version History
+
+See [the changelog][changelog] for a list of versions and their changes.
+
+[changelog]: https://gitlab.com/fkrull/deploy-ostree/blob/master/CHANGELOG.md
