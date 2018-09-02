@@ -55,7 +55,7 @@ setup(
     author_email='f_krull@gmx.de',
 
     classifiers=[
-        'Development Status :: 5 - Stable',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Environment :: Console',
         'Topic :: System :: Boot',
