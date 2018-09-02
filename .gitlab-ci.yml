@@ -45,17 +45,6 @@ build-wheel:
     paths:
       - dist/*.whl
 
-build-release-wheel:
-  <<: *python-template
-  stage: build
-  only:
-    - /^v.+$/
-  script:
-    - make build/release-wheel
-  artifacts:
-    paths:
-      - dist/*.whl
-
 # integration tests
 .docker-template: &docker-template
   image: docker
