@@ -1,6 +1,8 @@
 # deploy-ostree: deploy and provision an OSTree commit
 
-[![pipeline status](https://gitlab.com/fkrull/deploy-ostree/badges/master/pipeline.svg)](https://gitlab.com/fkrull/deploy-ostree/commits/master)
+![pipeline status](https://gitlab.com/fkrull/deploy-ostree/badges/master/pipeline.svg)
+![PyPI](https://img.shields.io/pypi/v/deploy-ostree.svg)
+![python versions](https://img.shields.io/pypi/pyversions/deploy-ostree.svg)
 
 `deploy-ostree` is a tool to deploy and configure an [OSTree][ostree] commit
 without user input from a simple configuration file. It will:
@@ -194,8 +196,6 @@ Note that CentOS Atomic Host includes [cloud-init][cloud-init] which means it
 will spend some time unsuccessfully doing its cloud setup. This is awkward, but
 there's not a lot of OSTree systems to demonstrate with so here we are.
 
-[centos-atomic]: https://wiki.centos.org/SpecialInterestGroup/Atomic/Download
-[cloud-init]: http://www.projectatomic.io/blog/2014/10/getting-started-with-cloud-init/
 [centos-atomic]: https://wiki.centos.org/SpecialInterestGroup/Atomic/Download
 [cloud-init]: http://www.projectatomic.io/blog/2014/10/getting-started-with-cloud-init/
 
