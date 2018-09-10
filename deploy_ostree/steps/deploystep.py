@@ -14,10 +14,6 @@ class DeployStep:
         pass
 
     @classmethod
-    def is_relevant(cls, cfg: Config) -> bool:
-        return True
-
-    @classmethod
     def get_steps(cls, cfg: Config) -> 'Sequence[DeployStep]':
         return [cls(cfg)]
 

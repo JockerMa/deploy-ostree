@@ -18,8 +18,7 @@ class DeploySteps:
     def __init__(self, cfg: Config, deploy_step_types: Iterable[Type[DeployStep]]) -> None:
         self.steps = []  # type: List[DeployStep]
         for cls in deploy_step_types:
-            if cls.is_relevant(cfg):
-                self.steps.extend(cls.get_steps(cfg))
+            self.steps.extend(cls.get_steps(cfg))
 
     def run(self):
         for step in self.steps:

@@ -19,8 +19,5 @@ class TestPullRef(TestCase):
             ['ostree', 'pull', 'ostree-remote', 'fedora/28/x86_64/workstation'],
             check=True)
 
-    def test_should_be_relevant(self):
-        self.assertTrue(PullRef.is_relevant(mock.Mock()))
-
     def test_title_should_be_str(self):
         self.assertIsInstance(PullRef(mock.Mock()).title, str)

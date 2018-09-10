@@ -2,6 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
+from typing import Sequence
 from . import DeployStep
 from ..config import Config
 from ..run import run
@@ -25,5 +26,7 @@ class FileRemote(DeployStep):
         ], check=True)
 
     @classmethod
-    def is_relevant(cls, cfg: Config) -> bool:
-        return cfg.path is not None
+    def get_steps(cls, cfg) -> Sequence[DeployStep]:
+        if cfg.path is None:
+            return []
+        return [cls(cfg)]

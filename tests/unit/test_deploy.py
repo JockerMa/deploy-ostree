@@ -94,9 +94,6 @@ class TestDeploy(TestCase):
             for step in steps:
                 step.run()
 
-    def test_should_be_relevant(self):
-        self.assertTrue(Deploy.is_relevant(mock.Mock()))
-
     def test_title_should_be_str(self):
         self.assertIsInstance(Deploy(mock.Mock()).title, str)
 

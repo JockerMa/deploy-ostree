@@ -1,6 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+from typing import Sequence
 from . import DeployStep
 from ..config import Config
 from ..run import run
@@ -24,5 +25,7 @@ class HttpRemote(DeployStep):
         ], check=True)
 
     @classmethod
-    def is_relevant(cls, cfg: Config) -> bool:
-        return cfg.url is not None
+    def get_steps(cls, cfg) -> Sequence[DeployStep]:
+        if cfg.url is None:
+            return []
+        return [cls(cfg)]

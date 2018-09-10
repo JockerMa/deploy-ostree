@@ -9,6 +9,20 @@ from deploy_ostree.steps.file_remote import FileRemote
 
 
 class TestFileRemote(TestCase):
+    def test_should_return_step_if_path_source(self):
+        cfg = Config(Source.path('/'), 'ref')
+
+        steps = FileRemote.get_steps(cfg)
+
+        self.assertEqual(len(steps), 1)
+
+    def test_should_return_no_steps_if_url_source(self):
+        cfg = Config(Source.url('/'), 'ref')
+
+        steps = FileRemote.get_steps(cfg)
+
+        self.assertEqual(len(steps), 0)
+
     @mock.patch('deploy_ostree.steps.file_remote.run')
     @mock.patch('os.path', posixpath)
     def test_should_add_ostree_remote_for_path_in_config(self, mock_run: mock.Mock):
@@ -41,16 +55,6 @@ class TestFileRemote(TestCase):
             'remote-name',
             'file://%s' % repo_abs_path
         ], check=True)
-
-    def test_should_not_be_relevant_if_source_is_url(self):
-        cfg = Config(Source.url('url'), 'ref')
-
-        self.assertFalse(FileRemote.is_relevant(cfg))
-
-    def test_should_be_relevant_if_source_is_path(self):
-        cfg = Config(Source.path('path'), 'ref')
-
-        self.assertTrue(FileRemote.is_relevant(cfg))
 
     def test_title_should_be_str(self):
         self.assertIsInstance(FileRemote(mock.Mock()).title, str)

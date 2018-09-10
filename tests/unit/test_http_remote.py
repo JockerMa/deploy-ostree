@@ -7,6 +7,20 @@ from deploy_ostree.steps.http_remote import HttpRemote
 
 
 class TestHttpRemote(TestCase):
+    def test_should_return_step_if_url_source(self):
+        cfg = Config(Source.url('/'), 'ref')
+
+        steps = HttpRemote.get_steps(cfg)
+
+        self.assertEqual(len(steps), 1)
+
+    def test_should_return_no_steps_ifpath_source(self):
+        cfg = Config(Source.path('/'), 'ref')
+
+        steps = HttpRemote.get_steps(cfg)
+
+        self.assertEqual(len(steps), 0)
+
     @mock.patch('deploy_ostree.steps.http_remote.run')
     def test_should_add_ostree_remote_for_url_in_config(self, mock_run: mock.Mock):
         cfg = Config(Source.url('https://example.com/ostree'), 'debian/9/i386/desktop', remote='remote-name')
@@ -21,16 +35,6 @@ class TestHttpRemote(TestCase):
             'remote-name',
             'https://example.com/ostree'
         ], check=True)
-
-    def test_should_be_relevant_if_source_is_url(self):
-        cfg = Config(Source.url('url'), 'ref')
-
-        self.assertTrue(HttpRemote.is_relevant(cfg))
-
-    def test_should_not_be_relevant_if_source_is_path(self):
-        cfg = Config(Source.path('path'), 'ref')
-
-        self.assertFalse(HttpRemote.is_relevant(cfg))
 
     def test_title_should_be_str(self):
         self.assertIsInstance(HttpRemote(mock.Mock()).title, str)

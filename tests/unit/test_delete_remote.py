@@ -21,10 +21,5 @@ class TestDeleteRemote(TestCase):
             'remote-name',
         ], check=True)
 
-    def test_should_be_relevant(self):
-        cfg = Config(Source.url('url'), 'ref')
-
-        self.assertTrue(DeleteRemote.is_relevant(cfg))
-
     def test_title_should_be_str(self):
         self.assertIsInstance(DeleteRemote(mock.Mock()).title, str)

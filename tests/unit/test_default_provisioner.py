@@ -9,15 +9,12 @@ from deploy_ostree.config import Config, ProvisionerConfig, Source
 
 
 class TestDefaultProvisioner(TestCase):
-    def test_should_be_relevant_if_default_provisioners_are_not_empty(self):
-        cfg = Config(Source.url('url'), 'ref', default_provisioners=[ProvisionerConfig('name', {})])
-
-        self.assertTrue(DefaultProvisioner.is_relevant(cfg))
-
-    def test_should_not_be_relevant_if_no_default_provisioners(self):
+    def test_should_return_no_steps_if_no_default_provisioners(self):
         cfg = Config(Source.url('url'), 'ref', default_provisioners=[])
 
-        self.assertFalse(DefaultProvisioner.is_relevant(cfg))
+        steps = DefaultProvisioner.get_steps(cfg)
+
+        self.assertEqual(len(steps), 0)
 
     def test_title_should_be_str_instance(self):
         self.assertIsInstance(DefaultProvisioner(mock.Mock(), mock.Mock()).title, str)

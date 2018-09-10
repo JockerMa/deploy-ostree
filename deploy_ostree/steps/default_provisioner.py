@@ -44,9 +44,5 @@ class DefaultProvisioner(DeployStep):
         self.PROVISIONERS[self.provisioner.name](self.config.deployment_dir, self.provisioner.args)
 
     @classmethod
-    def is_relevant(cls, config: Config) -> bool:
-        return bool(config.default_provisioners)
-
-    @classmethod
     def get_steps(cls, config: Config) -> Sequence[DeployStep]:
         return [cls(config, provisioner) for provisioner in config.default_provisioners]

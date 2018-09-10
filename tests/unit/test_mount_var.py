@@ -46,8 +46,5 @@ class TestMountVar(TestCase):
             os.path.join('/ostree', 'deploy', 'test', 'deploy', 'test-deploy.0', 'var'),
         ], check=True)
 
-    def test_should_be_relevant(self):
-        self.assertTrue(MountVar.is_relevant(mock.Mock()))
-
     def test_title_should_be_str(self):
         self.assertIsInstance(MountVar(mock.Mock()).title, str)
