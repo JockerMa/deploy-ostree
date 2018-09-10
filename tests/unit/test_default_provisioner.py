@@ -25,8 +25,8 @@ class TestDefaultProvisioner(TestCase):
     @mock.patch('deploy_ostree.steps.default_provisioner.run')
     def test_should_run_provisioner_script_per_config(self, run_mock: mock.Mock):
         cfg = Config(Source.url('url'), 'ref', stateroot='test', default_provisioners=[
-            ProvisionerConfig('name', {}),
-            ProvisionerConfig('name2', {'arg': 'value'}),
+            ProvisionerConfig('create-user', {}),
+            ProvisionerConfig('etc-fstab', {'arg': 'value'}),
         ])
         cfg.set_deployment_name('test-deploy.0')
 
@@ -39,12 +39,12 @@ class TestDefaultProvisioner(TestCase):
 
         expected_calls = [
             mock.call(
-                [os.path.join(provisioners_dir, 'name'), deploy_dir],
+                [os.path.join(provisioners_dir, 'create-user'), deploy_dir],
                 check=True,
                 env={}
             ),
             mock.call(
-                [os.path.join(provisioners_dir, 'name2'), deploy_dir],
+                [os.path.join(provisioners_dir, 'etc-fstab'), deploy_dir],
                 check=True,
                 env={'DEPLOY_OSTREE_arg': 'value'}
             )
