@@ -94,13 +94,21 @@ class Config:
 
     @property
     def var_dir(self) -> str:
-        return os.path.join('/ostree', 'deploy', self.stateroot, 'var')
+        return os.path.join(self.root_dir, 'ostree', 'deploy', self.stateroot, 'var')
 
     @property
     def deployment_dir(self) -> str:
         if self.deployment_name is None:
             raise RuntimeError('deployment name not set')
-        return os.path.join('/ostree', 'deploy', self.stateroot, 'deploy', self.deployment_name)
+        return os.path.join(
+            self.root_dir,
+            'ostree', 'deploy', self.stateroot,
+            'deploy', self.deployment_name
+        )
+
+    @property
+    def ostree_repo(self) -> str:
+        return os.path.join(self.root_dir, 'ostree', 'repo')
 
     def set_deployment_name(self, deployment: str) -> None:
         self.deployment_name = deployment
