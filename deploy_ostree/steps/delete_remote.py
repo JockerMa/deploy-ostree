@@ -9,6 +9,7 @@ from ..run import run
 class DeleteRemote(DeployStep):
     def __init__(self, cfg: Config) -> None:
         self.remote = cfg.remote
+        self.ostree_repo = cfg.ostree_repo
 
     @property
     def title(self) -> str:
@@ -17,6 +18,7 @@ class DeleteRemote(DeployStep):
     def run(self):
         run([
             'ostree', 'remote', 'delete',
+            '--repo=%s' % self.ostree_repo,
             '--if-exists',
             self.remote
         ], check=True)
