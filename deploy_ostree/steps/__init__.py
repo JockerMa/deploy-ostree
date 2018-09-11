@@ -3,8 +3,8 @@
 
 from typing import Callable, Iterable, Sequence, Type
 from .deploystep import DeployStep, DeployError  # noqa
+from . import remote
 from .delete_remote import DeleteRemote
-from .remote import FileRemote, HttpRemote
 from .pull_ref import PullRef
 from .create_stateroot import CreateStateroot
 from .deploy import Deploy
@@ -45,8 +45,7 @@ class DeploySteps:
 def get_deploy_steps(cfg: Config) -> DeploySteps:
     return DeploySteps(cfg, [
         step(DeleteRemote),
-        HttpRemote.get_steps,
-        FileRemote.get_steps,
+        remote.get_steps,
         step(PullRef),
         step(CreateStateroot),
         step(Deploy),

@@ -49,8 +49,11 @@ class HttpRemote(DeployStep):
             self.url
         ], check=True)
 
-    @classmethod
-    def get_steps(cls, cfg) -> Sequence[DeployStep]:
-        if cfg.url is None:
-            return []
-        return [cls(cfg)]
+
+def get_steps(cfg: Config) -> Sequence[DeployStep]:
+    if cfg.url is not None:
+        return [HttpRemote(cfg)]
+    if cfg.path is not None:
+        return [FileRemote(cfg)]
+    # Config should prevent this case
+    raise RuntimeError('invalid config')
