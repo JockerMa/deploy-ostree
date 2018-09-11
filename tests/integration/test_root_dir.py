@@ -26,10 +26,10 @@ class TestRootDir(FixtureTestCase):
         print(result.stdout_str)
 
     def test_should_not_modify_system_ostree_root(self):
-        self.assertEqual(len(os.listdir('/ostree')), 0)
+        self.assertEqual(elems_in_dir('/ostree'), 0)
 
     def test_should_not_add_system_ostree_remotes(self):
-        self.assertEqual(len(os.listdir('/etc/ostree/remotes.d')), 0)
+        self.assertEqual(elems_in_dir('/etc/ostree/remotes.d'), 0)
 
     def test_should_add_randomly_named_remote(self):
         remote = ostree(['remote', 'list', '--repo=%s' % self.REPO_DIR]).stdout_str.strip()
@@ -68,3 +68,9 @@ class TestRootDir(FixtureTestCase):
         with open(path, 'r') as f:
             content = f.read()
         self.assertIn(expected_content, content)
+
+
+def elems_in_dir(path):
+    if not os.path.exists(path):
+        return 0
+    return len(os.listdir(path))
