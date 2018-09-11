@@ -4,8 +4,7 @@
 from typing import Callable, Iterable, Sequence, Type
 from .deploystep import DeployStep, DeployError  # noqa
 from .delete_remote import DeleteRemote
-from .http_remote import HttpRemote
-from .file_remote import FileRemote
+from .remote import FileRemote, HttpRemote
 from .pull_ref import PullRef
 from .create_stateroot import CreateStateroot
 from .deploy import Deploy
