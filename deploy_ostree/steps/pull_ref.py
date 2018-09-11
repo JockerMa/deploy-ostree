@@ -10,10 +10,15 @@ class PullRef(DeployStep):
     def __init__(self, cfg: Config) -> None:
         self.remote = cfg.remote
         self.ref = cfg.ref
+        self.ostree_repo = cfg.ostree_repo
 
     @property
     def title(self) -> str:
         return 'Pulling: %s:%s' % (self.remote, self.ref)
 
     def run(self):
-        run(['ostree', 'pull', self.remote, self.ref], check=True)
+        run([
+            'ostree', 'pull',
+            '--repo=%s' % self.ostree_repo,
+            self.remote, self.ref
+        ], check=True)
