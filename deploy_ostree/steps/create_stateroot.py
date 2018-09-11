@@ -12,6 +12,7 @@ class CreateStateroot(DeployStep):
 
     def __init__(self, cfg: Config) -> None:
         self.stateroot = cfg.stateroot
+        self.root_dir = cfg.root_dir
 
     @property
     def title(self) -> str:
@@ -20,5 +21,9 @@ class CreateStateroot(DeployStep):
     def run(self):
         if os.path.exists(self.DEPLOY_DIR + self.stateroot):
             print("already exists, skipping")
-        else:
-            run(['ostree', 'admin', 'os-init', self.stateroot], check=True)
+            return
+        run([
+            'ostree', 'admin', 'os-init',
+            '--sysroot=%s' % self.root_dir,
+            self.stateroot
+        ], check=True)
