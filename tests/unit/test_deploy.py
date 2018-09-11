@@ -24,13 +24,12 @@ class TestDeploy(TestCase):
         Deploy(cfg).run()
 
         run_mock.assert_called_once_with([
-                'ostree',
-                'admin',
-                'deploy',
-                '--os=atomic-host',
-                'fedora-atomic:fedora/28/x86_64/atomic-host',
-                '--karg=root=/dev/mapper/atomic-root'
-            ], check=True)
+            'ostree', 'admin', 'deploy',
+            '--sysroot=/',
+            '--os=atomic-host',
+            'fedora-atomic:fedora/28/x86_64/atomic-host',
+            '--karg=root=/dev/mapper/atomic-root'
+        ], check=True)
         self.assertEqual(cfg.deployment_dir, os.path.join('/ostree', 'deploy', 'atomic-host', 'deploy', 'abcdef.1'))
 
     @mock.patch('deploy_ostree.steps.deploy.run')
@@ -53,15 +52,40 @@ class TestDeploy(TestCase):
         Deploy(cfg).run()
 
         run_mock.assert_called_once_with([
-                'ostree',
-                'admin',
-                'deploy',
-                '--os=os',
-                'remote:ref',
-                '--karg=root=/dev/rootfs',
-                '--karg-append=quiet',
-                '--karg-append=splash',
-            ], check=True)
+            'ostree', 'admin', 'deploy',
+            '--sysroot=/',
+            '--os=os',
+            'remote:ref',
+            '--karg=root=/dev/rootfs',
+            '--karg-append=quiet',
+            '--karg-append=splash',
+        ], check=True)
+
+    @mock.patch('deploy_ostree.steps.deploy.run')
+    @mock.patch('deploy_ostree.steps.deploy.get_root_fs')
+    @mock.patch('os.listdir')
+    def test_should_deploy_into_specified_root_dir(self, listdir_mock, get_root_fs_mock, run_mock):
+        root_dir = os.path.join('/mnt', 'rootfs')
+        cfg = Config(
+            Source.url('url'),
+            'ref',
+            remote='remote',
+            stateroot='test-stateroot',
+            root_dir=root_dir,
+        )
+        get_root_fs_mock.return_value = '/dev/mapper/atomic-root'
+        listdir_mock.side_effect = [[], ['deploy', 'deploy.origin']]
+
+        Deploy(cfg).run()
+
+        listdir_mock.assert_called_with(os.path.join(root_dir, 'ostree', 'deploy', 'test-stateroot', 'deploy'))
+        run_mock.assert_called_once_with([
+            'ostree', 'admin', 'deploy',
+            '--sysroot=%s' % root_dir,
+            '--os=test-stateroot',
+            'remote:ref',
+            '--karg=root=/dev/mapper/atomic-root'
+        ], check=True)
 
     @mock.patch('deploy_ostree.steps.deploy.run', mock.Mock())
     @mock.patch('deploy_ostree.steps.deploy.get_root_fs', mock.Mock())
