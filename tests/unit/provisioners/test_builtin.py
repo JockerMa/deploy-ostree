@@ -32,6 +32,20 @@ class TestBuiltinProvisioner(TestCase):
         )
 
     @mock.patch('deploy_ostree.steps.provisioners.builtin.run')
+    def test_should_run_provisioner_script_with_specified_root_dir(self, run_mock: mock.Mock):
+        root_dir = os.path.join('/mnt', 'rootfs')
+        cfg = Config(Source.url('url'), 'ref', stateroot='test', root_dir=root_dir)
+        cfg.set_deployment_name('test-deploy.0')
+        provisioner = ProvisionerConfig('etc-fstab', {})
+
+        BuiltinProvisioner(cfg, provisioner).run()
+
+        run_mock.assert_called_once_with([
+            os.path.join(PROVISIONERS_DIR, 'etc-fstab'),
+            os.path.join(root_dir, 'ostree', 'deploy', 'test', 'deploy', 'test-deploy.0')
+        ], check=True, env={})
+
+    @mock.patch('deploy_ostree.steps.provisioners.builtin.run')
     def test_should_run_provisioner_script_with_arguments(self, run_mock: mock.Mock):
         provisioner = ProvisionerConfig('create-user', {'username': 'user', 'password': 'pwd'})
 
