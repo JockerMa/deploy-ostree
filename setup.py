@@ -77,7 +77,7 @@ setup(
         'dev': ['flake8', 'mypy', 'twine'],
     },
     package_data={
-        'deploy_ostree': ['default-provisioners/*'],
+        'deploy_ostree': ['builtin-provisioners/*'],
     },
     entry_points={
         'console_scripts': [

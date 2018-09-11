@@ -4,7 +4,7 @@
 from unittest import TestCase
 from deploy_ostree.config import Config, Source, ProvisionerConfig
 from deploy_ostree.steps.provisioners import get_steps
-from deploy_ostree.steps.default_provisioner import DefaultProvisioner
+from deploy_ostree.steps.provisioners.builtin import BuiltinProvisioner
 
 
 class TestGetProvisionerSteps(TestCase):
@@ -15,7 +15,7 @@ class TestGetProvisionerSteps(TestCase):
 
         self.assertEqual(len(steps), 0)
 
-    def test_should_return_DefaultProvisioner_per_configured_provisioner(self):
+    def test_should_return_BuiltinProvisioner_per_configured_provisioner(self):
         cfg = Config(Source.url('url'), 'ref', stateroot='test', default_provisioners=[
             ProvisionerConfig('create-user', {}),
             ProvisionerConfig('etc-fstab', {'arg': 'value'}),
@@ -24,5 +24,5 @@ class TestGetProvisionerSteps(TestCase):
         steps = get_steps(cfg)
 
         self.assertEqual(len(steps), 2)
-        self.assertIsInstance(steps[0], DefaultProvisioner)
-        self.assertIsInstance(steps[1], DefaultProvisioner)
+        self.assertIsInstance(steps[0], BuiltinProvisioner)
+        self.assertIsInstance(steps[1], BuiltinProvisioner)

@@ -4,11 +4,11 @@
 import os
 import deploy_ostree
 from . import DeployStep
-from ..config import Config, ProvisionerConfig
-from ..run import run
+from ...config import Config, ProvisionerConfig
+from ...run import run
 
 
-PROVISIONER_DIR = os.path.join(os.path.dirname(deploy_ostree.__file__), 'default-provisioners')
+PROVISIONER_DIR = os.path.join(os.path.dirname(deploy_ostree.__file__), 'builtin-provisioners')
 
 
 def shell_provisioner(name):
@@ -21,7 +21,7 @@ def shell_provisioner(name):
     return provision
 
 
-class DefaultProvisioner(DeployStep):
+class BuiltinProvisioner(DeployStep):
     PROVISIONERS = {
         'authorized-keys': shell_provisioner('authorized-keys'),
         'create-user': shell_provisioner('create-user'),

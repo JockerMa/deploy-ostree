@@ -8,7 +8,7 @@ from unittest import TestCase
 import deploy_ostree
 from deploy_ostree.run import run
 
-PROVISIONER_DIR = os.path.join(os.path.dirname(deploy_ostree.__file__), 'default-provisioners')
+PROVISIONER_DIR = os.path.join(os.path.dirname(deploy_ostree.__file__), 'builtin-provisioners')
 
 
 class ProvisionerTestCase(TestCase):
