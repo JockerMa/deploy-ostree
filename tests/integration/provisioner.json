@@ -1,0 +1,12 @@
+{
+    "url": "http://localhost:8000/",
+    "ref": "test-commit",
+    "stateroot": "test-stateroot",
+
+    "default-provisioners": [
+        {
+            "provisioner": "etc-network-interfaces",
+            "interface": "enp0s3"
+        }
+    ]
+}
