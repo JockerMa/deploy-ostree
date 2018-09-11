@@ -1,7 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-from typing import Iterable, List, Type  # noqa
+from typing import Callable, Iterable, Sequence
 from .deploystep import DeployStep, DeployError  # noqa
 from .delete_remote import DeleteRemote
 from .http_remote import HttpRemote
@@ -14,11 +14,14 @@ from .default_provisioner import DefaultProvisioner
 from ..config import Config
 
 
+StepsProvider = Callable[[Config], Sequence[DeployStep]]
+
+
 class DeploySteps:
-    def __init__(self, cfg: Config, deploy_step_types: Iterable[Type[DeployStep]]) -> None:
-        self.steps = []  # type: List[DeployStep]
-        for cls in deploy_step_types:
-            self.steps.extend(cls.get_steps(cfg))
+    def __init__(self, cfg: Config, steps_providers: Iterable[StepsProvider]) -> None:
+        self.steps = []  # type: Sequence[DeployStep]
+        for get_steps in steps_providers:
+            self.steps.extend(get_steps(cfg))
 
     def run(self):
         for step in self.steps:
@@ -38,12 +41,12 @@ class DeploySteps:
 
 def get_deploy_steps(cfg: Config) -> DeploySteps:
     return DeploySteps(cfg, [
-        DeleteRemote,
-        HttpRemote,
-        FileRemote,
-        PullRef,
-        CreateStateroot,
-        Deploy,
-        MountVar,
-        DefaultProvisioner,
+        DeleteRemote.get_steps,
+        HttpRemote.get_steps,
+        FileRemote.get_steps,
+        PullRef.get_steps,
+        CreateStateroot.get_steps,
+        Deploy.get_steps,
+        MountVar.get_steps,
+        DefaultProvisioner.get_steps,
     ])
