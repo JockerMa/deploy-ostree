@@ -3,13 +3,12 @@
 
 from typing import Callable, Iterable, Sequence, Type
 from .deploystep import DeployStep, DeployError  # noqa
-from . import remote
+from . import remote, provisioners
 from .delete_remote import DeleteRemote
 from .pull_ref import PullRef
 from .create_stateroot import CreateStateroot
 from .deploy import Deploy
 from .mount_var import MountVar
-from .default_provisioner import DefaultProvisioner
 from ..config import Config
 
 
@@ -50,5 +49,5 @@ def get_deploy_steps(cfg: Config) -> DeploySteps:
         step(CreateStateroot),
         step(Deploy),
         step(MountVar),
-        DefaultProvisioner.get_steps,
+        provisioners.get_steps,
     ])
