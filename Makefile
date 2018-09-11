@@ -27,7 +27,13 @@ build/wheel: clean/wheels
 
 # dockerized tests
 IMAGE_TAG := deploy-ostree
-DOCKER_UNITTEST := docker run --rm -i --privileged -v /ostree -v $(SRC_DIR)/tests:/tests $(IMAGE_TAG) python3 -m unittest discover -v -t / -s
+DOCKER_UNITTEST := docker run --rm -i \
+	--privileged \
+	-v /ostree \
+	-v /tmp/deploy-ostree.test/sysroot \
+	-v $(SRC_DIR)/tests:/tests \
+	$(IMAGE_TAG) \
+	python3 -m unittest discover -v -t / -s
 
 build/docker:
 	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(shell ls -1 dist/*.whl | xargs basename) .

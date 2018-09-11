@@ -2,7 +2,6 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
-import tempfile
 from .. import deploy_ostree, ostree
 from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 
@@ -10,7 +9,7 @@ TESTS_DIR = os.path.dirname(__file__)
 
 
 class TestRootDir(FixtureTestCase):
-    ROOT_DIR = tempfile.mktemp('ostree-root')
+    ROOT_DIR = '/tmp/deploy-ostree.test/sysroot'
     REPO_DIR = os.path.join(ROOT_DIR, 'ostree', 'repo')
     STATEROOT_DIR = os.path.join(ROOT_DIR, 'ostree', 'deploy', 'test-stateroot')
     BOOTENTRIES_DIR = os.path.join(ROOT_DIR, 'boot', 'loader', 'entries')
