@@ -21,9 +21,7 @@ class TestDeploy(TestCase):
             ['1234567.0.origin', 'abcdef.1.origin', 'abcdef.1', '1234567.0'],
         ]
 
-        steps = Deploy.get_steps(cfg)
-        for step in steps:
-            step.run()
+        Deploy(cfg).run()
 
         run_mock.assert_called_once_with([
                 'ostree',
@@ -52,9 +50,7 @@ class TestDeploy(TestCase):
             ['1234567.0', '1234567.0.origin'],
         ]
 
-        steps = Deploy.get_steps(cfg)
-        for step in steps:
-            step.run()
+        Deploy(cfg).run()
 
         run_mock.assert_called_once_with([
                 'ostree',
@@ -74,10 +70,9 @@ class TestDeploy(TestCase):
         cfg = Config(Source.url('url'), 'ref')
         listdir_mock.return_value = ['abcdef.1.origin', 'abcdef.1']
 
-        steps = Deploy.get_steps(cfg)
+        step = Deploy(cfg)
         with self.assertRaises(DeployError):
-            for step in steps:
-                step.run()
+            step.run()
 
     @mock.patch('deploy_ostree.steps.deploy.run', mock.Mock())
     @mock.patch('deploy_ostree.steps.deploy.get_root_fs', mock.Mock())
@@ -89,13 +84,9 @@ class TestDeploy(TestCase):
             ['1234567.0.origin', 'abcdef.1.origin', 'abcdef.1', '1234567.0'],
         ]
 
-        steps = Deploy.get_steps(cfg)
+        step = Deploy(cfg)
         with self.assertRaises(DeployError):
-            for step in steps:
-                step.run()
-
-    def test_should_be_relevant(self):
-        self.assertTrue(Deploy.is_relevant(mock.Mock()))
+            step.run()
 
     def test_title_should_be_str(self):
         self.assertIsInstance(Deploy(mock.Mock()).title, str)

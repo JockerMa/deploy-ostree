@@ -11,20 +11,13 @@ class TestDeleteRemote(TestCase):
     def test_should_delete_ostree_remote(self, mock_run: mock.Mock):
         cfg = Config(Source.url('url'), 'ref', remote='remote-name')
 
-        steps = DeleteRemote.get_steps(cfg)
-        for step in steps:
-            step.run()
+        DeleteRemote(cfg).run()
 
         mock_run.assert_called_once_with([
             'ostree', 'remote', 'delete',
             '--if-exists',
             'remote-name',
         ], check=True)
-
-    def test_should_be_relevant(self):
-        cfg = Config(Source.url('url'), 'ref')
-
-        self.assertTrue(DeleteRemote.is_relevant(cfg))
 
     def test_title_should_be_str(self):
         self.assertIsInstance(DeleteRemote(mock.Mock()).title, str)

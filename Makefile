@@ -19,7 +19,7 @@ test/unit:
 	$(LOCAL_UNITTEST) tests/unit
 
 test/provisioners:
-	$(LOCAL_UNITTEST) tests/provisioners
+	$(LOCAL_UNITTEST) tests/builtin_provisioners
 
 # package
 build/wheel: clean/wheels
