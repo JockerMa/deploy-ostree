@@ -55,7 +55,7 @@ def parse_config(filename_or_url, root_dir=None) -> Config:
 def main():
     parser = build_argument_parser()
     args = parser.parse_args(sys.argv[1:])
-    cfg = parse_config(args.config)
+    cfg = parse_config(args.config, args.root)
     steps = get_deploy_steps(cfg)
 
     try:
