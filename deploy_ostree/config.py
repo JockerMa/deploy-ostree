@@ -68,6 +68,7 @@ class Config:
         ref: str,
         *,
         base_dir: str='',
+        root_dir: Optional[str]=None,
         remote: Optional[str]=None,
         stateroot: Optional[str]=None,
         kernel_args: Iterable[str]=(),
@@ -76,6 +77,7 @@ class Config:
         self._source = source
         self.ref = ref
         self.base_dir = base_dir
+        self.root_dir = root_dir or '/'
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
         self.kernel_args = list(kernel_args)
@@ -104,7 +106,7 @@ class Config:
         self.deployment_name = deployment
 
     @classmethod
-    def parse_json(cls, fobj: TextIO, *, base_dir=''):
+    def parse_json(cls, fobj: TextIO, *, base_dir: str='', root_dir: Optional[str]=None):
         data = json.load(fobj)
 
         if 'url' in data and 'path' in data:
@@ -121,6 +123,7 @@ class Config:
                 source=source,
                 ref=data['ref'],
                 base_dir=base_dir,
+                root_dir=root_dir,
                 remote=data.get('remote'),
                 stateroot=data.get('stateroot'),
                 kernel_args=data.get('kernel-args', ()),

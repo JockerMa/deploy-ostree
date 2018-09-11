@@ -232,3 +232,15 @@ class TestConfig(TestCase):
             cfg.var_dir,
             os.path.join('/ostree', 'deploy', cfg.stateroot, 'var')
         )
+
+    def test_default_root_dir_should_be_system_root(self):
+        json = '{"url": "http://example.com", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.root_dir, '/')
+
+    def test_should_pass_root_dir_to_config(self):
+        json = '{"url": "http://example.com", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json), root_dir='/mnt/rootfs')
+
+        self.assertEqual(cfg.root_dir, '/mnt/rootfs')
