@@ -26,7 +26,7 @@ class TestRootDir(FixtureTestCase):
         print(result.stdout_str)
 
     def test_should_not_modify_system_ostree_root(self):
-        self.assertFalse(os.path.exists('/ostree'))
+        self.assertEqual(len(os.listdir('/ostree')), 0)
 
     def test_should_not_add_system_ostree_remotes(self):
         self.assertEqual(len(os.listdir('/etc/ostree/remotes.d')), 0)
@@ -52,8 +52,6 @@ class TestRootDir(FixtureTestCase):
         entry_name = os.listdir(self.BOOTENTRIES_DIR)[0]
         entry_file = os.path.join(self.BOOTENTRIES_DIR, entry_name)
         self.assert_file_contains(entry_file, 'linux /ostree/test-stateroot-')
-        self.assert_file_contains(entry_file, 'initrd /ostree/test-stateroot-')
-        self.assert_file_contains(entry_file, 'ostree=/ostree/boot.0/test-stateroot/')
 
     def test_should_run_provisioner_and_create_file_in_deployment(self):
         path = self.deployment('etc', 'network', 'interfaces.d', 'enp0s3')

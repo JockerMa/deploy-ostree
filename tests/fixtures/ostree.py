@@ -37,7 +37,7 @@ class OSTreeFixture(Fixture):
     def tearDown(self):
         sh_silent('chattr -R -i %s' % self.ostree)
         sh('rm -rf %s/*' % self.ostree)
-        shutil.rmtree(os.path.join(self.root_dir, 'etc', 'ostree', 'remotes.d'))
+        sh('rm -rf %s' % os.path.join(self.root_dir, 'etc', 'ostree', 'remotes.d'))
         for elem in os.listdir(self.boot):
             path = os.path.join(self.boot, elem)
             if elem == 'loader':
