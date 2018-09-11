@@ -11,9 +11,7 @@ class TestDeleteRemote(TestCase):
     def test_should_delete_ostree_remote(self, mock_run: mock.Mock):
         cfg = Config(Source.url('url'), 'ref', remote='remote-name')
 
-        steps = DeleteRemote.get_steps(cfg)
-        for step in steps:
-            step.run()
+        DeleteRemote(cfg).run()
 
         mock_run.assert_called_once_with([
             'ostree', 'remote', 'delete',

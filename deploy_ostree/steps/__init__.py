@@ -1,7 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-from typing import Callable, Iterable, Sequence
+from typing import Callable, Iterable, Sequence, Type
 from .deploystep import DeployStep, DeployError  # noqa
 from .delete_remote import DeleteRemote
 from .http_remote import HttpRemote
@@ -15,6 +15,10 @@ from ..config import Config
 
 
 StepsProvider = Callable[[Config], Sequence[DeployStep]]
+
+
+def step(cls: Type[DeployStep]) -> StepsProvider:
+    return lambda cfg: [cls(cfg)]
 
 
 class DeploySteps:
@@ -41,12 +45,12 @@ class DeploySteps:
 
 def get_deploy_steps(cfg: Config) -> DeploySteps:
     return DeploySteps(cfg, [
-        DeleteRemote.get_steps,
+        step(DeleteRemote),
         HttpRemote.get_steps,
         FileRemote.get_steps,
-        PullRef.get_steps,
-        CreateStateroot.get_steps,
-        Deploy.get_steps,
-        MountVar.get_steps,
+        step(PullRef),
+        step(CreateStateroot),
+        step(Deploy),
+        step(MountVar),
         DefaultProvisioner.get_steps,
     ])

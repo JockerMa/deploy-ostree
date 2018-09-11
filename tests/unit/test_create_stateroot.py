@@ -13,9 +13,7 @@ class TestCreateStateroot(TestCase):
         cfg = Config(Source.url('url'), 'ref', stateroot='stateroot-name')
         exists_mock.return_value = False
 
-        steps = CreateStateroot.get_steps(cfg)
-        for step in steps:
-            step.run()
+        CreateStateroot(cfg).run()
 
         exists_mock.assert_called_once_with('/ostree/deploy/stateroot-name')
         run_mock.assert_called_once_with(['ostree', 'admin', 'os-init', 'stateroot-name'], check=True)
@@ -26,9 +24,7 @@ class TestCreateStateroot(TestCase):
         cfg = Config(Source.url('url'), 'ref', stateroot='stateroot-name')
         exists_mock.return_value = True
 
-        steps = CreateStateroot.get_steps(cfg)
-        for step in steps:
-            step.run()
+        CreateStateroot(cfg).run()
 
         exists_mock.assert_called_once_with('/ostree/deploy/stateroot-name')
         run_mock.assert_not_called()

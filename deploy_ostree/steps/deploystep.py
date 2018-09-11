@@ -1,7 +1,6 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-from typing import Sequence  # noqa
 from ..config import Config
 
 
@@ -12,10 +11,6 @@ class DeployError(RuntimeError):
 class DeployStep:
     def __init__(self, cfg: Config) -> None:
         pass
-
-    @classmethod
-    def get_steps(cls, cfg: Config) -> 'Sequence[DeployStep]':
-        return [cls(cfg)]
 
     @property
     def title(self) -> str:
