@@ -12,6 +12,7 @@ class FileRemote(DeployStep):
     def __init__(self, cfg: Config) -> None:
         self.remote = cfg.remote
         self.path = cfg.path
+        self.ostree_repo = cfg.ostree_repo
 
     @property
     def title(self) -> str:
@@ -20,6 +21,7 @@ class FileRemote(DeployStep):
     def run(self):
         run([
             'ostree', 'remote', 'add',
+            '--repo=%s' % self.ostree_repo,
             '--no-gpg-verify',
             self.remote,
             'file://%s' % os.path.abspath(self.path)
@@ -36,6 +38,7 @@ class HttpRemote(DeployStep):
     def __init__(self, cfg: Config) -> None:
         self.remote = cfg.remote
         self.url = cfg.url
+        self.ostree_repo = cfg.ostree_repo
 
     @property
     def title(self) -> str:
@@ -44,6 +47,7 @@ class HttpRemote(DeployStep):
     def run(self):
         run([
             'ostree', 'remote', 'add',
+            '--repo=%s' % self.ostree_repo,
             '--no-gpg-verify',
             self.remote,
             self.url
