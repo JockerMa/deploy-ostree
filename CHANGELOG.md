@@ -9,7 +9,7 @@ next release. See also the [list of all released versions](https://pypi.org/proj
 
 ## 1.1.0
 ### Added
-* WIP --root parameter to allow specifying a different sysroot.
+* `--sysroot` parameter to allow specifying a different sysroot.
 
 ## 1.0.0
 * Initial release. Feature highlights are:
