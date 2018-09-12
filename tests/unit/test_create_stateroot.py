@@ -11,8 +11,8 @@ class TestCreateStateroot(TestCase):
     @mock.patch('deploy_ostree.steps.create_stateroot.run')
     @mock.patch('os.path.exists')
     def test_should_create_stateroot(self, exists_mock: mock.Mock, run_mock: mock.Mock):
-        root_dir = os.path.join('/mnt', 'rootfs')
-        cfg = Config(Source.url('url'), 'ref', stateroot='stateroot-name', root_dir=root_dir)
+        sysroot = os.path.join('/mnt', 'rootfs')
+        cfg = Config(Source.url('url'), 'ref', stateroot='stateroot-name', sysroot=sysroot)
         exists_mock.return_value = False
 
         CreateStateroot(cfg).run()
@@ -20,7 +20,7 @@ class TestCreateStateroot(TestCase):
         exists_mock.assert_called_once_with('/ostree/deploy/stateroot-name')
         run_mock.assert_called_once_with([
             'ostree', 'admin', 'os-init',
-            '--sysroot=%s' % root_dir,
+            '--sysroot=%s' % sysroot,
             'stateroot-name'
         ], check=True)
 

@@ -28,13 +28,13 @@ class Deploy(DeployStep):
 
     @property
     def deployments_dir(self) -> str:
-        return os.path.join(self.cfg.root_dir, 'ostree', 'deploy', self.cfg.stateroot, 'deploy')
+        return os.path.join(self.cfg.sysroot, 'ostree', 'deploy', self.cfg.stateroot, 'deploy')
 
     def run(self):
         items_diff = NewItemsHelper(self.deployments_dir)
         args = [
             'ostree', 'admin', 'deploy',
-            '--sysroot=%s' % self.cfg.root_dir,
+            '--sysroot=%s' % self.cfg.sysroot,
             '--os=%s' % self.cfg.stateroot,
             '%s:%s' % (self.cfg.remote, self.cfg.ref),
             '--karg=root=%s' % get_root_fs()

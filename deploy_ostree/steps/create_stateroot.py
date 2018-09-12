@@ -12,7 +12,7 @@ class CreateStateroot(DeployStep):
 
     def __init__(self, cfg: Config) -> None:
         self.stateroot = cfg.stateroot
-        self.root_dir = cfg.root_dir
+        self.sysroot = cfg.sysroot
 
     @property
     def title(self) -> str:
@@ -24,6 +24,6 @@ class CreateStateroot(DeployStep):
             return
         run([
             'ostree', 'admin', 'os-init',
-            '--sysroot=%s' % self.root_dir,
+            '--sysroot=%s' % self.sysroot,
             self.stateroot
         ], check=True)

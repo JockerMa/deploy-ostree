@@ -21,7 +21,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         '--root',
-        metavar='ROOT_DIR',
+        metavar='SYSROOT',
         type=str,
         help='root directory to work in'
     )
@@ -35,20 +35,20 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def parse_config(filename_or_url, root_dir=None) -> Config:
+def parse_config(filename_or_url, sysroot=None) -> Config:
     parsed_url = urlparse(filename_or_url)
     if parsed_url.scheme in ['http', 'https']:
         with urlopen(filename_or_url) as req:
             return Config.parse_json(
                 TextIOWrapper(req, encoding='utf-8'),
                 base_dir=os.getcwd(),
-                root_dir=root_dir,
+                sysroot=sysroot,
             )
     with open(filename_or_url, encoding='utf-8') as fobj:
         return Config.parse_json(
             fobj,
             base_dir=os.path.dirname(filename_or_url),
-            root_dir=root_dir
+            sysroot=sysroot
         )
 
 

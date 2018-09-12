@@ -8,18 +8,18 @@ from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 TESTS_DIR = os.path.dirname(__file__)
 
 
-class TestRootDir(FixtureTestCase):
-    ROOT_DIR = '/tmp/deploy-ostree.test/sysroot'
-    REPO_DIR = os.path.join(ROOT_DIR, 'ostree', 'repo')
-    STATEROOT_DIR = os.path.join(ROOT_DIR, 'ostree', 'deploy', 'test-stateroot')
-    BOOTENTRIES_DIR = os.path.join(ROOT_DIR, 'boot', 'loader', 'entries')
-    FIXTURES = [OSTreeFixture(root_dir=ROOT_DIR), OSTreeCommitFixture()]
+class TestSysroot(FixtureTestCase):
+    SYSROOT = '/tmp/deploy-ostree.test/sysroot'
+    REPO_DIR = os.path.join(SYSROOT, 'ostree', 'repo')
+    STATEROOT_DIR = os.path.join(SYSROOT, 'ostree', 'deploy', 'test-stateroot')
+    BOOTENTRIES_DIR = os.path.join(SYSROOT, 'boot', 'loader', 'entries')
+    FIXTURES = [OSTreeFixture(sysroot=SYSROOT), OSTreeCommitFixture()]
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         result = deploy_ostree([
-            '--root=%s' % cls.ROOT_DIR,
+            '--root=%s' % cls.SYSROOT,
             os.path.join(TESTS_DIR, 'provisioner.json')
         ])
         print(result.stdout_str)
