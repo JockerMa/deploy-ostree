@@ -10,6 +10,8 @@ next release. See also the [list of all released versions](https://pypi.org/proj
 ## 1.1.0
 ### Added
 * `--sysroot` parameter to allow specifying a different sysroot.
+* `--root-karg` parameter to allow specifying the root partition to pass to the
+  kernel.
 
 ## 1.0.0
 * Initial release. Feature highlights are:
