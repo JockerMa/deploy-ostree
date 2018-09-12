@@ -18,11 +18,10 @@ class TestSysroot(FixtureTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        result = deploy_ostree([
+        deploy_ostree([
             '--sysroot=%s' % cls.SYSROOT,
             os.path.join(TESTS_DIR, 'provisioner.json')
         ])
-        print(result.stdout_str)
 
     def test_should_not_modify_system_ostree_root(self):
         self.assertEqual(elems_in_dir('/ostree'), 0)
