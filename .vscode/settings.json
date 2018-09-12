@@ -1,4 +1,9 @@
 {
     "python.linting.flake8Enabled": true,
-    "python.linting.mypyEnabled": true
+    "python.linting.mypyEnabled": true,
+    "python.linting.ignorePatterns": [
+        ".vscode/*.py",
+        "**/Lib/**/*.py",
+        "**/site-packages/**/*.py"
+    ]
 }

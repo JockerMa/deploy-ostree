@@ -36,6 +36,7 @@ class TestFileRemote(TestCase):
 
         mock_run.assert_called_once_with([
             'ostree', 'remote', 'add',
+            '--repo=%s' % os.path.join('/ostree', 'repo'),
             '--no-gpg-verify',
             'remote-name',
             'file:///srv/ostree/debian/repo'
@@ -51,6 +52,7 @@ class TestFileRemote(TestCase):
 
         mock_run.assert_called_once_with([
             'ostree', 'remote', 'add',
+            '--repo=%s' % os.path.join('/ostree', 'repo'),
             '--no-gpg-verify',
             'remote-name',
             'file://%s' % repo_abs_path
@@ -69,6 +71,7 @@ class TestHttpRemote(TestCase):
 
         mock_run.assert_called_once_with([
             'ostree', 'remote', 'add',
+            '--repo=%s' % os.path.join('/ostree', 'repo'),
             '--no-gpg-verify',
             'remote-name',
             'https://example.com/ostree'

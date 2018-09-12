@@ -23,10 +23,23 @@ class TestMountVar(TestCase):
         MountVar(cfg).run()
 
         run_mock.assert_called_once_with([
-            'mount',
-            '-o', 'bind',
+            'mount', '-o', 'bind',
             os.path.join('/ostree', 'deploy', 'test', 'var'),
             os.path.join('/ostree', 'deploy', 'test', 'deploy', 'test-deploy.0', 'var'),
+        ], check=True)
+
+    @mock.patch('deploy_ostree.steps.mount_var.run')
+    def test_should_mount_with_specified_sysroot(self, run_mock: mock.Mock):
+        sysroot = os.path.join('/mnt', 'rootfs')
+        cfg = Config(Source.url('url'), 'ref', stateroot='test', sysroot=sysroot)
+        cfg.set_deployment_name('test-deploy.0')
+
+        MountVar(cfg).run()
+
+        run_mock.assert_called_once_with([
+            'mount', '-o', 'bind',
+            os.path.join(sysroot, 'ostree', 'deploy', 'test', 'var'),
+            os.path.join(sysroot, 'ostree', 'deploy', 'test', 'deploy', 'test-deploy.0', 'var'),
         ], check=True)
 
     @mock.patch('deploy_ostree.steps.mount_var.run')
@@ -37,9 +50,21 @@ class TestMountVar(TestCase):
         MountVar(cfg).cleanup()
 
         run_mock.assert_called_once_with([
-            'umount',
-            '--lazy',
+            'umount', '--lazy',
             os.path.join('/ostree', 'deploy', 'test', 'deploy', 'test-deploy.0', 'var'),
+        ], check=True)
+
+    @mock.patch('deploy_ostree.steps.mount_var.run')
+    def test_should_unmount_with_specified_sysroot(self, run_mock: mock.Mock):
+        sysroot = os.path.join('/mnt', 'rootfs')
+        cfg = Config(Source.url('url'), 'ref', stateroot='test', sysroot=sysroot)
+        cfg.set_deployment_name('test-deploy.0')
+
+        MountVar(cfg).cleanup()
+
+        run_mock.assert_called_once_with([
+            'umount', '--lazy',
+            os.path.join(sysroot, 'ostree', 'deploy', 'test', 'deploy', 'test-deploy.0', 'var'),
         ], check=True)
 
     def test_title_should_be_str(self):

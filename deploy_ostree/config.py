@@ -68,6 +68,7 @@ class Config:
         ref: str,
         *,
         base_dir: str='',
+        sysroot: Optional[str]=None,
         remote: Optional[str]=None,
         stateroot: Optional[str]=None,
         kernel_args: Iterable[str]=(),
@@ -76,6 +77,7 @@ class Config:
         self._source = source
         self.ref = ref
         self.base_dir = base_dir
+        self.sysroot = sysroot or '/'
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
         self.kernel_args = list(kernel_args)
@@ -92,19 +94,27 @@ class Config:
 
     @property
     def var_dir(self) -> str:
-        return os.path.join('/ostree', 'deploy', self.stateroot, 'var')
+        return os.path.join(self.sysroot, 'ostree', 'deploy', self.stateroot, 'var')
 
     @property
     def deployment_dir(self) -> str:
         if self.deployment_name is None:
             raise RuntimeError('deployment name not set')
-        return os.path.join('/ostree', 'deploy', self.stateroot, 'deploy', self.deployment_name)
+        return os.path.join(
+            self.sysroot,
+            'ostree', 'deploy', self.stateroot,
+            'deploy', self.deployment_name
+        )
+
+    @property
+    def ostree_repo(self) -> str:
+        return os.path.join(self.sysroot, 'ostree', 'repo')
 
     def set_deployment_name(self, deployment: str) -> None:
         self.deployment_name = deployment
 
     @classmethod
-    def parse_json(cls, fobj: TextIO, *, base_dir=''):
+    def parse_json(cls, fobj: TextIO, *, base_dir: str='', sysroot: Optional[str]=None):
         data = json.load(fobj)
 
         if 'url' in data and 'path' in data:
@@ -121,6 +131,7 @@ class Config:
                 source=source,
                 ref=data['ref'],
                 base_dir=base_dir,
+                sysroot=sysroot,
                 remote=data.get('remote'),
                 stateroot=data.get('stateroot'),
                 kernel_args=data.get('kernel-args', ()),

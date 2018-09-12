@@ -1,6 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+import os.path
 from unittest import mock, TestCase
 from deploy_ostree.config import Config, Source
 from deploy_ostree.steps.delete_remote import DeleteRemote
@@ -15,6 +16,7 @@ class TestDeleteRemote(TestCase):
 
         mock_run.assert_called_once_with([
             'ostree', 'remote', 'delete',
+            '--repo=%s' % os.path.join('/ostree', 'repo'),
             '--if-exists',
             'remote-name',
         ], check=True)

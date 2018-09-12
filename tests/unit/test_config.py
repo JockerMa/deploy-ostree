@@ -232,3 +232,45 @@ class TestConfig(TestCase):
             cfg.var_dir,
             os.path.join('/ostree', 'deploy', cfg.stateroot, 'var')
         )
+
+    def test_default_sysroot_should_be_system_root(self):
+        json = '{"url": "http://example.com", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json))
+
+        self.assertEqual(cfg.sysroot, '/')
+
+    def test_should_pass_sysroot_to_config(self):
+        json = '{"url": "http://example.com", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json), sysroot='/mnt/rootfs')
+
+        self.assertEqual(cfg.sysroot, '/mnt/rootfs')
+
+    def test_var_dir_should_include_sysroot(self):
+        sysroot = os.path.join('/mnt', 'rootfs')
+        cfg = Config(Source.url('url'), 'ref', sysroot=sysroot)
+
+        self.assertEqual(
+            cfg.var_dir,
+            os.path.join(sysroot, 'ostree', 'deploy', cfg.stateroot, 'var')
+        )
+
+    def test_deployment_dir_should_include_sysroot(self):
+        sysroot = os.path.join('/mnt', 'rootfs')
+        cfg = Config(Source.url('url'), 'ref', sysroot=sysroot)
+        cfg.set_deployment_name('0123deployment.0')
+
+        self.assertEqual(
+            cfg.deployment_dir,
+            os.path.join(sysroot, 'ostree', 'deploy', cfg.stateroot, 'deploy', '0123deployment.0')
+        )
+
+    def test_repo_dir_should_default_to_system_ostree_repo(self):
+        cfg = Config(Source.url('url'), 'ref')
+
+        self.assertEqual(cfg.ostree_repo, os.path.join('/ostree', 'repo'))
+
+    def test_repo_dir_should_include_sysroot(self):
+        sysroot = os.path.join('/mnt', 'rootfs')
+        cfg = Config(Source.url('url'), 'ref', sysroot=sysroot)
+
+        self.assertEqual(cfg.ostree_repo, os.path.join(sysroot, 'ostree', 'repo'))

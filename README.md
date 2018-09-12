@@ -51,6 +51,12 @@ $ pip3 install deploy-ostree
 This requires root permissions. If `deploy-ostree` exits successfully, your new
 OSTree deployment should be ready to boot.
 
+#### Command-Line Arguments
+
+* **--sysroot=\<sysroot path\>**: install into the specified target root
+  directory, rather than `/`. Just like for `/`, the directory needs to exist
+  and be initialized for libostree use with `ostree admin init-fs <sysroot path>`.
+
 #### A Note on SELinux
 
 While not recommended, certain combinations of SELinux-using host systems and

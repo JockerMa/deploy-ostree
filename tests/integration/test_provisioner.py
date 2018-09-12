@@ -19,12 +19,12 @@ class TestProvisioner(FixtureTestCase):
     def test_should_run_provisioner_and_create_lo_config(self):
         path = self.deployment('etc', 'network', 'interfaces.d', 'lo')
         self.assertTrue(os.path.isfile(path))
-        self.assert_file_contains(path, 'iface lo inet')
+        self.assert_file_contains(path, 'iface lo inet loopback')
 
     def test_should_run_provisioner_and_create_iface_config(self):
         path = self.deployment('etc', 'network', 'interfaces.d', 'enp0s3')
         self.assertTrue(os.path.isfile(path))
-        self.assert_file_contains(path, 'iface enp0s3 inet')
+        self.assert_file_contains(path, 'iface enp0s3 inet dhcp')
 
     def deployment(self, *args):
         deployments_dir = '/ostree/deploy/test-stateroot/deploy'
