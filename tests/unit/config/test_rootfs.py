@@ -3,7 +3,7 @@
 
 from io import StringIO
 from unittest import TestCase, mock
-from deploy_ostree.config.get_root_fs import get_root_fs
+from deploy_ostree.config import get_root_fs
 
 
 @mock.patch('sys.getfilesystemencoding', mock.Mock(return_value='fs-encoding'))

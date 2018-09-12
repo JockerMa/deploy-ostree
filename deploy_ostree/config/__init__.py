@@ -5,6 +5,7 @@ import json
 import os.path
 from typing import Any, Iterable, Mapping, Optional, TextIO
 from uuid import uuid4
+from .rootfs import get_root_fs  # noqa
 
 
 class InvalidConfigError(RuntimeError):
