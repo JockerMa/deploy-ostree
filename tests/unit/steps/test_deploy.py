@@ -10,8 +10,11 @@ from deploy_ostree.steps.deploy import Deploy
 
 class TestDeploy(TestCase):
     @mock.patch('deploy_ostree.steps.deploy.run')
-    @mock.patch('os.listdir')
-    def test_should_deploy_commit_and_set_deployment_folder(self, listdir_mock, run_mock):
+    @mock.patch('os.listdir', mock.Mock(side_effect=[
+        ['1234567.0', '1234567.0.origin'],
+        ['1234567.0.origin', 'abcdef.1.origin', 'abcdef.1', '1234567.0'],
+    ]))
+    def test_should_deploy_commit_and_set_deployment_folder(self, run_mock):
         cfg = Config(
             Source.url('url'),
             'fedora/28/x86_64/atomic-host',
@@ -19,10 +22,6 @@ class TestDeploy(TestCase):
             stateroot='atomic-host',
             root_karg='/dev/mapper/atomic-root',
         )
-        listdir_mock.side_effect = [
-            ['1234567.0', '1234567.0.origin'],
-            ['1234567.0.origin', 'abcdef.1.origin', 'abcdef.1', '1234567.0'],
-        ]
 
         Deploy(cfg).run()
 
@@ -36,8 +35,11 @@ class TestDeploy(TestCase):
         self.assertEqual(cfg.deployment_dir, os.path.join('/ostree', 'deploy', 'atomic-host', 'deploy', 'abcdef.1'))
 
     @mock.patch('deploy_ostree.steps.deploy.run')
-    @mock.patch('os.listdir')
-    def test_should_add_additional_kernel_args(self, listdir_mock, run_mock):
+    @mock.patch('os.listdir', mock.Mock(side_effect=[
+        [],
+        ['1234567.0', '1234567.0.origin'],
+    ]))
+    def test_should_add_additional_kernel_args(self, run_mock):
         cfg = Config(
             Source.url('url'),
             'ref',
@@ -46,10 +48,6 @@ class TestDeploy(TestCase):
             kernel_args=['quiet', 'splash'],
             root_karg='/dev/rootfs',
         )
-        listdir_mock.side_effect = [
-            [],
-            ['1234567.0', '1234567.0.origin'],
-        ]
 
         Deploy(cfg).run()
 
@@ -89,23 +87,21 @@ class TestDeploy(TestCase):
         ], check=True)
 
     @mock.patch('deploy_ostree.steps.deploy.run', mock.Mock())
-    @mock.patch('os.listdir')
-    def test_should_raise_exception_if_nothing_was_added_to_deployments_dir(self, listdir_mock):
+    @mock.patch('os.listdir', mock.Mock(side_effect=['abcdef.1.origin', 'abcdef.1']))
+    def test_should_raise_exception_if_nothing_was_added_to_deployments_dir(self):
         cfg = Config(Source.url('url'), 'ref')
-        listdir_mock.return_value = ['abcdef.1.origin', 'abcdef.1']
 
         step = Deploy(cfg)
         with self.assertRaises(DeployError):
             step.run()
 
     @mock.patch('deploy_ostree.steps.deploy.run', mock.Mock())
-    @mock.patch('os.listdir')
-    def test_should_raise_exception_if_too_many_elements_were_added_to_deployments_dir(self, listdir_mock):
+    @mock.patch('os.listdir', mock.Mock(side_effect=[
+        [],
+        ['1234567.0.origin', 'abcdef.1.origin', 'abcdef.1', '1234567.0'],
+    ]))
+    def test_should_raise_exception_if_too_many_elements_were_added_to_deployments_dir(self):
         cfg = Config(Source.url('url'), 'ref')
-        listdir_mock.side_effect = [
-            [],
-            ['1234567.0.origin', 'abcdef.1.origin', 'abcdef.1', '1234567.0'],
-        ]
 
         step = Deploy(cfg)
         with self.assertRaises(DeployError):
