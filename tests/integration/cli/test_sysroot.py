@@ -2,10 +2,10 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
-from .. import deploy_ostree, ostree
-from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
+from ... import deploy_ostree, ostree
+from ...fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 
-TESTS_DIR = os.path.dirname(__file__)
+TESTS_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
 
 
 class TestSysroot(FixtureTestCase):
