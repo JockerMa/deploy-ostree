@@ -3,10 +3,11 @@
 
 from io import StringIO
 import os.path
-from unittest import TestCase
+from unittest import TestCase, mock
 from deploy_ostree.config import Config, ProvisionerConfig, InvalidConfigError, Source
 
 
+@mock.patch('deploy_ostree.config.get_root_fs', mock.Mock(return_value='/dev/sda1'))
 class TestConfig(TestCase):
     def test_should_parse_config_with_url_and_ref(self):
         json = '''{
@@ -275,10 +276,10 @@ class TestConfig(TestCase):
 
         self.assertEqual(cfg.ostree_repo, os.path.join(sysroot, 'ostree', 'repo'))
 
-    def test_default_root_karg_should_be_empty(self):
+    def test_default_root_karg_should_be_determined_by_get_root_fs(self):
         cfg = Config(Source.url('url'), 'ref')
 
-        self.assertIsNone(cfg.root_karg)
+        self.assertEqual(cfg.root_karg, '/dev/sda1')
 
     def test_should_pass_root_karg_to_config(self):
         json = '{"url": "http://example.com", "ref": "ref"}'

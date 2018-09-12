@@ -5,7 +5,7 @@ import json
 import os.path
 from typing import Any, Iterable, Mapping, Optional, TextIO
 from uuid import uuid4
-from .rootfs import get_root_fs  # noqa
+from .rootfs import get_root_fs
 
 
 class InvalidConfigError(RuntimeError):
@@ -80,7 +80,7 @@ class Config:
         self.ref = ref
         self.base_dir = base_dir
         self.sysroot = sysroot or '/'
-        self.root_karg = root_karg
+        self.root_karg = root_karg or get_root_fs()
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
         self.kernel_args = list(kernel_args)
