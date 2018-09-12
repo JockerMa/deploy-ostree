@@ -2,7 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
-from deploy_ostree.steps.deploy import get_root_fs
+from deploy_ostree.config import get_root_fs
 from ... import deploy_ostree
 from ...fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 
