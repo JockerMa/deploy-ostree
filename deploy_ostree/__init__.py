@@ -20,8 +20,9 @@ def build_argument_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        '--root',
+        '--sysroot',
         metavar='SYSROOT',
+        dest='sysroot',
         type=str,
         help='root directory to work in'
     )
@@ -55,7 +56,7 @@ def parse_config(filename_or_url, sysroot=None) -> Config:
 def main():
     parser = build_argument_parser()
     args = parser.parse_args(sys.argv[1:])
-    cfg = parse_config(args.config, args.root)
+    cfg = parse_config(args.config, args.sysroot)
     steps = get_deploy_steps(cfg)
 
     try:

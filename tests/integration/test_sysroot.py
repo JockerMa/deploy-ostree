@@ -19,7 +19,7 @@ class TestSysroot(FixtureTestCase):
     def setUpClass(cls):
         super().setUpClass()
         result = deploy_ostree([
-            '--root=%s' % cls.SYSROOT,
+            '--sysroot=%s' % cls.SYSROOT,
             os.path.join(TESTS_DIR, 'provisioner.json')
         ])
         print(result.stdout_str)
