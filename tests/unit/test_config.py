@@ -274,3 +274,14 @@ class TestConfig(TestCase):
         cfg = Config(Source.url('url'), 'ref', sysroot=sysroot)
 
         self.assertEqual(cfg.ostree_repo, os.path.join(sysroot, 'ostree', 'repo'))
+
+    def test_default_root_karg_should_be_empty(self):
+        cfg = Config(Source.url('url'), 'ref')
+
+        self.assertIsNone(cfg.root_karg)
+
+    def test_should_pass_root_karg_to_config(self):
+        json = '{"url": "http://example.com", "ref": "ref"}'
+        cfg = Config.parse_json(StringIO(json), root_karg='/dev/mapper/custom-root')
+
+        self.assertEqual(cfg.root_karg, '/dev/mapper/custom-root')
