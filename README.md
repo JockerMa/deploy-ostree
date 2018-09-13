@@ -53,9 +53,11 @@ OSTree deployment should be ready to boot.
 
 #### Command-Line Arguments
 
-* **--sysroot=\<sysroot path\>**: install into the specified target root
-  directory, rather than `/`. Just like for `/`, the directory needs to exist
-  and be initialized for libostree use with `ostree admin init-fs <sysroot path>`.
+* **--sysroot=SYSROOT**: install into the specified target root directory,
+  rather than `/`. Just like for `/`, the directory needs to exist and be
+  initialized for libostree use with `ostree admin init-fs <sysroot path>`.
+* **--karg-root=ROOT**: set the kernel `root` boot parameter to the given value.
+  By default, the `root` parameter of the current boot is used.
 
 #### A Note on SELinux
 
