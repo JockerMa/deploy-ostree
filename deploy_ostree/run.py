@@ -17,16 +17,20 @@ class ProcessResult:
     ) -> None:
         self.args = args
         self.exitcode = exitcode
-        self.stdout = stdout
-        self.stderr = stderr
+        self._stdout = stdout
+        self._stderr = stderr
 
     @property
-    def stdout_str(self) -> str:
-        return self.stdout or ''
+    def stdout(self) -> str:
+        if self._stdout is None:
+            raise ValueError('stdout was not captured')
+        return self._stdout
 
     @property
-    def stderr_str(self) -> str:
-        return self.stderr or ''
+    def stderr(self) -> str:
+        if self._stderr is None:
+            raise ValueError('stderr was not captured')
+        return self._stderr
 
     @property
     def args_string(self) -> str:

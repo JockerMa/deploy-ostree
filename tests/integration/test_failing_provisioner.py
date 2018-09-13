@@ -20,11 +20,11 @@ class TestFailingProvisioner(FixtureTestCase):
         )
 
         # we expect chpasswd to try to run, but not work
-        self.assertIn('chpasswd', result.stderr_str)
+        self.assertIn('chpasswd', result.stderr)
         self.assertEqual(result.exitcode, 1)
         var_mount = os.path.join(self.get_deployment_dir(), 'var')
         mount = run(['mount'], capture_output=True)
-        self.assertNotIn(' %s ' % var_mount, mount.stdout_str)
+        self.assertNotIn(' %s ' % var_mount, mount.stdout)
 
     def get_deployment_dir(self):
         deployments_dir = os.path.join('/ostree', 'deploy', 'test-stateroot', 'deploy')

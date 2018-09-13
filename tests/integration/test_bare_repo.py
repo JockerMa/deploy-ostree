@@ -24,5 +24,5 @@ class TestBareRepo(FixtureTestCase):
         deploy_ostree([deploy_config])
 
     def test_should_pull_ref_from_remote(self):
-        refs = [ref.strip() for ref in ostree(['refs']).stdout_str.splitlines()]
+        refs = [ref.strip() for ref in ostree(['refs']).stdout.splitlines()]
         self.assertIn('%s:%s' % (self.remote, self.ref), refs)

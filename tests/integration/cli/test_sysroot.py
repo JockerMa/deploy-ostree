@@ -30,8 +30,8 @@ class TestSysroot(FixtureTestCase):
         self.assertEqual(elems_in_dir('/etc/ostree/remotes.d'), 0)
 
     def test_should_add_randomly_named_remote(self):
-        remote = ostree(['remote', 'list', '--repo=%s' % self.REPO_DIR]).stdout_str.strip()
-        url = ostree(['remote', 'show-url', remote, '--repo=%s' % self.REPO_DIR]).stdout_str.strip()
+        remote = ostree(['remote', 'list', '--repo=%s' % self.REPO_DIR]).stdout.strip()
+        url = ostree(['remote', 'show-url', remote, '--repo=%s' % self.REPO_DIR]).stdout.strip()
         self.assertEqual(url, 'http://localhost:8000/')
 
     def test_should_create_stateroot(self):

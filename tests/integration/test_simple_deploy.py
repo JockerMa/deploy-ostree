@@ -17,15 +17,15 @@ class TestSimpleDeploy(FixtureTestCase):
         deploy_ostree([os.path.join(TESTS_DIR, 'simple-deploy.json')])
 
     def test_should_add_randomly_named_remote(self):
-        remote = ostree(['remote', 'list']).stdout_str.strip()
-        url = ostree(['remote', 'show-url', remote]).stdout_str.strip()
+        remote = ostree(['remote', 'list']).stdout.strip()
+        url = ostree(['remote', 'show-url', remote]).stdout.strip()
         self.assertEqual(
             'http://localhost:8000/',
             url)
 
     def test_should_pull_ref_from_remote(self):
-        remote = ostree(['remote', 'list']).stdout_str.strip()
-        refs = [ref.strip() for ref in ostree(['refs']).stdout_str.splitlines()]
+        remote = ostree(['remote', 'list']).stdout.strip()
+        refs = [ref.strip() for ref in ostree(['refs']).stdout.splitlines()]
         self.assertIn('%s:test-commit' % remote, refs)
 
     def test_should_create_randomly_named_stateroot(self):

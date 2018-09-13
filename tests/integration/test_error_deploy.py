@@ -12,5 +12,5 @@ class TestErrorDeploy(TestCase):
     def test_should_report_process_errors_concisely(self):
         result = deploy_ostree([os.path.join(TESTS_DIR, 'error-deploy.json')], check=False, capture_output=True)
 
-        self.assertNotIn('Traceback (most recent call last):', result.stderr_str)
+        self.assertNotIn('Traceback (most recent call last):', result.stderr)
         self.assertEqual(result.exitcode, 1)

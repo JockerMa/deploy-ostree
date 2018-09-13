@@ -18,9 +18,9 @@ class TestRun(TestCase):
         mock_run.assert_called_once_with(args, stdout=None, stderr=None, env=None)
         self.assertEqual(32, result.exitcode)
         self.assertIsNone(result.stdout)
-        self.assertEqual(result.stdout_str, '')
+        self.assertEqual(result.stdout, '')
         self.assertIsNone(result.stderr)
-        self.assertEqual(result.stderr_str, '')
+        self.assertEqual(result.stderr, '')
 
     @mock.patch('subprocess.run')
     def test_should_capture_and_decode_process_output_using_provided_encoding(self, mock_run: mock.Mock):

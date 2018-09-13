@@ -18,7 +18,7 @@ class TestExistingRemote(FixtureTestCase):
         deploy_ostree([os.path.join(TESTS_DIR, 'existing-remote.json')])
 
     def test_should_replace_remote(self):
-        url = ostree(['remote', 'show-url', 'test-remote']).stdout_str.strip()
+        url = ostree(['remote', 'show-url', 'test-remote']).stdout.strip()
         self.assertEqual(
             'http://localhost:8000/',
             url
