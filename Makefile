@@ -11,6 +11,7 @@ all: lint test/unit test/provisioners build/wheel build/docker test/integration 
 # local checks
 define pytest
     $(PYTHON) -m pytest \
+		--verbose \
 		--junitxml=$(SRC_DIR)/build/test.xml \
 		--override junit_suite_name=$(1) \
 		--rootdir $(SRC_DIR) \
@@ -44,7 +45,7 @@ build/docker:
 IMAGE_TAG := deploy-ostree
 
 define docker_test
-	docker run --rm -i \
+	docker run --rm -it \
 		--privileged \
 		-v /ostree \
 		-v /tmp/deploy-ostree.test/sysroot \
