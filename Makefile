@@ -9,40 +9,55 @@ endif
 all: lint test/unit test/provisioners build/wheel build/docker test/integration test/integration_long
 
 # local checks
-LOCAL_UNITTEST := $(PYTHON) -m pytest --rootdir $(SRC_DIR)
+define pytest
+    $(PYTHON) -m pytest \
+		--junitxml=$(SRC_DIR)/build/test.xml \
+		--override junit_suite_name=$(1) \
+		--rootdir $(SRC_DIR) \
+		$(1)
+endef
 
 lint:
 	flake8 $(SRC_DIR)
 	mypy $(SRC_DIR)
 
 test/unit:
-	$(LOCAL_UNITTEST) tests/unit
+	$(call pytest,tests/unit)
 
 test/provisioners:
-	$(LOCAL_UNITTEST) tests/builtin_provisioners
+	$(call pytest,tests/builtin_provisioners)
+
+test/_local/integration:
+	$(call pytest,tests/integration)
+
+test/_local/integration_long:
+	$(call pytest,tests/integration_long)
 
 # package
 build/wheel: clean/wheels
 	$(PYTHON) $(SRC_DIR)/setup.py bdist_wheel
 
-# dockerized tests
-IMAGE_TAG := deploy-ostree
-DOCKER_UNITTEST := docker run --rm -i \
-	--privileged \
-	-v /ostree \
-	-v /tmp/deploy-ostree.test/sysroot \
-	-v $(SRC_DIR)/tests:/tests \
-	$(IMAGE_TAG) \
-	python3 -m unittest discover -v -t / -s
-
 build/docker:
 	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(shell ls -1 dist/*.whl | xargs basename) .
 
+# dockerized tests
+IMAGE_TAG := deploy-ostree
+
+define docker_test
+	docker run --rm -i \
+		--privileged \
+		-v /ostree \
+		-v /tmp/deploy-ostree.test/sysroot \
+		-v $(SRC_DIR):/src \
+		$(IMAGE_TAG) \
+		make -C /src SRC_DIR=/src $(1)
+endef
+
 test/integration:
-	$(DOCKER_UNITTEST) tests/integration
+	$(call docker_test,test/_local/integration)
 
 test/integration_long:
-	$(DOCKER_UNITTEST) tests/integration_long
+	$(call docker_test,test/_local/integration_long)
 
 # push to PyPI
 release/test:
@@ -53,6 +68,7 @@ release/pypi:
 
 # cleanup
 clean: clean/wheels
+	-rm -rf build
 	-docker image rm $(IMAGE_TAG)
 
 clean/wheels:

@@ -2,6 +2,7 @@ FROM debian:9-slim
 RUN apt-get update && \
     apt-get install -y \
         ca-certificates \
+        make \
         python3 \
         python3-pip && \
     rm -rf /var/lib/apt/lists
@@ -13,6 +14,6 @@ RUN echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/s
 
 ARG PACKAGE
 COPY dist/${PACKAGE} /
-RUN pip3 install /${PACKAGE} && \
+RUN pip3 install /${PACKAGE}[dev] && \
     rm /${PACKAGE}
 CMD ["deploy-ostree"]
