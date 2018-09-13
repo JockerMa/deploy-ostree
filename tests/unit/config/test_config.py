@@ -276,13 +276,13 @@ class TestConfig(TestCase):
 
         self.assertEqual(cfg.ostree_repo, os.path.join(sysroot, 'ostree', 'repo'))
 
-    def test_default_root_karg_should_be_determined_by_get_root_fs(self):
+    def test_default_root_filesystem_should_be_determined_by_get_root_fs(self):
         cfg = Config(Source.url('url'), 'ref')
 
-        self.assertEqual(cfg.root_karg, '/dev/sda1')
+        self.assertEqual(cfg.root_filesystem, '/dev/sda1')
 
-    def test_should_pass_root_karg_to_config(self):
+    def test_should_pass_root_filesystem_to_config(self):
         json = '{"url": "http://example.com", "ref": "ref"}'
-        cfg = Config.parse_json(StringIO(json), root_karg='/dev/mapper/custom-root')
+        cfg = Config.parse_json(StringIO(json), root_filesystem='/dev/mapper/custom-root')
 
-        self.assertEqual(cfg.root_karg, '/dev/mapper/custom-root')
+        self.assertEqual(cfg.root_filesystem, '/dev/mapper/custom-root')

@@ -27,7 +27,7 @@ class Deploy(DeployStep):
             '--sysroot=%s' % self.cfg.sysroot,
             '--os=%s' % self.cfg.stateroot,
             '%s:%s' % (self.cfg.remote, self.cfg.ref),
-            '--karg=root=%s' % self.cfg.root_karg,
+            '--karg=root=%s' % self.cfg.root_filesystem,
         ]
         for additional_argument in self.cfg.kernel_args:
             args.append('--karg-append=%s' % additional_argument)

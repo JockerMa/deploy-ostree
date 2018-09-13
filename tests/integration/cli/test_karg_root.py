@@ -17,7 +17,7 @@ def get_bootloader_entry():
         return f.read()
 
 
-class TestDefaultRootKarg(FixtureTestCase):
+class TestDefaultRootFilesystem(FixtureTestCase):
     FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
 
     @classmethod
@@ -25,21 +25,21 @@ class TestDefaultRootKarg(FixtureTestCase):
         super().setUpClass()
         deploy_ostree([os.path.join(TESTS_DIR, 'named-deploy.json')])
 
-    def test_should_create_bootloader_entry_with_default_root_karg(self):
+    def test_should_create_bootloader_entry_with_default_root_filesystem(self):
         self.assertIn('root=%s' % get_root_fs(), get_bootloader_entry())
 
 
-class TestRootKarg(FixtureTestCase):
-    ROOT_KARG = '/dev/mapper/my-root-filesystem'
+class TestKargRoot(FixtureTestCase):
+    ROOT_FILESYSTEM = '/dev/mapper/my-root-filesystem'
     FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         deploy_ostree([
-            '--root-karg=%s' % cls.ROOT_KARG,
+            '--root-karg=%s' % cls.ROOT_FILESYSTEM,
             os.path.join(TESTS_DIR, 'named-deploy.json')
         ])
 
-    def test_should_create_bootloader_entry_with_specified_root_karg(self):
-        self.assertIn('root=%s' % self.ROOT_KARG, get_bootloader_entry())
+    def test_should_create_bootloader_entry_with_specified_root_filesystem(self):
+        self.assertIn('root=%s' % self.ROOT_FILESYSTEM, get_bootloader_entry())

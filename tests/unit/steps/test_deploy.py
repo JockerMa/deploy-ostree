@@ -20,7 +20,7 @@ class TestDeploy(TestCase):
             'fedora/28/x86_64/atomic-host',
             remote='fedora-atomic',
             stateroot='atomic-host',
-            root_karg='/dev/mapper/atomic-root',
+            root_filesystem='/dev/mapper/atomic-root',
         )
 
         Deploy(cfg).run()
@@ -46,7 +46,7 @@ class TestDeploy(TestCase):
             remote='remote',
             stateroot='os',
             kernel_args=['quiet', 'splash'],
-            root_karg='/dev/rootfs',
+            root_filesystem='/dev/rootfs',
         )
 
         Deploy(cfg).run()
@@ -71,7 +71,7 @@ class TestDeploy(TestCase):
             remote='remote',
             stateroot='test-stateroot',
             sysroot=sysroot,
-            root_karg='/dev/mapper/atomic-root'
+            root_filesystem='/dev/mapper/atomic-root'
         )
         listdir_mock.side_effect = [[], ['deploy', 'deploy.origin']]
 

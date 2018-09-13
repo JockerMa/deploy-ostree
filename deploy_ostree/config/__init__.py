@@ -70,7 +70,7 @@ class Config:
         *,
         base_dir: str='',
         sysroot: Optional[str]=None,
-        root_karg: Optional[str]=None,
+        root_filesystem: Optional[str]=None,
         remote: Optional[str]=None,
         stateroot: Optional[str]=None,
         kernel_args: Iterable[str]=(),
@@ -80,7 +80,7 @@ class Config:
         self.ref = ref
         self.base_dir = base_dir
         self.sysroot = sysroot or '/'
-        self.root_karg = root_karg or get_root_fs()
+        self.root_filesystem = root_filesystem or get_root_fs()
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
         self.kernel_args = list(kernel_args)
@@ -122,7 +122,7 @@ class Config:
         fobj: TextIO, *,
         base_dir: str='',
         sysroot: Optional[str]=None,
-        root_karg: Optional[str]=None
+        root_filesystem: Optional[str]=None
     ):
         data = json.load(fobj)
 
@@ -141,7 +141,7 @@ class Config:
                 ref=data['ref'],
                 base_dir=base_dir,
                 sysroot=sysroot,
-                root_karg=root_karg,
+                root_filesystem=root_filesystem,
                 remote=data.get('remote'),
                 stateroot=data.get('stateroot'),
                 kernel_args=data.get('kernel-args', ()),
