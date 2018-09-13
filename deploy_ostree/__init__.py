@@ -27,6 +27,13 @@ def build_argument_parser() -> argparse.ArgumentParser:
         help='root directory to work in'
     )
     parser.add_argument(
+        '--karg-root',
+        metavar='ROOT',
+        dest='root_filesystem',
+        type=str,
+        help='root partition to pass to the kernel (default: autodetect)'
+    )
+    parser.add_argument(
         'config',
         metavar='CONFIG',
         type=str,
@@ -36,7 +43,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def parse_config(filename_or_url, sysroot=None) -> Config:
+def parse_config(filename_or_url, sysroot=None, root_filesystem=None) -> Config:
     parsed_url = urlparse(filename_or_url)
     if parsed_url.scheme in ['http', 'https']:
         with urlopen(filename_or_url) as req:
@@ -44,19 +51,21 @@ def parse_config(filename_or_url, sysroot=None) -> Config:
                 TextIOWrapper(req, encoding='utf-8'),
                 base_dir=os.getcwd(),
                 sysroot=sysroot,
+                root_filesystem=root_filesystem,
             )
     with open(filename_or_url, encoding='utf-8') as fobj:
         return Config.parse_json(
             fobj,
             base_dir=os.path.dirname(filename_or_url),
-            sysroot=sysroot
+            sysroot=sysroot,
+            root_filesystem=root_filesystem,
         )
 
 
 def main():
     parser = build_argument_parser()
     args = parser.parse_args(sys.argv[1:])
-    cfg = parse_config(args.config, args.sysroot)
+    cfg = parse_config(args.config, args.sysroot, args.root_filesystem)
     steps = get_deploy_steps(cfg)
 
     try:

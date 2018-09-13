@@ -3,10 +3,10 @@
 
 import os
 import time
-from .. import deploy_ostree
-from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture, HttpServerFixture
+from ... import deploy_ostree
+from ...fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture, HttpServerFixture
 
-TESTS_DIR = os.path.dirname(__file__)
+TESTS_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
 
 
 class TestHttpConfig(FixtureTestCase):

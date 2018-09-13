@@ -2,10 +2,10 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os.path
-from .. import deploy_ostree, ostree
-from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
+from ... import deploy_ostree, ostree
+from ...fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 
-TESTS_DIR = os.path.dirname(__file__)
+TESTS_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
 
 
 class TestSysroot(FixtureTestCase):
@@ -18,11 +18,10 @@ class TestSysroot(FixtureTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        result = deploy_ostree([
+        deploy_ostree([
             '--sysroot=%s' % cls.SYSROOT,
             os.path.join(TESTS_DIR, 'provisioner.json')
         ])
-        print(result.stdout_str)
 
     def test_should_not_modify_system_ostree_root(self):
         self.assertEqual(elems_in_dir('/ostree'), 0)

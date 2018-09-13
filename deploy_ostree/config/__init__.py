@@ -5,6 +5,7 @@ import json
 import os.path
 from typing import Any, Iterable, Mapping, Optional, TextIO
 from uuid import uuid4
+from .rootfs import get_root_fs
 
 
 class InvalidConfigError(RuntimeError):
@@ -69,6 +70,7 @@ class Config:
         *,
         base_dir: str='',
         sysroot: Optional[str]=None,
+        root_filesystem: Optional[str]=None,
         remote: Optional[str]=None,
         stateroot: Optional[str]=None,
         kernel_args: Iterable[str]=(),
@@ -78,6 +80,7 @@ class Config:
         self.ref = ref
         self.base_dir = base_dir
         self.sysroot = sysroot or '/'
+        self.root_filesystem = root_filesystem or get_root_fs()
         self.remote = remote or random_string()
         self.stateroot = stateroot or random_string()
         self.kernel_args = list(kernel_args)
@@ -114,7 +117,13 @@ class Config:
         self.deployment_name = deployment
 
     @classmethod
-    def parse_json(cls, fobj: TextIO, *, base_dir: str='', sysroot: Optional[str]=None):
+    def parse_json(
+        cls,
+        fobj: TextIO, *,
+        base_dir: str='',
+        sysroot: Optional[str]=None,
+        root_filesystem: Optional[str]=None
+    ):
         data = json.load(fobj)
 
         if 'url' in data and 'path' in data:
@@ -132,6 +141,7 @@ class Config:
                 ref=data['ref'],
                 base_dir=base_dir,
                 sysroot=sysroot,
+                root_filesystem=root_filesystem,
                 remote=data.get('remote'),
                 stateroot=data.get('stateroot'),
                 kernel_args=data.get('kernel-args', ()),

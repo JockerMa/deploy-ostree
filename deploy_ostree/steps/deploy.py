@@ -2,20 +2,10 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import os
-import sys
 from typing import Set
 from . import DeployStep, DeployError
 from ..config import Config
 from ..run import run
-
-
-def get_root_fs() -> str:
-    with open('/proc/cmdline', 'r', encoding=sys.getfilesystemencoding()) as f:
-        args = f.read()  # type: str
-    for arg in (arg.strip() for arg in args.split()):
-        if arg.startswith('root='):
-            return arg[5:]
-    return ''
 
 
 class Deploy(DeployStep):
@@ -37,7 +27,7 @@ class Deploy(DeployStep):
             '--sysroot=%s' % self.cfg.sysroot,
             '--os=%s' % self.cfg.stateroot,
             '%s:%s' % (self.cfg.remote, self.cfg.ref),
-            '--karg=root=%s' % get_root_fs()
+            '--karg=root=%s' % self.cfg.root_filesystem,
         ]
         for additional_argument in self.cfg.kernel_args:
             args.append('--karg-append=%s' % additional_argument)
