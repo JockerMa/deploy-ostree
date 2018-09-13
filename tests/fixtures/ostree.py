@@ -9,7 +9,7 @@ from .. import ostree
 
 
 def sh(cmd, **kwargs):
-    return subprocess.run(cmd, shell=True, check=True, **kwargs)
+    return subprocess.run(cmd, shell=True, **kwargs)
 
 
 def sh_silent(cmd, **kwargs):
