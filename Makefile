@@ -18,7 +18,10 @@ define pytest
 		$(1)
 endef
 
-lint:
+build:
+	mkdir -p $(SRC_DIR)/build
+
+lint: build
 	flake8 $(SRC_DIR)
 	mypy --junit-xml=build/mypy.xml $(SRC_DIR)
 
