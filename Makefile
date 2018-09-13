@@ -48,7 +48,7 @@ build/docker:
 IMAGE_TAG := deploy-ostree
 
 define docker_test
-	docker run --rm -it \
+	docker run --rm -i \
 		--privileged \
 		-v /ostree \
 		-v /tmp/deploy-ostree.test/sysroot \
