@@ -22,13 +22,13 @@ class TestMultipleNamedDeploys(FixtureTestCase):
         deploy_ostree([os.path.join(TESTS_DIR, 'named-deploy.json')])
 
     def test_should_add_single_named_remote(self):
-        url = ostree(['remote', 'show-url', self.remote]).stdout_str.strip()
+        url = ostree(['remote', 'show-url', self.remote]).stdout.strip()
         self.assertEqual(
             self.url,
             url)
 
     def test_should_pull_ref_from_remote(self):
-        refs = [ref.strip() for ref in ostree(['refs']).stdout_str.splitlines()]
+        refs = [ref.strip() for ref in ostree(['refs']).stdout.splitlines()]
         self.assertIn('%s:%s' % (self.remote, self.ref), refs)
 
     def test_should_create_single_named_stateroot(self):

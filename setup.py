@@ -2,7 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from datetime import datetime
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages  # type: ignore
 import os.path
 import os
 import re
@@ -70,11 +70,13 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
 
-    packages=find_packages(exclude=['tests', 'tests.*']),
+    package_dir={'': 'src'},
+    packages=find_packages('src', exclude=['tests', 'tests.*']),
     zip_safe=False,
     install_requires=[],
     extras_require={
-        'dev': ['flake8', 'mypy', 'twine'],
+        'dev': ['flake8', 'mypy', 'pytest', 'twine'],
+        'test': ['pytest'],
     },
     package_data={
         'deploy_ostree': ['builtin-provisioners/*'],

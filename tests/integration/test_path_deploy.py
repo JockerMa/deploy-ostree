@@ -24,11 +24,11 @@ class TestPathDeploy(FixtureTestCase):
         deploy_ostree([deploy_config])
 
     def test_should_add_named_remote(self):
-        url = ostree(['remote', 'show-url', self.remote]).stdout_str.strip()
+        url = ostree(['remote', 'show-url', self.remote]).stdout.strip()
         self.assertEqual(url, 'file://%s' % self.commit_fixture.repo_dir.name)
 
     def test_should_pull_ref_from_remote(self):
-        refs = [ref.strip() for ref in ostree(['refs']).stdout_str.splitlines()]
+        refs = [ref.strip() for ref in ostree(['refs']).stdout.splitlines()]
         self.assertIn('%s:%s' % (self.remote, self.ref), refs)
 
     def test_should_create_named_stateroot(self):

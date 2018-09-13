@@ -1,9 +1,11 @@
 {
     "python.linting.flake8Enabled": true,
     "python.linting.mypyEnabled": true,
+    "python.linting.pylintEnabled": false,
     "python.linting.ignorePatterns": [
         ".vscode/*.py",
         "**/Lib/**/*.py",
         "**/site-packages/**/*.py"
-    ]
+    ],
+    "python.envFile": "${workspaceFolder}/.vscode/env"
 }

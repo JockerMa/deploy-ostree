@@ -16,6 +16,9 @@ lint:
   stage: lint
   script:
     - make lint
+  artifacts:
+    reports:
+      junit: build/mypy.xml
 
 # unit-style tests
 unit:
@@ -23,12 +26,18 @@ unit:
   stage: test
   script:
     - make test/unit
+  artifacts:
+    reports:
+      junit: build/test.xml
 
 provisioners:
   <<: *python-template
   stage: test
   script:
     - make test/provisioners
+  artifacts:
+    reports:
+      junit: build/test.xml
 
 # package
 build-wheel:
@@ -54,12 +63,18 @@ integration:
   stage: integration
   script:
     - make build/docker test/integration
+  artifacts:
+    reports:
+      junit: build/test.xml
 
 integration-long:
   <<: *docker-template
   stage: integration
   script:
     - make build/docker test/integration_long
+  artifacts:
+    reports:
+      junit: build/test.xml
 
 # release
 release-test:
