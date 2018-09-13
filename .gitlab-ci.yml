@@ -16,6 +16,9 @@ lint:
   stage: lint
   script:
     - make lint
+  artifacts:
+    reports:
+      junit: build/mypy.xml
 
 # unit-style tests
 unit:

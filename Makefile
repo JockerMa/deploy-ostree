@@ -20,7 +20,7 @@ endef
 
 lint:
 	flake8 $(SRC_DIR)
-	mypy $(SRC_DIR)
+	mypy --junit-xml=build/mypy.xml $(SRC_DIR)
 
 test/unit:
 	$(call pytest,tests/unit)
