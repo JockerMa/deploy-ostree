@@ -37,7 +37,7 @@ class TestKargRoot(FixtureTestCase):
     def setUpClass(cls):
         super().setUpClass()
         deploy_ostree([
-            '--root-karg=%s' % cls.ROOT_FILESYSTEM,
+            '--karg-root=%s' % cls.ROOT_FILESYSTEM,
             os.path.join(TESTS_DIR, 'named-deploy.json')
         ])
 
