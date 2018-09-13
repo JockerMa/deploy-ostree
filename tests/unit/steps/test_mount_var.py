@@ -50,7 +50,7 @@ class TestMountVar(TestCase):
         MountVar(cfg).cleanup()
 
         run_mock.assert_called_once_with([
-            'umount', '--lazy',
+            'umount', '-l',
             os.path.join('/ostree', 'deploy', 'test', 'deploy', 'test-deploy.0', 'var'),
         ], check=True)
 
@@ -63,7 +63,7 @@ class TestMountVar(TestCase):
         MountVar(cfg).cleanup()
 
         run_mock.assert_called_once_with([
-            'umount', '--lazy',
+            'umount', '-l',
             os.path.join(sysroot, 'ostree', 'deploy', 'test', 'deploy', 'test-deploy.0', 'var'),
         ], check=True)
 
