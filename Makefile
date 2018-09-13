@@ -9,7 +9,7 @@ endif
 all: lint test/unit test/provisioners build/wheel build/docker test/integration test/integration_long
 
 # local checks
-LOCAL_UNITTEST := $(PYTHON) -m unittest discover -v -t $(SRC_DIR) -s
+LOCAL_UNITTEST := $(PYTHON) -m pytest --rootdir $(SRC_DIR)
 
 lint:
 	flake8 $(SRC_DIR)

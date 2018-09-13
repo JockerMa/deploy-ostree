@@ -74,7 +74,7 @@ setup(
     zip_safe=False,
     install_requires=[],
     extras_require={
-        'dev': ['flake8', 'mypy', 'twine'],
+        'dev': ['flake8', 'mypy', 'pytest', 'twine'],
     },
     package_data={
         'deploy_ostree': ['builtin-provisioners/*'],
