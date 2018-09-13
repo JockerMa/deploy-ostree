@@ -24,6 +24,6 @@ class MountVar(DeployStep):
 
     def cleanup(self):
         run([
-            'umount', '--lazy',
+            'umount', '-l',
             os.path.join(self.cfg.deployment_dir, 'var'),
         ], check=True)
