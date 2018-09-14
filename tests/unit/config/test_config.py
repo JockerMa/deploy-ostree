@@ -3,6 +3,7 @@
 
 from io import StringIO
 import os.path
+from pathlib import Path
 from unittest import TestCase, mock
 from deploy_ostree.config import Config, ProvisionerConfig, InvalidConfigError, Source
 
@@ -286,3 +287,9 @@ class TestConfig(TestCase):
         cfg = Config.parse_json(StringIO(json), root_filesystem='/dev/mapper/custom-root')
 
         self.assertEqual(cfg.root_filesystem, '/dev/mapper/custom-root')
+
+
+def test_fstab_should_default_to_system_fstab():
+    cfg = Config(Source.url('url'), 'ref')
+
+    assert cfg.fstab == Path('/', 'etc', 'fstab')

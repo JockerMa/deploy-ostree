@@ -9,8 +9,8 @@ class DeployError(RuntimeError):
 
 
 class DeployStep:
-    def __init__(self, cfg: Config) -> None:
-        pass
+    def __init__(self, config: Config) -> None:
+        self.config = config
 
     @property
     def title(self) -> str:
