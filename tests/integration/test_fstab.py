@@ -26,7 +26,6 @@ class TestDefaultFstab:
 
 @pytest.mark.usefixtures('ostree_setup', 'ostree_remote', 'deploy_ostree')
 @pytest.mark.needs_isolation
-@pytest.mark.xfail
 class TestFstabArgument:
     deploy_ostree = ['named-deploy.json']
 
