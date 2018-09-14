@@ -7,31 +7,24 @@ endif
 all: lint test/unit test/provisioners build/wheel build/docker test/integration test/integration_long
 
 # local checks
-define pytest
-    $(PYTHON) -m pytest \
-		--verbose \
-		--junitxml=build/test.xml \
-		$(1)
-endef
-
 build:
 	mkdir -p build
 
 lint: build
 	flake8 .
-	mypy --junit-xml=build/mypy.xml .
+	mypy .
 
 test/unit:
-	$(call pytest,tests/unit)
+	pytest tests/unit
 
 test/provisioners:
-	$(call pytest,tests/builtin_provisioners)
+	pytest tests/builtin_provisioners
 
 test/_local/integration:
-	$(call pytest,tests/integration)
+	pytest tests/integration
 
 test/_local/integration_long:
-	$(call pytest,tests/integration_long)
+	pytest tests/integration_long
 
 # package
 build/wheel: clean/wheels
@@ -48,17 +41,17 @@ define docker_test
 		--privileged \
 		--volume /ostree \
 		--volume /tmp/deploy-ostree.test/sysroot \
-		--volume $(shell pwd):/src \
-		--workdir /src \
+		--volume $(shell pwd):/project \
+		--workdir /project \
 		$(IMAGE_TAG) \
-		make $(1)
+		$(1)
 endef
 
 test/integration: build/docker
-	$(call docker_test,test/_local/integration)
+	$(call docker_test,pytest tests/integration)
 
 test/integration_long: build/docker
-	$(call docker_test,test/_local/integration_long)
+	$(call docker_test,pytest tests/integration_long)
 
 # push to PyPI
 release/test:
@@ -69,8 +62,9 @@ release/pypi:
 
 # cleanup
 clean: clean/wheels
+	-find . -name __pycache__ | xargs rm -r
 	-rm -rf build
-	-docker image rm $(IMAGE_TAG)
+	-docker image rm -f $(IMAGE_TAG)
 
 clean/wheels:
 	-rm -rf dist/*.whl
