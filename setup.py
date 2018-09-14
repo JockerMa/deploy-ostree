@@ -2,7 +2,7 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 from datetime import datetime
-from setuptools import setup, find_packages  # type: ignore
+from setuptools import setup, find_packages
 import os.path
 import os
 import re
