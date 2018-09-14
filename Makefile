@@ -1,5 +1,3 @@
-SRC_DIR := $(PWD)
-
 ifeq ($(OS),Windows_NT)
 	PYTHON := py -3
 else
@@ -12,17 +10,16 @@ all: lint test/unit test/provisioners build/wheel build/docker test/integration 
 define pytest
     $(PYTHON) -m pytest \
 		--verbose \
-		--junitxml=$(SRC_DIR)/build/test.xml \
-		--rootdir $(SRC_DIR) \
+		--junitxml=build/test.xml \
 		$(1)
 endef
 
 build:
-	mkdir -p $(SRC_DIR)/build
+	mkdir -p build
 
 lint: build
-	flake8 $(SRC_DIR)
-	mypy --junit-xml=build/mypy.xml $(SRC_DIR)
+	flake8 .
+	mypy --junit-xml=build/mypy.xml .
 
 test/unit:
 	$(call pytest,tests/unit)
@@ -38,7 +35,7 @@ test/_local/integration_long:
 
 # package
 build/wheel: clean/wheels
-	$(PYTHON) $(SRC_DIR)/setup.py bdist_wheel
+	$(PYTHON) setup.py bdist_wheel
 
 build/docker:
 	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(shell ls -1 dist/*.whl | xargs basename) .
@@ -49,11 +46,12 @@ IMAGE_TAG := deploy-ostree
 define docker_test
 	docker run --rm -i \
 		--privileged \
-		-v /ostree \
-		-v /tmp/deploy-ostree.test/sysroot \
-		-v $(SRC_DIR):/src \
+		--volume /ostree \
+		--volume /tmp/deploy-ostree.test/sysroot \
+		--volume $(shell pwd):/src \
+		--workdir /src \
 		$(IMAGE_TAG) \
-		make -C /src SRC_DIR=/src $(1)
+		make $(1)
 endef
 
 test/integration:
