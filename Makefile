@@ -42,6 +42,9 @@ define docker_test
 		$(1)
 endef
 
+test/isolated: build/docker
+	$(call docker_test, pytest $(TEST))
+
 test/integration: build/docker
 	$(call docker_test, pytest tests/integration -m "not slow")
 

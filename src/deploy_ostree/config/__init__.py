@@ -127,7 +127,7 @@ class Config:
         sysroot: Optional[str]=None,
         root_filesystem: Optional[str]=None,
         fstab: Path=None
-    ):
+    ) -> 'Config':
         data = json.load(fobj)
 
         if 'url' in data and 'path' in data:

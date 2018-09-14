@@ -3,15 +3,8 @@
 
 import pytest
 from pathlib import Path
-import tempfile
 from deploy_ostree.config import Config, Source
 from deploy_ostree.steps import Fstab
-
-
-@pytest.fixture
-def tempdir():
-    with tempfile.TemporaryDirectory() as tmpdir:
-        yield Path(tmpdir)
 
 
 @pytest.fixture

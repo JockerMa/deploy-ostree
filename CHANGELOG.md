@@ -12,6 +12,8 @@ next release. See also the [list of all released versions](https://pypi.org/proj
 * `--sysroot` parameter to allow specifying a different sysroot.
 * `--karg-root` parameter to allow specifying the root partition to pass to the
   kernel.
+* `--fstab` parameter to specify a different fstab file to copy into the
+  deployment.
 
 ### Changed
 * The system `/etc/fstab` is now always copied into the deployment. The
