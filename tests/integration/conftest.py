@@ -44,7 +44,7 @@ def ostree_setup(request):
 
 
 @pytest.fixture(scope='class')
-def ostree_commit(request):
+def ostree_remote(request):
     fixture = OSTreeCommitFixture()
     fixture.setUp()
     yield fixture

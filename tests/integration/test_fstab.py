@@ -12,14 +12,13 @@ def files_equal(a: Path, b: Path) -> bool:
         return f.read() == a_content
 
 
-@pytest.mark.usefixtures('ostree_setup', 'ostree_commit', 'deploy_ostree')
+@pytest.mark.usefixtures('ostree_setup', 'ostree_remote', 'deploy_ostree')
 @pytest.mark.needs_isolation
 class TestDefaultFstab:
     deploy_ostree = ['named-deploy.json']
 
     def should_copy_system_fstab_into_deployment(self, ostree_setup):
-        deployment = ostree_setup.deployment('test-stateroot')
-        fstab = deployment / 'etc' / 'fstab'
+        fstab = ostree_setup.deployment('test-stateroot') / 'etc' / 'fstab'
 
         assert fstab.exists()
         assert files_equal(fstab, Path('/etc', 'fstab'))
