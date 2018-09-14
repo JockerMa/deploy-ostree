@@ -20,12 +20,6 @@ test/unit:
 test/provisioners:
 	pytest tests/builtin_provisioners
 
-test/_local/integration:
-	pytest tests/integration
-
-test/_local/integration_long:
-	pytest tests/integration_long
-
 # package
 build/wheel: clean/wheels
 	$(PYTHON) setup.py bdist_wheel
@@ -48,10 +42,10 @@ define docker_test
 endef
 
 test/integration: build/docker
-	$(call docker_test,pytest tests/integration)
+	$(call docker_test,pytest tests/integration -m "not slow")
 
 test/integration_long: build/docker
-	$(call docker_test,pytest tests/integration_long)
+	$(call docker_test,pytest tests/integration -m "slow")
 
 # push to PyPI
 release/test:

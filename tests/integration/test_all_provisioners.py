@@ -1,6 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+import pytest
 import crypt
 import os
 import stat
@@ -45,6 +46,8 @@ def shadow(deployment_dir: str) -> Iterator[ShadowEntry]:
             yield ShadowEntry(line.strip())
 
 
+@pytest.mark.slow
+@pytest.mark.needs_isolation
 class TestDeployWithProvisioners(FixtureTestCase):
     FIXTURES = [OSTreeFixture()]
 
@@ -53,7 +56,7 @@ class TestDeployWithProvisioners(FixtureTestCase):
         super().setUpClass()
         with open('/authorized_keys', 'w') as f:
             f.write('authorized keys file')
-        deploy_ostree([os.path.join(TESTS_DIR, 'default-provisioners.json')])
+        deploy_ostree([os.path.join(TESTS_DIR, 'all-provisioners.json')])
 
     def test_should_copy_etc_fstab_from_host(self):
         self.assert_files_equal('/etc/fstab', self.deployment('etc', 'fstab'))
