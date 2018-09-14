@@ -62,7 +62,7 @@ integration:
   <<: *docker-template
   stage: integration
   script:
-    - make build/docker test/integration
+    - make test/integration
   artifacts:
     reports:
       junit: build/test.xml
@@ -71,7 +71,7 @@ integration-long:
   <<: *docker-template
   stage: integration
   script:
-    - make build/docker test/integration_long
+    - make test/integration_long
   artifacts:
     reports:
       junit: build/test.xml

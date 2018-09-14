@@ -54,10 +54,10 @@ define docker_test
 		make $(1)
 endef
 
-test/integration:
+test/integration: build/docker
 	$(call docker_test,test/_local/integration)
 
-test/integration_long:
+test/integration_long: build/docker
 	$(call docker_test,test/_local/integration_long)
 
 # push to PyPI
