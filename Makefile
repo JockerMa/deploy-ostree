@@ -26,6 +26,7 @@ build/wheel: clean/wheels
 
 # dockerized tests
 IMAGE_TAG := deploy-ostree
+WORKDIR := $(shell pwd)
 
 build/docker:
 	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(shell ls -1 dist/*.whl | xargs basename) .
@@ -35,8 +36,8 @@ define docker_test
 		--privileged \
 		--volume /ostree \
 		--volume /tmp/deploy-ostree.test/sysroot \
-		--volume $(shell pwd):/project \
-		--workdir /project \
+		--volume $(WORKDIR):$(WORKDIR) \
+		--workdir $(WORKDIR) \
 		$(IMAGE_TAG) \
 		$(1)
 endef
