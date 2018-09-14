@@ -13,7 +13,6 @@ define pytest
     $(PYTHON) -m pytest \
 		--verbose \
 		--junitxml=$(SRC_DIR)/build/test.xml \
-		--override junit_suite_name=$(1) \
 		--rootdir $(SRC_DIR) \
 		$(1)
 endef
