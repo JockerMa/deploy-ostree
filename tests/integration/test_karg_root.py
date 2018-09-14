@@ -3,10 +3,10 @@
 
 import os.path
 from deploy_ostree.config import get_root_fs
-from ... import deploy_ostree
-from ...fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
+from .. import deploy_ostree
+from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 
-TESTS_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
+TESTS_DIR = os.path.dirname(__file__)
 BOOTENTRIES_DIR = os.path.join('/boot', 'loader', 'entries')
 
 
