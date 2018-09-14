@@ -24,11 +24,11 @@ test/provisioners:
 build/wheel: clean/wheels
 	$(PYTHON) setup.py bdist_wheel
 
-build/docker:
-	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(shell ls -1 dist/*.whl | xargs basename) .
-
 # dockerized tests
 IMAGE_TAG := deploy-ostree
+
+build/docker:
+	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(shell ls -1 dist/*.whl | xargs basename) .
 
 define docker_test
 	docker run --rm -i \
@@ -42,10 +42,10 @@ define docker_test
 endef
 
 test/integration: build/docker
-	$(call docker_test,pytest tests/integration -m "not slow")
+	$(call docker_test, pytest tests/integration -m "not slow")
 
 test/integration_long: build/docker
-	$(call docker_test,pytest tests/integration -m "slow")
+	$(call docker_test, pytest tests/integration -m "slow")
 
 # push to PyPI
 release/test:
@@ -56,7 +56,7 @@ release/pypi:
 
 # cleanup
 clean: clean/wheels
-	-find . -name __pycache__ | xargs rm -r
+	-find . -name "*.pyc" -delete
 	-rm -rf build
 	-docker image rm -f $(IMAGE_TAG)
 

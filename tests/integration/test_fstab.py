@@ -13,6 +13,7 @@ def files_equal(a: Path, b: Path) -> bool:
 
 
 @pytest.mark.usefixtures('ostree_setup', 'ostree_commit', 'deploy_ostree')
+@pytest.mark.needs_isolation
 class TestDefaultFstab:
     deploy_ostree = ['named-deploy.json']
 

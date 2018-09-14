@@ -1,6 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+import pytest
 import os.path
 from .. import deploy_ostree, ostree
 from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
@@ -8,6 +9,7 @@ from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 TESTS_DIR = os.path.dirname(__file__)
 
 
+@pytest.mark.needs_isolation
 class TestMultipleNamedDeploys(FixtureTestCase):
     url = 'http://localhost:8000/'
     ref = 'test-commit'

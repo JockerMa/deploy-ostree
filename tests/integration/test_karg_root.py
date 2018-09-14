@@ -1,6 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+import pytest
 import os.path
 from deploy_ostree.config import get_root_fs
 from .. import deploy_ostree
@@ -17,6 +18,7 @@ def get_bootloader_entry():
         return f.read()
 
 
+@pytest.mark.needs_isolation
 class TestDefaultRootFilesystem(FixtureTestCase):
     FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
 
@@ -29,6 +31,7 @@ class TestDefaultRootFilesystem(FixtureTestCase):
         self.assertIn('root=%s' % get_root_fs(), get_bootloader_entry())
 
 
+@pytest.mark.needs_isolation
 class TestKargRoot(FixtureTestCase):
     ROOT_FILESYSTEM = '/dev/mapper/my-root-filesystem'
     FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]

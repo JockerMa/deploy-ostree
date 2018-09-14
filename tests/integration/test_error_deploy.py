@@ -1,6 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+import pytest
 import os.path
 from unittest import TestCase
 from .. import deploy_ostree
@@ -8,6 +9,7 @@ from .. import deploy_ostree
 TESTS_DIR = os.path.dirname(__file__)
 
 
+@pytest.mark.needs_isolation
 class TestErrorDeploy(TestCase):
     def test_should_report_process_errors_concisely(self):
         result = deploy_ostree([os.path.join(TESTS_DIR, 'error-deploy.json')], check=False, capture_output=True)
