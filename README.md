@@ -58,6 +58,8 @@ OSTree deployment should be ready to boot.
   initialized for libostree use with `ostree admin init-fs <sysroot path>`.
 * **--karg-root=ROOT**: set the kernel `root` boot parameter to the given value.
   By default, the `root` parameter of the current boot is used.
+* **--fstab=FSTAB**: copy the given file into the deployment as `/etc/fstab`. If
+  this parameter is omitted, the system fstab (`/etc/fstab`) is used.
 
 #### A Note on SELinux
 
