@@ -1,7 +1,5 @@
 #!/bin/sh
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
-set -eu
-
-mkdir -p $1/etc
-cp /etc/fstab $1/etc/fstab
+echo The "etc-fstab" provisioner has been integrated into deploy-ostree itself.
+echo It is deprecated and will be removed in a future release.
