@@ -1,14 +1,16 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+import pytest
 import os
 import time
-from ... import deploy_ostree
-from ...fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture, HttpServerFixture
+from .. import deploy_ostree
+from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture, HttpServerFixture
 
-TESTS_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
+TESTS_DIR = os.path.dirname(__file__)
 
 
+@pytest.mark.needs_isolation
 class TestHttpConfig(FixtureTestCase):
     FIXTURES = [
         OSTreeFixture(),

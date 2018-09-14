@@ -1,6 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
+import pytest
 import os.path
 from deploy_ostree.run import run
 from .. import deploy_ostree
@@ -9,6 +10,7 @@ from ..fixtures import FixtureTestCase, OSTreeFixture, OSTreeCommitFixture
 TESTS_DIR = os.path.dirname(__file__)
 
 
+@pytest.mark.needs_isolation
 class TestFailingProvisioner(FixtureTestCase):
     FIXTURES = [OSTreeFixture(), OSTreeCommitFixture()]
 

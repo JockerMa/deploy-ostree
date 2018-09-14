@@ -1,5 +1,3 @@
-SRC_DIR := $(PWD)
-
 ifeq ($(OS),Windows_NT)
 	PYTHON := py -3
 else
@@ -9,59 +7,46 @@ endif
 all: lint test/unit test/provisioners build/wheel build/docker test/integration test/integration_long
 
 # local checks
-define pytest
-    $(PYTHON) -m pytest \
-		--verbose \
-		--junitxml=$(SRC_DIR)/build/test.xml \
-		--override junit_suite_name=$(1) \
-		--rootdir $(SRC_DIR) \
-		$(1)
-endef
-
 build:
-	mkdir -p $(SRC_DIR)/build
+	mkdir -p build
 
 lint: build
-	flake8 $(SRC_DIR)
-	mypy --junit-xml=build/mypy.xml $(SRC_DIR)
+	flake8 .
+	mypy .
 
 test/unit:
-	$(call pytest,tests/unit)
+	pytest tests/unit
 
 test/provisioners:
-	$(call pytest,tests/builtin_provisioners)
-
-test/_local/integration:
-	$(call pytest,tests/integration)
-
-test/_local/integration_long:
-	$(call pytest,tests/integration_long)
+	pytest tests/builtin_provisioners
 
 # package
 build/wheel: clean/wheels
-	$(PYTHON) $(SRC_DIR)/setup.py bdist_wheel
+	$(PYTHON) setup.py bdist_wheel
+
+# dockerized tests
+IMAGE_TAG := deploy-ostree
+WORKDIR := $(shell pwd)
 
 build/docker:
 	docker build -t $(IMAGE_TAG) --build-arg PACKAGE=$(shell ls -1 dist/*.whl | xargs basename) .
 
-# dockerized tests
-IMAGE_TAG := deploy-ostree
-
 define docker_test
 	docker run --rm -i \
 		--privileged \
-		-v /ostree \
-		-v /tmp/deploy-ostree.test/sysroot \
-		-v $(SRC_DIR):/src \
+		--volume /ostree \
+		--volume /tmp/deploy-ostree.test/sysroot \
+		--volume $(WORKDIR):$(WORKDIR) \
+		--workdir $(WORKDIR) \
 		$(IMAGE_TAG) \
-		make -C /src SRC_DIR=/src $(1)
+		$(1)
 endef
 
-test/integration:
-	$(call docker_test,test/_local/integration)
+test/integration: build/docker
+	$(call docker_test, pytest tests/integration -m "not slow")
 
-test/integration_long:
-	$(call docker_test,test/_local/integration_long)
+test/integration_long: build/docker
+	$(call docker_test, pytest tests/integration -m "slow")
 
 # push to PyPI
 release/test:
@@ -72,8 +57,9 @@ release/pypi:
 
 # cleanup
 clean: clean/wheels
+	-find . -name "*.pyc" -delete
 	-rm -rf build
-	-docker image rm $(IMAGE_TAG)
+	-docker image rm -f $(IMAGE_TAG)
 
 clean/wheels:
 	-rm -rf dist/*.whl

@@ -8,6 +8,7 @@ from .delete_remote import DeleteRemote
 from .pull_ref import PullRef
 from .create_stateroot import CreateStateroot
 from .deploy import Deploy
+from .fstab import Fstab
 from .mount_var import MountVar
 from ..config import Config
 
@@ -48,6 +49,7 @@ def get_deploy_steps(cfg: Config) -> DeploySteps:
         step(PullRef),
         step(CreateStateroot),
         step(Deploy),
+        step(Fstab),
         step(MountVar),
         provisioners.get_steps,
     ])

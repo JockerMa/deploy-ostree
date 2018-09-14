@@ -1,7 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-from ... import deploy_ostree
+from .. import deploy_ostree
 
 
 def should_print_error_and_exit_if_called_with_no_arguments():

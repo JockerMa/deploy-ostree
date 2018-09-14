@@ -102,13 +102,6 @@ keys are documented below. Any unknown keys are ignored.
 These are the default provisioners bundled with `deploy-ostree`. Any options
 documented below must be specified in the provisioner configuration object.
 
-#### etc-fstab
-
-Copy the system's `/etc/fstab` file into the deployed system. This is a quick
-and convenient way to set up the file systems for the deployed system.
-
-This provisioner has no options.
-
 #### etc-network-interfaces
 
 Set up the loopback interface and one other interface for DHCP with
@@ -177,9 +170,6 @@ set up `/etc/fstab`, and create a user and set it up for passwordless `sudo`.
     "kernel-args": ["quiet", "splash"],
 
     "default-provisioners": [
-        {
-            "provisioner": "etc-fstab"
-        },
         {
             "provisioner": "create-user",
             "username": "atomic",
