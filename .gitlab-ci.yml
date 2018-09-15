@@ -9,7 +9,7 @@ stages:
 .python-template: &python-template
   image: python:3.5
   before_script:
-    - pip install .[dev]
+    - pip install --editable .[dev]
 
 lint:
   <<: *python-template
