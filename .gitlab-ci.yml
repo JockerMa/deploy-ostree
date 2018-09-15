@@ -9,7 +9,7 @@ stages:
 .python-template: &python-template
   image: python:3.5
   before_script:
-    - pip install .[dev]
+    - pip install --editable .[dev]
 
 lint:
   <<: *python-template
@@ -90,11 +90,9 @@ release-test:
   script:
     - make release/test
 
-release-pypi:
+.release-template: &release-template
   <<: *python-template
   stage: release
-  only:
-    - /^v.+$/
   variables:
     TWINE_USERNAME: $PYPI_USERNAME
     TWINE_PASSWORD: $PYPI_PASSWORD
@@ -103,3 +101,14 @@ release-pypi:
     url: https://pypi.org/project/deploy-ostree
   script:
     - make release/pypi
+
+release-dev:
+  <<: *release-template
+  when: manual
+  except:
+    - /^v.+$/
+
+release:
+  <<: *release-template
+  only:
+    - /^v.+$/
