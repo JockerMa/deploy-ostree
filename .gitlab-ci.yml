@@ -102,11 +102,11 @@ release-test:
   script:
     - make release/pypi
 
-release-manual:
+release-dev:
   <<: *release-template
   when: manual
 
-release-auto:
+release:
   <<: *release-template
   only:
     - /^v.+$/
