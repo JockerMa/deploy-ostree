@@ -105,6 +105,8 @@ release-test:
 release-dev:
   <<: *release-template
   when: manual
+  except:
+    - /^v.+$/
 
 release:
   <<: *release-template
