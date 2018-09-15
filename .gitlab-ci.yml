@@ -90,11 +90,9 @@ release-test:
   script:
     - make release/test
 
-release-pypi:
+.release-template: &release-template
   <<: *python-template
   stage: release
-  only:
-    - /^v.+$/
   variables:
     TWINE_USERNAME: $PYPI_USERNAME
     TWINE_PASSWORD: $PYPI_PASSWORD
@@ -103,3 +101,12 @@ release-pypi:
     url: https://pypi.org/project/deploy-ostree
   script:
     - make release/pypi
+
+release-manual:
+  <<: *release-template
+  when: manual
+
+release-auto:
+  <<: *release-template
+  only:
+    - /^v.+$/
