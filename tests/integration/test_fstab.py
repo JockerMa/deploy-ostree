@@ -2,24 +2,8 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import pytest
-import os
 from pathlib import Path
-import stat
-
-
-def files_equal(a: Path, b: Path) -> bool:
-    with a.open() as f:
-        a_content = f.read()
-    with b.open() as f:
-        return f.read() == a_content
-
-
-def assert_has_owner_and_mode(path: Path, uid: int, gid: int, mode: int) -> None:
-    st = os.stat(str(path), follow_symlinks=False)
-    assert st.st_uid == 0
-    assert st.st_gid == 0
-    assert stat.S_ISREG(st.st_mode)
-    assert stat.S_IMODE(st.st_mode) == 0o644
+from ..util import files_equal, FileMode
 
 
 @pytest.mark.usefixtures('ostree_setup', 'ostree_remote', 'deploy_ostree')
@@ -34,7 +18,7 @@ class TestDefaultFstab:
 
     def should_normalize_owner_and_mode(self, ostree_setup):
         fstab = ostree_setup.deployment('test-stateroot') / 'etc' / 'fstab'
-        assert_has_owner_and_mode(fstab, 0, 0, 0o644)
+        assert FileMode.for_path(fstab) == FileMode(0, 0, 0o644, True)
 
 
 @pytest.mark.usefixtures('ostree_setup', 'ostree_remote', 'deploy_ostree')
@@ -47,8 +31,7 @@ class TestFstabArgument:
         fstab = tempdir_cls / 'fstab'
         with fstab.open('w') as f:
             f.write('test fstab')
-        os.chown(str(fstab), 1000, 1000)
-        os.chmod(str(fstab), 0o703)
+        FileMode(1000, 1000, 0o703, True).apply(fstab)
         self.__class__.deploy_ostree.insert(0, '--fstab=%s' % fstab)
         return fstab
 
@@ -60,4 +43,4 @@ class TestFstabArgument:
     @pytest.mark.xfail
     def should_normalize_owner_and_mode(self, ostree_setup):
         fstab = ostree_setup.deployment('test-stateroot') / 'etc' / 'fstab'
-        assert_has_owner_and_mode(fstab, 0, 0, 0o644)
+        assert FileMode.for_path(fstab) == FileMode(0, 0, 0o644, True)
