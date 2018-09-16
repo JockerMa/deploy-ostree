@@ -1,8 +1,9 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-import shutil
+import os
 from pathlib import Path
+import shutil
 from . import DeployStep
 
 
@@ -13,4 +14,5 @@ class Fstab(DeployStep):
 
     def run(self):
         fstab = Path(self.config.deployment_dir, 'etc', 'fstab')
-        shutil.copy(str(self.config.fstab), str(fstab))
+        shutil.copyfile(str(self.config.fstab), str(fstab))
+        os.chmod(str(fstab), 0o644)

@@ -7,6 +7,10 @@ project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This changelog also includes the in-development version that will become the
 next release. See also the [list of all released versions](https://pypi.org/project/deploy-ostree/#history).
 
+## 1.1.1
+### Changed
+* When copying fstab, the file mode is now normalized to 0644.
+
 ## 1.1.0
 ### Added
 * `--sysroot` parameter to allow specifying a different sysroot.
