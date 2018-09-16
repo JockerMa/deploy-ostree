@@ -67,11 +67,11 @@ integration:
     reports:
       junit: build/test.xml
 
-integration-long:
+integration-slow:
   <<: *docker-template
   stage: integration
   script:
-    - make test/integration_long
+    - make test/integration_slow
   artifacts:
     reports:
       junit: build/test.xml

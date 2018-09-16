@@ -48,7 +48,7 @@ test/isolated: build/docker
 test/integration: build/docker
 	$(call docker_test, pytest tests/integration -m "not slow")
 
-test/integration_long: build/docker
+test/integration_slow: build/docker
 	$(call docker_test, pytest tests/integration -m "slow")
 
 # push to PyPI
