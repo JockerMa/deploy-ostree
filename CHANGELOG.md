@@ -11,6 +11,10 @@ next release. See also the [list of all released versions](https://pypi.org/proj
 ### Changed
 * When copying fstab, the file mode is now normalized to 0644.
 
+### Fixed
+* When using `--sysroot`, it's now properly detected if the stateroot already
+  exists.
+
 ## 1.1.0
 ### Added
 * `--sysroot` parameter to allow specifying a different sysroot.
