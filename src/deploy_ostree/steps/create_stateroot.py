@@ -3,27 +3,24 @@
 
 import os.path
 from . import DeployStep
-from ..config import Config
 from ..run import run
 
 
 class CreateStateroot(DeployStep):
-    DEPLOY_DIR = '/ostree/deploy/'
-
-    def __init__(self, cfg: Config) -> None:
-        self.stateroot = cfg.stateroot
-        self.sysroot = cfg.sysroot
-
     @property
     def title(self) -> str:
-        return 'Creating stateroot: %s' % self.stateroot
+        return 'Creating stateroot: %s' % self.config.stateroot
 
     def run(self):
-        if os.path.exists(self.DEPLOY_DIR + self.stateroot):
+        if os.path.exists(self._stateroot_dir):
             print("already exists, skipping")
             return
         run([
             'ostree', 'admin', 'os-init',
-            '--sysroot=%s' % self.sysroot,
-            self.stateroot
+            '--sysroot=%s' % self.config.sysroot,
+            self.config.stateroot
         ], check=True)
+
+    @property
+    def _stateroot_dir(self):
+        return os.path.join(self.config.sysroot, 'ostree', 'deploy', self.config.stateroot)
