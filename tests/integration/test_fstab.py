@@ -40,7 +40,6 @@ class TestFstabArgument:
         assert fstab.exists()
         assert files_equal(fstab, temp_fstab)
 
-    @pytest.mark.xfail
     def should_normalize_owner_and_mode(self, ostree_setup):
         fstab = ostree_setup.deployment('test-stateroot') / 'etc' / 'fstab'
         assert FileMode.for_path(fstab) == FileMode(0, 0, 0o644, True)

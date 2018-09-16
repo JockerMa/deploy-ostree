@@ -2,9 +2,12 @@
 # Licensed under the MIT license, see LICENSE for details.
 
 import pytest
+import os
 from pathlib import Path
+import stat
 from deploy_ostree.config import Config, Source
 from deploy_ostree.steps import Fstab
+from ...util import touch
 
 
 @pytest.fixture
@@ -29,3 +32,17 @@ def should_copy_fstab_into_deployment(tempdir: Path):
     assert fstab.exists and fstab.is_file()
     with fstab.open() as f:
         assert f.read() == 'test fstab'
+
+
+def should_normalize_mode(tempdir: Path):
+    fstab = tempdir / 'fstab'
+    touch(fstab)
+    os.chmod(str(fstab), 0o750)
+    config = Config(Source.url('url'), 'ref', stateroot='stateroot', sysroot=str(tempdir), fstab=tempdir / 'fstab')
+    config.set_deployment_name('deployment')
+    Path(config.deployment_dir, 'etc').mkdir(parents=True)
+
+    Fstab(config).run()
+
+    st = os.stat(str(Path(config.deployment_dir, 'etc', 'fstab')))
+    assert stat.S_IMODE(st.st_mode) == 0o644
