@@ -49,6 +49,12 @@ build-wheel:
     paths:
       - dist/*.whl
 
+check-wheel:
+  <<: *python-template
+  stage: integration
+  script:
+    - make test/check-wheel
+
 # integration tests
 .docker-template: &docker-template
   image: docker

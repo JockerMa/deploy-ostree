@@ -75,7 +75,7 @@ setup(
     zip_safe=False,
     install_requires=[],
     extras_require={
-        'dev': ['flake8', 'mypy', 'pytest', 'twine'],
+        'dev': ['flake8', 'mypy', 'pytest', 'twine>=1.12'],
         'test': ['pytest'],
     },
     package_data={

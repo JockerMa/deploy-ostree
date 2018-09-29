@@ -24,6 +24,9 @@ test/provisioners:
 build/wheel: clean/wheels
 	$(PYTHON) setup.py bdist_wheel
 
+test/check-wheel:
+	twine check dist/*
+
 # dockerized tests
 IMAGE_TAG := deploy-ostree
 WORKDIR := $(shell pwd)
