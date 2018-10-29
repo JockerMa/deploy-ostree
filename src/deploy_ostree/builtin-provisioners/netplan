@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+mkdir -p $1/etc/netplan
+
+NETPLAN_CONFIG=${DEPLOY_OSTREE_netplan_config:-"  "}
+mkdir -p $1/etc/systemd/network
+cat > $1/etc/netplan/netplan.yaml <<EOF
+$(echo "${NETPLAN_CONFIG}")
+EOF

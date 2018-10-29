@@ -27,6 +27,7 @@ class BuiltinProvisioner(DeployStep):
         'create-user': shell_provisioner('create-user'),
         'etc-fstab': shell_provisioner('etc-fstab'),
         'etc-network-interfaces': shell_provisioner('etc-network-interfaces'),
+        'netplan': shell_provisioner('netplan'),
         'passwordless-sudo': shell_provisioner('passwordless-sudo'),
         'root-password': shell_provisioner('root-password'),
         'systemd-networkd': shell_provisioner('systemd-networkd'),

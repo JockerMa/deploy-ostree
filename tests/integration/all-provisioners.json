@@ -1,52 +1,54 @@
 {
-    "url": "http://mirror.centos.org/centos/7/atomic/x86_64/repo/",
-    "ref": "centos-atomic-host/7/x86_64/standard",
-    "stateroot": "test-stateroot",
-
-    "default-provisioners": [
-        {
-            "provisioner": "etc-network-interfaces",
-            "interface": "enp0s3"
-        },
-        {
-            "provisioner": "systemd-networkd",
-            "interface": "enp0s3"
-        },
-        {
-            "provisioner": "root-password",
-            "password": "rootpw"
-        },
-        {
-            "provisioner": "create-user",
-            "username": "testuser",
-            "password": "testpw"
-        },
-        {
-            "provisioner": "create-user",
-            "username": "shell-user",
-            "password": "testpw",
-            "shell": "/my/custom/shell"
-        },
-        {
-            "provisioner": "authorized-keys",
-            "path": "/authorized_keys",
-            "user": "testuser"
-        },
-        {
-            "provisioner": "passwordless-sudo",
-            "user": "testuser"
-        },
-
-        {
-            "provisioner": "create-user",
-            "username": "existing-user",
-            "password": "original-password"
-        },
-        {
-            "provisioner": "create-user",
-            "username": "existing-user",
-            "password": "overwritten-password",
-            "shell": "/new/shell"
-        }
-    ]
+  "url": "http://mirror.centos.org/centos/7/atomic/x86_64/repo/",
+  "ref": "centos-atomic-host/7/x86_64/standard",
+  "stateroot": "test-stateroot",
+  "default-provisioners": [
+    {
+      "provisioner": "etc-network-interfaces",
+      "interface": "enp0s3"
+    },
+    {
+      "provisioner": "systemd-networkd",
+      "interface": "enp0s3"
+    },
+    {
+      "provisioner": "netplan",
+      "netplan_config": "network:\n  version: 2\n  renderer: networkd\n  ethernets:\n    enp0s3:\n      dhcp4: true\n"
+    },
+    {
+      "provisioner": "root-password",
+      "password": "rootpw"
+    },
+    {
+      "provisioner": "create-user",
+      "username": "testuser",
+      "password": "testpw"
+    },
+    {
+      "provisioner": "create-user",
+      "username": "shell-user",
+      "password": "testpw",
+      "shell": "/my/custom/shell"
+    },
+    {
+      "provisioner": "authorized-keys",
+      "path": "/authorized_keys",
+      "user": "testuser"
+    },
+    {
+      "provisioner": "passwordless-sudo",
+      "user": "testuser"
+    },
+    {
+      "provisioner": "create-user",
+      "username": "existing-user",
+      "password": "original-password"
+    },
+    {
+      "provisioner": "create-user",
+      "username": "existing-user",
+      "password": "overwritten-password",
+      "shell": "/new/shell"
+    }
+  ]
 }
