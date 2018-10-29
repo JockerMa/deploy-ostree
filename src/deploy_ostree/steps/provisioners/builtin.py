@@ -29,6 +29,7 @@ class BuiltinProvisioner(DeployStep):
         'etc-network-interfaces': shell_provisioner('etc-network-interfaces'),
         'passwordless-sudo': shell_provisioner('passwordless-sudo'),
         'root-password': shell_provisioner('root-password'),
+        'systemd-networkd': shell_provisioner('systemd-networkd'),
     }
 
     def __init__(self, config: Config, provisioner: ProvisionerConfig) -> None:

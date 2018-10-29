@@ -9,6 +9,10 @@
             "interface": "enp0s3"
         },
         {
+            "provisioner": "systemd-networkd",
+            "interface": "enp0s3"
+        },
+        {
             "provisioner": "root-password",
             "password": "rootpw"
         },

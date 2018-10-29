@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+mkdir -p $1/etc/systemd/network
+
+DEFAULT_IFACE=$(sed -n 2p /proc/net/route | cut -f1)
+IFACE=${DEPLOY_OSTREE_interface:-${DEFAULT_IFACE}}
+mkdir -p $1/etc/systemd/network
+cat > $1/etc/systemd/network/${IFACE}.network <<EOF
+[Match]
+Name=${IFACE}
+[Network]
+DHCP=yes
+EOF

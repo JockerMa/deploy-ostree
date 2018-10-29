@@ -120,6 +120,22 @@ like NetworkManager.
 [etc-network-interfaces]: https://wiki.debian.org/NetworkConfiguration
 [predictable]: https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
 
+#### systemd-networkd
+
+Set up the loopback interface and one other interface for DHCP with
+[/etc/network/interfaces][etc-network-interfaces]. This probably only applies
+to Debian-based systems and only for DHCP configuration. If you need different
+configuration, you will have to supply your own provisioner or use something
+like NetworkManager.
+
+* **interface**: name of the interface to configure. By default, the default
+  network interface is retrieved from `/proc/net/route`. However, this might
+  differ between systems (especially if only one is using
+  [predictable interface names][predictable]) so it's not guaranteed to work.
+
+[etc-network-interfaces]: https://wiki.debian.org/NetworkConfiguration
+[predictable]: https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
+
 #### root-password
 
 Set the root password.
