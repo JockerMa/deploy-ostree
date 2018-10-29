@@ -17,7 +17,7 @@ class TestConfig(TestCase):
 
             "ignored key": "ignored value"
         }'''
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual('https://example.com/ostree', cfg.url)
         self.assertIsNone(cfg.path)
@@ -28,7 +28,7 @@ class TestConfig(TestCase):
             "path": "/srv/ostree",
             "ref": "fedora/28/x86_64/workstation"
         }'''
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual('/srv/ostree', cfg.path)
         self.assertIsNone(cfg.url)
@@ -41,7 +41,7 @@ class TestConfig(TestCase):
             "ref": "fedora/28/x86_64/workstation"
         }'''
         with self.assertRaises(InvalidConfigError):
-            Config.parse_json(StringIO(json))
+            Config.parse_yaml(StringIO(json))
 
     def test_should_parse_config_with_remote_and_stateroot_names(self):
         json = '''{
@@ -51,7 +51,7 @@ class TestConfig(TestCase):
             "remote": "atomicws",
             "stateroot": "fedora-atomic-workstation"
         }'''
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual('https://example.com/ostree', cfg.url)
         self.assertEqual('fedora/28/x86_64/workstation', cfg.ref)
@@ -65,7 +65,7 @@ class TestConfig(TestCase):
 
             "default-provisioners": []
         }'''
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual(cfg.default_provisioners, [])
 
@@ -80,7 +80,7 @@ class TestConfig(TestCase):
                 }
             ]
         }'''
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual(cfg.default_provisioners, [
             ProvisionerConfig('some-provisioner', {})
@@ -106,7 +106,7 @@ class TestConfig(TestCase):
                 }
             ]
         }'''
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual(cfg.default_provisioners, [
             ProvisionerConfig('prov-1', {}),
@@ -119,7 +119,7 @@ class TestConfig(TestCase):
             "path": "/srv/ostree",
             "ref": "ref"
         }'''
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual(cfg.kernel_args, [])
 
@@ -133,7 +133,7 @@ class TestConfig(TestCase):
                 "arg3"
             ]
         }'''
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual(cfg.kernel_args, ['arg1', 'arg2', 'arg3'])
 
@@ -143,54 +143,54 @@ class TestConfig(TestCase):
             "ref": "ref",
             "kernel-args": []
         }'''
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual(cfg.kernel_args, [])
 
     def test_should_take_base_dir_from_argument(self):
         json = '{"path": "repo", "ref": "ref"}'
-        cfg = Config.parse_json(StringIO(json), base_dir='/home/user/ostree')
+        cfg = Config.parse_yaml(StringIO(json), base_dir='/home/user/ostree')
 
         self.assertEqual(cfg.base_dir, '/home/user/ostree')
 
     def test_default_base_dir_should_be_empty(self):
         json = '{"path": "repo", "ref": "ref"}'
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual(cfg.base_dir, '')
 
     def test_path_should_include_base_dir(self):
         json = '{"path": "repo", "ref": "ref"}'
-        cfg = Config.parse_json(StringIO(json), base_dir='ostree')
+        cfg = Config.parse_yaml(StringIO(json), base_dir='ostree')
 
         self.assertEqual(cfg.path, os.path.join('ostree', 'repo'))
 
     def test_path_should_not_specifically_include_base_dir_if_default(self):
         json = '{"path": "repo/path", "ref": "ref"}'
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual(cfg.path, 'repo/path')
 
     def test_path_should_not_include_base_dir_if_absolute(self):
         json = '{"path": "/srv/ostree", "ref": "ref"}'
-        cfg = Config.parse_json(StringIO(json), base_dir='/home/user/')
+        cfg = Config.parse_yaml(StringIO(json), base_dir='/home/user/')
 
         self.assertEqual(cfg.path, '/srv/ostree')
 
     def test_should_raise_config_exception_if_neither_url_nor_path_is_present(self):
         json = '{"ref": "ostree/ref"}'
         with self.assertRaises(InvalidConfigError):
-            Config.parse_json(StringIO(json))
+            Config.parse_yaml(StringIO(json))
 
     def test_should_raise_config_exception_if_url_is_present_and_ref_is_missing(self):
         json = '{"url": "http://example.com"}'
         with self.assertRaises(InvalidConfigError):
-            Config.parse_json(StringIO(json))
+            Config.parse_yaml(StringIO(json))
 
     def test_should_raise_config_exception_if_path_is_present_and_ref_is_missing(self):
         json = '{"path": "/os/tree"}'
         with self.assertRaises(InvalidConfigError):
-            Config.parse_json(StringIO(json))
+            Config.parse_yaml(StringIO(json))
 
     def test_remote_name_should_be_randomly_generated_if_not_specified(self):
         cfg1 = Config(Source.url('url'), 'ref')
@@ -237,13 +237,13 @@ class TestConfig(TestCase):
 
     def test_default_sysroot_should_be_system_root(self):
         json = '{"url": "http://example.com", "ref": "ref"}'
-        cfg = Config.parse_json(StringIO(json))
+        cfg = Config.parse_yaml(StringIO(json))
 
         self.assertEqual(cfg.sysroot, '/')
 
     def test_should_pass_sysroot_to_config(self):
         json = '{"url": "http://example.com", "ref": "ref"}'
-        cfg = Config.parse_json(StringIO(json), sysroot='/mnt/rootfs')
+        cfg = Config.parse_yaml(StringIO(json), sysroot='/mnt/rootfs')
 
         self.assertEqual(cfg.sysroot, '/mnt/rootfs')
 
@@ -284,7 +284,7 @@ class TestConfig(TestCase):
 
     def test_should_pass_root_filesystem_to_config(self):
         json = '{"url": "http://example.com", "ref": "ref"}'
-        cfg = Config.parse_json(StringIO(json), root_filesystem='/dev/mapper/custom-root')
+        cfg = Config.parse_yaml(StringIO(json), root_filesystem='/dev/mapper/custom-root')
 
         self.assertEqual(cfg.root_filesystem, '/dev/mapper/custom-root')
 

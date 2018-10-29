@@ -73,7 +73,7 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src', exclude=['tests', 'tests.*']),
     zip_safe=False,
-    install_requires=[],
+    install_requires=['PyYAML'],
     extras_require={
         'dev': ['flake8', 'mypy', 'pytest', 'twine>=1.12'],
         'test': ['pytest'],

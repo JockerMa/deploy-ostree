@@ -1,7 +1,7 @@
 # Copyright 2018 Felix Krull
 # Licensed under the MIT license, see LICENSE for details.
 
-import json
+import yaml
 import os.path
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Optional, TextIO
@@ -120,7 +120,7 @@ class Config:
         self.deployment_name = deployment
 
     @classmethod
-    def parse_json(
+    def parse_yaml(
         cls,
         fobj: TextIO, *,
         base_dir: str='',
@@ -128,7 +128,7 @@ class Config:
         root_filesystem: Optional[str]=None,
         fstab: Path=None
     ) -> 'Config':
-        data = json.load(fobj)
+        data = yaml.safe_load(fobj)
 
         if 'url' in data and 'path' in data:
             raise InvalidConfigError("both 'url' and 'path' are present")

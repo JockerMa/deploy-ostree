@@ -55,7 +55,7 @@ def parse_config(filename_or_url, sysroot=None, root_filesystem=None, fstab=None
     parsed_url = urlparse(filename_or_url)
     if parsed_url.scheme in ['http', 'https']:
         with urlopen(filename_or_url) as req:
-            return Config.parse_json(
+            return Config.parse_yaml(
                 TextIOWrapper(req, encoding='utf-8'),
                 base_dir=os.getcwd(),
                 sysroot=sysroot,
@@ -63,7 +63,7 @@ def parse_config(filename_or_url, sysroot=None, root_filesystem=None, fstab=None
                 fstab=fstab
             )
     with open(filename_or_url, encoding='utf-8') as fobj:
-        return Config.parse_json(
+        return Config.parse_yaml(
             fobj,
             base_dir=os.path.dirname(filename_or_url),
             sysroot=sysroot,
