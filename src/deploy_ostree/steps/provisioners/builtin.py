@@ -24,6 +24,7 @@ def shell_provisioner(name):
 class BuiltinProvisioner(DeployStep):
     PROVISIONERS = {
         'authorized-keys': shell_provisioner('authorized-keys'),
+        'cloud-init': shell_provisioner('cloud-init'),
         'create-user': shell_provisioner('create-user'),
         'etc-fstab': shell_provisioner('etc-fstab'),
         'etc-network-interfaces': shell_provisioner('etc-network-interfaces'),

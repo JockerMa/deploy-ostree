@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+
+CLOUDINIT_MODULE=${DEPLOY_OSTREE_module:-"DataSourceNoCloud"}
+CLOUDINIT_META_DATA=${DEPLOY_OSTREE_meta_data:-"  "}
+CLOUDINIT_USER_DATA=${DEPLOY_OSTREE_user_data:-"  "}
+
+# NOTE(portdirect): See https://github.com/number5/cloud-init/tree/45794188f06ad3ab990f2c5d32cd2a67341475aa/doc/examples/seed
+if [ "${CLOUDINIT_MODULE}" = "DataSourceNoCloud" ]; then
+  CLOUDINIT_SEED_DIR="nocloud"
+else
+  CLOUDINIT_SEED_DIR="nocloud-net"
+fi
+
+mkdir -p "$1/var/lib/cloud/seed/${CLOUDINIT_SEED_DIR}"
+
+cat > "$1/var/lib/cloud/seed/${CLOUDINIT_SEED_DIR}/meta-data" <<EOF
+$(echo "${CLOUDINIT_META_DATA}")
+EOF
+
+cat > "$1/var/lib/cloud/seed/${CLOUDINIT_SEED_DIR}/user-data" <<EOF
+$(echo "${CLOUDINIT_USER_DATA}")
+EOF

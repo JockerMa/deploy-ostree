@@ -16,6 +16,12 @@
       "netplan_config": "network:\n  version: 2\n  renderer: networkd\n  ethernets:\n    enp0s3:\n      dhcp4: true\n"
     },
     {
+      "provisioner": "cloud-init",
+      "module": "DataSourceNoCloud",
+      "meta_data": "instance-id: some-uuid\n",
+      "user_data": "runcmd:\n  - [ modprobe, fuse ]\n"
+    },
+    {
       "provisioner": "root-password",
       "password": "rootpw"
     },
